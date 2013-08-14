@@ -1,0 +1,17 @@
+<?php defined('SYSPATH') or die('No direct script access.'); ?>
+
+2013-03-13 16:47:49 --- ERROR: ErrorException [ 1 ]: Class 'Model_Vias' not found ~ MODPATH/orm/classes/kohana/orm.php [ 109 ]
+2013-03-13 16:51:24 --- ERROR: ErrorException [ 1 ]: Class 'Model_Vias' not found ~ MODPATH/orm/classes/kohana/orm.php [ 109 ]
+2013-03-13 16:57:25 --- ERROR: ErrorException [ 1 ]: Class 'Model_Vias' not found ~ MODPATH/orm/classes/kohana/orm.php [ 109 ]
+2013-03-13 16:59:28 --- ERROR: ErrorException [ 1 ]: Class 'Model_Vias' not found ~ MODPATH/orm/classes/kohana/orm.php [ 109 ]
+2013-03-13 17:51:36 --- ERROR: Database_Exception [ 0 ]: [1062] Duplicate entry 'MDPyEP/2013-000' for key 'PRIMARY' ( INSERT INTO `nurs` (`nur`, `id_user`, `fecha_creacion`, `username`) VALUES ('MDPyEP/2013-00051', '51', '2013-03-13 17:51:36', 'Luis Freddy Velasco') ) ~ MODPATH/database/classes/kohana/database/mysql.php [ 181 ]
+2013-03-13 17:52:08 --- ERROR: Database_Exception [ 0 ]: [1062] Duplicate entry 'MDPyEP/2013-000' for key 'PRIMARY' ( INSERT INTO `nurs` (`nur`, `id_user`, `fecha_creacion`, `username`) VALUES ('MDPyEP/2013-00052', '51', '2013-03-13 17:52:08', 'Luis Freddy Velasco') ) ~ MODPATH/database/classes/kohana/database/mysql.php [ 181 ]
+2013-03-13 18:24:36 --- ERROR: Kohana_Exception [ 0 ]: Cannot delete vias model because it is not loaded. ~ MODPATH/orm/classes/kohana/orm.php [ 1383 ]
+2013-03-13 18:27:17 --- ERROR: Kohana_Exception [ 0 ]: Cannot delete vias model because it is not loaded. ~ MODPATH/orm/classes/kohana/orm.php [ 1383 ]
+2013-03-13 18:30:04 --- ERROR: Kohana_Exception [ 0 ]: Cannot delete vias model because it is not loaded. ~ MODPATH/orm/classes/kohana/orm.php [ 1383 ]
+2013-03-13 18:39:27 --- ERROR: ErrorException [ 2 ]: mysql_num_rows() expects parameter 1 to be resource, boolean given ~ MODPATH/database/classes/kohana/database/mysql/result.php [ 20 ]
+2013-03-13 18:40:11 --- ERROR: ErrorException [ 2 ]: mysql_num_rows() expects parameter 1 to be resource, boolean given ~ MODPATH/database/classes/kohana/database/mysql/result.php [ 20 ]
+2013-03-13 18:41:37 --- ERROR: ErrorException [ 2 ]: mysql_num_rows() expects parameter 1 to be resource, boolean given ~ MODPATH/database/classes/kohana/database/mysql/result.php [ 20 ]
+2013-03-13 18:42:07 --- ERROR: ErrorException [ 2 ]: mysql_num_rows() expects parameter 1 to be resource, boolean given ~ MODPATH/database/classes/kohana/database/mysql/result.php [ 20 ]
+2013-03-13 18:42:37 --- ERROR: ErrorException [ 2 ]: mysql_num_rows() expects parameter 1 to be resource, boolean given ~ MODPATH/database/classes/kohana/database/mysql/result.php [ 20 ]
+2013-03-13 18:52:25 --- ERROR: Kohana_Exception [ 0 ]: Cannot delete vias model because it is not loaded. ~ MODPATH/orm/classes/kohana/orm.php [ 1383 ]

@@ -1,0 +1,262 @@
+*{color: #333; padding: 0; margin: 0;}
+body{background:#F0F1F3;}
+body{
+    color: #333;
+    direction: ltr;
+    font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+    font-size: 11px;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    unicode-bidi: embed;}
+a{text-decoration: none;}
+a,a:visited,a:active{color:#294F87;}
+a img{border: none;}
+h2{
+    line-height: 15px; font-size: 14px; letter-spacing: 0.1px; font-family: Tahoma;  }
+h2 span{font-size: 11px; font-weight: normal; color: #aaa;}
+h2.subtitulo{color:#23599B; border-bottom: 1px dashed #ccc; }
+h2.oficial{ color: #4A7A11;   }
+h2.copia{ color: #3072D1;   }
+hr {
+    clear: right;
+}
+hr {
+    background: none repeat scroll 0 0 #D9D9D9;
+    border-width: 0;
+    color: #D9D9D9;
+    height: 1px;
+    margin-top: 5px;
+}
+hr.azul {
+    background: none repeat scroll 0 0 #618FBA;
+    border-width: 0;
+    color: #618FBA;
+    height: 2px;
+}
+div#main{ width: 99%; margin:0; padding:22px 5px 0 5px; background: #F0F1F3; display: block; }
+/*icons*/
+span.icon{padding-left: 18px; font-weight: normal; background: #ddd transparent; width: 25px; }
+span.entrada{background: url(../images/entrada.gif) no-repeat;  }
+span.documento{background: url(../images/doc.png) no-repeat;  }
+span.observado{background: url(../images/observers.gif) no-repeat;  }
+span.recepcion{background: url(../images/documentos.png) no-repeat; }
+span.pendientes{background: url(../images/folder_desktop.png) no-repeat;  }
+span.informe{background: url(../images/informe.gif) no-repeat; }
+span.carta{background: url(../images/email.png) no-repeat;}
+span.nota{background: url(../images/nota.png) no-repeat;  }
+span.circular{background: url(../images/circular.png) no-repeat;  }
+span.memo{background: url(../images/memo.gif) no-repeat;  }
+span.hr{background: url(../images/hr.gif) no-repeat;  }
+span.nur{background: url(../images/nur.png) no-repeat;  }
+span.archivos{background: url(../images/kfm2.png) no-repeat;  }
+span.word{ padding-left: 24px; font-weight: bold; background: url(../images/blog_compose.png) no-repeat;  }
+
+div#vias{width: 230px; height: 160px; border: 1px solid #CCCCCC; overflow-y:auto; padding: 2px; background: #fff;   }
+div.separador{padding-top: 5px; margin-bottom: 5px; border-bottom: 1px solid #ddd; width: 170px;  }
+span.subtitulo{font-weight: bold;}
+a:hover{text-decoration: underline; }
+ul li {line-height: 15px;}
+li.oficina a{font-size: 11px;}
+li.oficina a:hover{border-bottom: 1px dotted;  }
+div#documento{ padding: 5px;  }
+#frmUsuario label ,label.form{display: block;  color:#175992; font-family: Helvetica;   font-weight: normal; line-height: 20px;}
+label{color: #1160B7;  }
+label.error{padding-left: 2px; color:#D70909;}
+input[type="password"],input[type="text"],input[type="select"],select{
+        border:1px solid #ccc;
+	background: #fff;	
+	margin:0;
+        color: #111;
+        line-height: 12px;
+        padding: 3px;
+        font-size: 11px;
+}
+input[type="text"]:focus,input[type="password"]:focus{
+    border: 1px solid #8BB1D2;
+}
+form textarea{
+    width: 595px;
+}
+.titulo{
+    background-color:#1865A8;
+    width: 100%;
+    color: #fff;
+    font-size: 22px;
+    line-height: 24px;
+    font-weight: normal;
+    font-family: sans-serif;
+    border: #2F6FB6;
+    border-radius: 5px 5px 0px 0px;
+    font-weight: normal;
+}
+
+fieldset{border: 1px solid #D1D7DD;}
+legend
+{
+color: #303577;
+background: #F0F1F3;
+border: none;
+padding:0px;
+font-weight: bold;
+}
+.submitbutton ,a.submitbutton {
+    background-color: #4073B1;
+    border: 1px solid #ddd;
+    /*border-radius: 6px 6px 6px 6px;*/
+    color: #fff;
+    cursor: pointer;
+    font-size: 11px;
+    margin: 5px 2px 0 0;
+    padding: 5px 8px;
+    text-shadow: 1px 1px 0 #333;
+    text-decoration: none;
+    width: auto;
+    font-weight: bold;      
+}
+.submitbutton:hover {
+    background-color: #23599B;
+    border: 1px solid #ccc;
+}
+/*
+Plugin Name: WP-Digg Style Paginator
+Plugin URI: http://www.mis-algoritmos.com/2007/09/09/wp-digg-style-pagination-plugin-v-10/
+Author: Victor De la Rocha
+Author URI: http://www.mis-algoritmos.com
+*/
+
+/*CSS black style pagination*/
+.pagination {
+	padding: 3px;
+	margin: 3px;
+	text-align:center;
+}
+
+.pagination a {
+	padding: 2px 5px 2px 5px;
+	margin: 2px;
+	border: 1px solid #EEE;
+	text-decoration: none; /* no underline */
+	color: #036CB4;
+}
+
+.pagination a:hover,
+.pagination a:active {
+	border: 1px solid #999;
+	color: #666;
+}
+.pagination .current {
+	padding: 2px 5px 2px 5px;
+	margin: 2px;
+	border: 1px solid #036CB4;
+	font-weight: bold;
+	background-color: #036CB4;
+	color: #FFF;
+}
+.pagination .disabled {
+	padding: 2px 5px 2px 5px;
+	margin: 2px;
+	border: 1px solid #EEE;
+	color: #DDD;
+}
+div#perfil{
+    font-size: 14px;
+    font-weight: bold;
+}
+div#perfil span.negro{
+    color: #222;    
+}
+div#perfil span.gris{
+    color: #999;    
+}
+div#vias ul li.hombre{margin-left: 22px;list-style-image: url('../images/user_hombre.png');}
+div#vias ul li.mujer{margin-left: 22px;list-style-image: url('../images/user_mujer.png');}
+/*combo copias*/
+div#cc{border: 1px solid #ccc; width: 350px; margin-left: 0px; overflow-x:auto; height: 100px; }
+div#cc ul{list-style: none;margin: 0;padding: 0;}
+label.lbc{color:#666;}
+td.fondo_nur{  text-align: center; padding-bottom:  6px; font-size: 30px; color: #1865A8; font-weight: bold; 
+border: 2px dashed #CCCCCC;
+
+}
+p.numero{font-size: 24px; color: #235B9B; line-height: 5px;  }
+
+
+
+span.pasos{ background-color: #CC3A3A; color: #eee; padding: 0px 3px 0px 3px; margin-left: 3px; font-size: 10px;  }
+
+table#seguimiento{
+    widows: 100%;
+    border:1px solid;
+    padding: 0;
+    margin: 0;
+    border-bottom:  1px solid #ccc;
+    border-collapse: collapse;        
+    background-color: #fff;
+}
+table#seguimiento tbody tr td{
+    border: 1px solid;
+}
+b.oficina{color: #4073B1;}
+div#message{ border: 1px solid #DEE2E7; width: 100%; padding: 10px 0 10px 60px; background:#fff url(../images/Get-Info-icon.png) no-repeat left;}
+div#alert{ border: 1px solid #DEE2E7; width: 100%; padding: 10px 0 10px 60px; background:#fff url(../images/Get-Info-icon.png) no-repeat left;}
+.button{
+    background: url("../images/btn_gray.png") repeat-x scroll left top transparent;
+    border: 1px solid #707070;
+    border-radius: 3px 3px 3px 3px;
+    color: black;
+    /*display: block;*/
+    font-size: 12px;
+    height: 28px;
+    line-height: 28px;
+    margin: 0 auto;
+    text-decoration: none;
+    width: 160px;
+}
+ .button:hover {
+    background-position: left -31px;
+    border: 1px solid #3C7FB1;
+}
+
+h1 {
+	    text-indent:-9999px;
+	    margin:0 auto;
+	    width:400px;
+	    height:100px;
+	    background:transparent url("images/logo.jpg") no-repeat scroll;
+	}
+.title_nur{
+            width: 200px;
+            background: #F0F1F3;
+            padding: 3px;
+            margin: 0;
+            font-size: 25px;
+            color: #23599B;
+            font-weight: bold;
+            border-top: 1px solid #D1D7DD;
+            border-right: 1px solid #D1D7DD;
+            border-left: 1px solid #D1D7DD;
+            text-align: center;            
+        }       
+span .home{background: url('/media/images/home.gif') no-repeat; height: 35px;}        
+div.bandeja{width: 100%; margin-bottom: 10px; background: #E8EBEE;}
+div.bandeja table.oficial1{width: 100%;padding: 0;margin: 0;border:  1px solid #325B8D;
+        border-collapse:collapse;        
+        background-color: #fff;}
+div.bandeja table.oficial0{width: 100%;padding: 0;margin: 0;border:  1px solid #B0B0B0;
+        border-collapse:collapse;        
+        background-color: #fff;}
+div.bandeja table tr td{padding: 5px;}
+div.bandeja table tr.header td{font-size: 10px; text-transform: uppercase; font-weight: normal;}
+div.bandeja table.oficial0 tr.header td{background: #DFE0E1; color: #000;  border-bottom:  1px solid #ccc;}
+div.bandeja table.oficial1 tr.header td{background: #3C6597; color: #fefefe;  border-bottom:  1px solid #ccc;}
+
+div.bandeja table tr td{ }
+div#editmain{width: 100%; background: #fff;}
+div#editar{width: 980px; margin: 0 auto; padding: 10px;background: #fff;}
+p{margin-top: 5px;}
+form#frmCreate{background: #fff;}
+form#frmCreate,div#derivacion{background: #F0F1F3; width: 980px;margin: 0 auto; padding: 0 20px; border-left: 1px solid #ccc; border-right: 1px solid #ccc;}
+div#derivacion{background: #fff;}
+div.info{margin:10px; padding: 20px; background-color:#EFF4FB; border: 1px solid #30598B; }
+div.error{margin: 0 10px; padding:20px; background-color:#F9EEEE; border: 1px solid #A93C3C; }

@@ -1,0 +1,85 @@
+@charset "utf-8";
+table#theTable{width: 100%;padding: 0;margin: 0;border:  1px solid #ccc;border-collapse:collapse;background-color: #fff;}
+table#theTable thead{background: #6E6E6E; }
+table#theTable thead tr{ background: url("../images/fondo_tabla.png") repeat-x scroll 0 0 transparent;height: 35px;text-transform: uppercase;}
+table#theTable tbody{background: #fff; font-size: 11px; }        
+table#theTable thead th{font-size: 10px; font-weight: bold;text-align: center;                        
+        letter-spacing: 1px;
+        padding:0;               
+        color: #558AD3;
+        font-weight: bold;
+        margin: 0;
+        border-left: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        }
+table#theTable thead th a{text-decoration:none; color: #303577;}
+table#theTable tbody td a{ text-decoration:none; color:#239; font-weight: bold;   }
+table#theTable tbody td a:hover{ text-decoration:underline;}
+table#theTable tbody td img{border:none;}
+table#theTable tbody td h{font-size: 10px;color: #09286F; font-weight: bold; text-align: right; float: right;  }
+table#theTable tbody td{font-size: 11px;color: #333; border-bottom: 1px solid #DFE5E9; }
+table#theTable tbody td{padding:5px 2px 3px 2px; margin: 0;}
+table#theTable tbody td.derecha{text-align: right; float: right;}
+table#theTable tbody td.codigo{ font-size: 11px; font-weight: bold; color: #294F87; }        
+span.destinatario{color: #294F87; font-weight: bold;}
+table#docs{width: 800px; }
+table#docs tr td {border: 1px dashed #999; text-align: center; font-size: 12px; font-weight: bold; background-color: #efefef; padding: 3px 0 3px 0;}
+table#docs tr td a {display: block; font-weight: normal;}
+div#titulares{width: 800px; background-color: #F0F1F3;padding:5px; border:1px solid #D1D7DD;}
+div#titulares2{background-color: #EFF4FB; padding: 5px; border-top: 3px solid #3085BB;border-bottom: 3px solid #3085BB;  }
+div#titulares2 table tr td{padding: 4px 0; font-size: 12px; }
+td a.asignar{font-weight: bold;}
+td a.asignar:hover{border-bottom: 1px dotted;}
+table#theTable tbody td a.hs{color:#303577; font-weight: bold; }
+table#theTable tbody td a.hs:hover{border-bottom: 1px dotted;}
+table tr td.oficial{background-color:#DFF692; }
+table tbody tr td.nur1{background: url('../images/oficial.jpg') no-repeat bottom; text-align: center;}
+table tbody tr td.nur0{background:url('../images/copia.jpg') no-repeat bottom; text-align: center;}
+table tbody tr td.copia{background-color:#F3F9FD; }
+table tr td.doc_copia{text-align: center; }
+.odd{ background: #EFF4FF;}
+tr.oficial1 td{background: #F9E451; }
+td.oficial2{background: transparent url('../images/goto.png') no-repeat right top ;}
+td#pasos{background: transparent url('../images/goto.png') no-repeat right top ;}
+td.oficial0 td{background: #EAEAEA;}
+td#estrella{background: #FFF845 url('../images/flag2.png') no-repeat right top ;}
+td#estado10,td#estado2{background: #F9E451 url('../images/flag2.png') no-repeat right top ;}
+tr.oficial2 td span{ width: 22px; height: 22px; display: block; position: absolute; top: -15px; left: 150px; background: url('../images/goto.png') no-repeat;}
+tr.oficial0 td h2{color: #18457C; }
+tr.oficial1 td h2{color: #045E4A; }
+tr.oficial1  td.adjunto{font-size: 8px; }
+td.copia2{background: #AFBFE1; }
+div.divoficial{ background: #F7FFEF; width: 20px; height: 20px;border: 1px solid; float: left;}
+div.divcopia{ background: #eff8ff; width: 20px; height: 20px;border: 1px solid;float: left;}
+div.divexterno{ background: #F1DBD0; width: 20px; height: 20px;border: 1px solid;float: left;}
+/* tables */
+table.tablesorter {
+	font-family:arial;
+	/*background-color: #CDCDCD;*/
+	margin:10px 0pt 15px;
+	font-size: 8pt;
+	width: 100%;
+	text-align: left;}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {/*background-color: #e6EEEE;*/border: 1px solid #FFF;font-size: 8pt;padding: 2px 4px 0;}
+table.tablesorter thead tr .header {background-image: url(bg.2gif);background-repeat: no-repeat;background-position: center right;cursor: pointer;}
+table.tablesorter tbody td {color: #3D3D3D;padding: 4px;background-color: #FFF;vertical-align: top;}
+table.tablesorter tbody tr.odd td {background-color:#F6FAFF;}
+table.tablesorter thead tr .headerSortUp {background-image: url(asc.gif);}
+table.tablesorter thead tr .headerSortDown {background-image: url(desc.gif);}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+/*background-color:  none repeat scroll 0 0 rgba(255, 255, 255, 0.2);*/
+}
+td span.prioridad1{background: url(../images/urgente.jpg) no-repeat center; width: 80px; height: 23px; display: block; margin:25px auto 0 auto; }
+table.oficial0 {border: 1px solid #666; }
+table.estado1 thead tr th{ }
+table#seguimiento thead tr th{ padding: 2px; }
+table#seguimiento {width: 100%; padding: 2px; margin-bottom: 4px;border-collapse: separate; background: #fff;border: 1px solid #ccc;}
+table#seguimiento tbody.oficial0 {border: 1px solid #CAD4E6; background-color: #f0f0f0; }
+table#seguimiento tbody.oficial1 {border: 1px solid #CAD4E6; background-color: #FFF845; }
+table#seguimiento tbody.oficial2 {background: #FFFCB2; border: 1px solid #CAD4E6; }
+h{color:#666; font-size: 10px;}
+table#seguimiento tbody tr td a{font-weight: bold; text-decoration: none;  color: #303577;}
+table#seguimiento tbody tr td a:hover{ text-decoration: underline;}
+table#seguimiento tbody tr td span{  color: #333; margin-top: 3px; display: block;   }
+table#seguimiento tbody tr td span b{  color: #333; }
+table#seguimiento tbody td pro{ background: url(../images/circular.gif) no-repeat left; margin-left: 3px;  padding-left: 18px; color: #666; font-weight: bold;  }

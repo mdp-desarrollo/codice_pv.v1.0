@@ -1,0 +1,410 @@
+/* 
+    Document   : menu
+    Created on : 30-07-2011, 06:46:28 PM
+    Author     : Ivan Marcelo Chacolla
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+/* -------------------------[ Neutralize styles, fonts and viewport ]--- */
+
+html { /overflow-x: hidden; /overflow-y: auto;} /* for IE7, IE6 */
+html,body, form, fieldset {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	font-size: 100.01%;
+	line-height: 1.5;
+	font-family: Helvetica, Arial, sans-serif !important;
+	font-family: Arial, Tahoma, Helvetica, sans-serif;
+	color: #111;
+}
+body {
+	font-size: 62.5%;
+	font-size: 75%;
+	font-size: 68.75%;
+	height: 100%;
+	color:#333333;
+	background: #f7f7f7;
+
+}
+img, a img {
+	border: 0 !important;
+	text-decoration: none;
+	padding: 0;
+	margin: 0;
+}
+h1, h2, h3, h4, h5, h6, p, pre, blockquote, ul, ol, dl, address {
+	margin: 0 0 .5em;
+	padding: 0;
+	font-weight: normal;
+}
+li, dd, blockquote {
+	margin: 0 0  0 1em;
+}
+	.rtl li, .rtl dd, .rtl blockquote {
+		margin: 0 1em 0 0;
+	}
+
+
+.file-manager td {
+	border-bottom: 1px solid #d5dfea;
+}
+.ab2 {
+	padding-bottom: 20px;
+}
+/* -------------------------[ Miscellaneous conveniences ]--- */
+.clearfix, .cls {
+	clear: both;
+	height: 0 !important;
+	margin: 0;
+	font-size: 1px;
+	overflow: hidden;
+}
+.clear {
+	clear: both;
+}
+.fail {
+	color: #900;
+	font-weight: bold;
+}
+.warning {
+	color: #444444;
+	font-weight: bold;
+}
+.success {
+	color: #090;
+	font-weight: bold;
+}
+.contentPad {
+	height: 20px !important;
+	clear: both;
+}
+.hide, .skip, .printonly {
+	display: none;
+}
+.inline {
+	display: inline;
+}
+/* -------------------------[ Headers and Paragraphs ]--- */
+h1, h2, h3, h4, h5, h6, .subTitle {
+	font-weight: normal;
+}
+h1 {
+	font-size: 218%;
+	font-size: 164%;
+	line-height: 40px;
+	margin-left: 10px;
+	letter-spacing:1px;
+}
+	.rtl h1 {
+		margin-right: 10px;
+	}
+h2 {
+	font-size: 164%;
+}
+h3 {
+	font-size: 145%;
+}
+h4 {
+	font-size: 118%;
+}
+h5 {
+	font-size: 100%;
+	font-weight: bold;
+}
+h6 {
+	font-size: 86%;
+	font-weight: bold;
+}
+p.caption, p.comment {
+	font-size: 86%;
+	color: #888;
+}
+button {
+	color: #821517;
+	font-weight: bold;
+	width: 112px;
+	margin: 0 5px 0 0;
+	cursor: pointer;
+}
+	.rtl button {
+		margin: 0 0 0 5px;
+	}
+a, a:active, a:visited, a:link {
+	color: #1a32c7;
+	text-decoration: underline;
+}
+a:hover {
+	color: #0f1e76;
+}
+hr {
+	color: #777;
+	background-color: #777;
+	height: 1px;
+	border: 0;
+}
+.split {
+	background: #821517 url(../images/misc/line.gif) repeat-x;
+	height: 1px;
+	font-size: 0;
+	clear: both;
+	padding: 0;
+}
+#previewIframe {
+	width: 100%;
+	height: 400px;
+}
+.messageRead {
+	color: #000;
+}
+.messageUnread {
+	color: #3CB371;
+	font-weight: bold;
+}
+.right {
+	font-weight: bold;
+	color: #000;
+	float: left;
+	padding: 0 20px 20px;
+}
+	.rtl .right {
+		float: right;
+	}
+
+/* -------------------------[ Topbar ]--- */
+#topbar {
+    
+	margin: 0;
+	color: #000;
+	padding: 0 5px;
+}
+#topbar * {
+	vertical-align: middle;
+}
+#topbar a,
+#topbar a:link,
+#topbar a:visited {
+	font-weight: bold;
+	color: #AAB1B9;
+	text-decoration: none;
+}
+#topbar a:hover {
+	color: #fff;
+	text-decoration: underline;
+}
+#tocText {
+	position: absolute;
+	left: 3px;
+	top: 50px;
+	z-index: 1000;
+}
+.rtl #tocText {
+        right: 3px;
+	}
+.tocTextRTL {
+	right: 3px;
+}
+#tocText,
+#buildText,
+#workText {
+	font-weight: bold;
+	line-height: 16px;
+	margin: 0 15px;
+	color: #FFF;
+}
+#tocText,
+#buildText img,
+#workText img {
+	margin: 0 5px;
+}
+#statusbar {
+	position: absolute;
+	right: 0;
+	top: 27px;
+}
+	.rtl #statusbar { 
+		left: 0; 
+	}
+#supplementalNav {
+	float: right;
+	background: transparent;
+	font-size: 11px;
+	padding: 0 0 30px;
+	margin: 0;
+	color: #89939E;
+	
+}
+.rtl #supplementalNav {
+	float: left;
+	}
+#supplementalNav * {
+	vertical-align: bottom;
+}
+#supplementalNav a {
+	padding: 0;
+	margin: 0;
+	text-decoration: none;
+}
+#supplementalNav a:hover
+ {	
+	text-decoration: none;
+}
+#msgCounter, #newMail {
+	margin: 0;
+	padding: 0;
+}
+
+/* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
+#topMenu {
+	background: #e4e4e4 url(../images/headers.jpg);
+}
+#Navcontainer {
+	padding: 0 10px;
+	color: #fff;
+}
+#nav {
+	margin: 0;
+	padding: 0;
+	height: 25px;
+	width: 100%;
+	position: absolute;
+	top: 18px;
+	overflow: visible !important;
+}
+.rtl #nav {
+        right: 10px;
+	}
+#nav ul {
+	display: none;
+	height: 24px;
+	position: relative;
+	z-index: 500;
+	margin: 0 0 0 -10px;
+	padding: 0 0 0 20px;
+}
+.rtl #nav ul {
+		margin: 0 -10px 0 0;
+	    padding: 0 20px 0 0;
+
+}
+#nav li {
+	list-style: none;
+	background: #d4d4d4 url(../images/misc/tab.gif) 100% 100%;
+	float: left;
+	width: auto;
+	margin: 0 2px 0 0;
+	padding: 0;
+
+}
+	.rtl #nav li {
+		float: right;
+		margin: 0 0 0 3px;
+	}
+#nav li a {
+	border-left: 1px solid #2c3d50;
+	color: #919fae;
+	height: 25px;
+	font-weight: bold;
+	text-decoration: none;
+	white-space: nowrap;
+	cursor: pointer;
+	line-height: 25px;
+	overflow: hidden;
+	padding: 0 25px;
+	float: none !important;
+	float: left;
+	display: block;
+}
+#nav li ul li a {
+	padding: 0 10px !important;
+}
+#nav li ul li a {
+	background-color: #d4d4d4;
+	float: left;
+	width: auto;
+}
+	.rtl #nav li ul li a {
+	    float: right;
+	}
+
+#nav a:hover {
+	color: #fff;
+}
+#nav a:active {
+	color: #fff;
+}
+#nav li.active {
+	background: #758ca2 url(../images/misc/tab.gif) 100% 0;
+}
+#nav li.active a {
+	color:#fff;
+	position: relative;
+	z-index: 999999;
+	border-bottom: 1px solid #61779B;
+	
+}
+#nav li.active a:hover {
+	cursor: pointer;
+}
+#nav li.active ul.subnav {
+	padding-top:1px;
+	height:43px; /*alerta*/
+	display: block;
+	position: absolute;
+	top: 24px;
+	width: 100%;
+	left: 0;
+	right:0;
+	background-color: #657587;
+	border-top: 1px solid #61779B;
+	border-bottom: 1px solid #7b8c9f;
+	
+}
+	#nav li.active ul.subnav {
+	    right: 0;
+
+	}
+#nav li.active ul.subnav a {
+	color: #BFCCD8;
+	font-weight: normal;
+	border-bottom: 1px solid #7b8c9f;
+	background-color: #657587;
+	cursor: pointer;
+	border-left: none;
+	font-weight:bold;
+}
+#nav li.active ul.subnav li {
+
+	-moz-border-radius: 6px;
+	text-align:center;
+	
+}
+#nav li.active ul.subnav li {
+	-moz-border-radius: 6px;
+	text-align:center;
+	text-transform:capitalize;	
+}
+#nav li.active ul.subnav a:hover {
+	color: #333;
+	background: #E5EBF5; 	
+	-moz-border-radius: 5px;
+	font-weight:bold;
+}
+#nav li.active ul.subnav a:active {
+	color: #111;		
+	font-weight:bold;
+}
+#nav li.active ul.subnav,
+#nav li.active ul.subnav a {
+	background: #657587 url(../images/misc/longbarbg.png) repeat-x top;
+	height:45px;	
+}
+img{padding-top:1px;}

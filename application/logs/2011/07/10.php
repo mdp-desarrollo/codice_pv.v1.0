@@ -1,0 +1,17 @@
+<?php defined('SYSPATH') or die('No direct script access.'); ?>
+
+2011-07-10 08:14:00 --- ERROR: HTTP_Exception_404 [ 404 ]: The requested URL hojaruta/derivar/24 was not found on this server. ~ SYSPATH\classes\kohana\request\client\internal.php [ 120 ]
+2011-07-10 08:21:42 --- ERROR: Kohana_View_Exception [ 0 ]: The requested view errors/404 could not be found ~ SYSPATH\classes\kohana\view.php [ 252 ]
+2011-07-10 08:22:41 --- ERROR: HTTP_Exception_404 [ 404 ]: The requested URL bandeja/archivos was not found on this server. ~ SYSPATH\classes\kohana\request\client\internal.php [ 120 ]
+2011-07-10 08:27:35 --- ERROR: Kohana_View_Exception [ 0 ]: The requested view errors/404 could not be found ~ SYSPATH\classes\kohana\view.php [ 252 ]
+2011-07-10 08:32:40 --- ERROR: Kohana_View_Exception [ 0 ]: The requested view template/document could not be found ~ SYSPATH\classes\kohana\view.php [ 252 ]
+2011-07-10 08:38:29 --- ERROR: Kohana_View_Exception [ 0 ]: The requested view errors/404 could not be found ~ SYSPATH\classes\kohana\view.php [ 252 ]
+2011-07-10 08:39:51 --- ERROR: Kohana_View_Exception [ 0 ]: The requested view errors/404 could not be found ~ SYSPATH\classes\kohana\view.php [ 252 ]
+2011-07-10 18:10:30 --- ERROR: ErrorException [ 1 ]: Call to a member function get_user() on a non-object ~ APPPATH\classes\controller\documento.php [ 128 ]
+2011-07-10 18:12:34 --- ERROR: ErrorException [ 1 ]: Call to a member function get_user() on a non-object ~ APPPATH\classes\controller\documento.php [ 105 ]
+2011-07-10 18:13:03 --- ERROR: ErrorException [ 1 ]: Class 'Model_Hojasruta' not found ~ MODPATH\orm\classes\kohana\orm.php [ 109 ]
+2011-07-10 20:17:28 --- ERROR: ErrorException [ 2 ]: Invalid argument supplied for foreach() ~ APPPATH\views\templates\menutop.php [ 2 ]
+2011-07-10 22:15:19 --- ERROR: Kohana_View_Exception [ 0 ]: The requested view error/404 could not be found ~ SYSPATH\classes\kohana\view.php [ 252 ]
+2011-07-10 22:15:30 --- ERROR: Kohana_View_Exception [ 0 ]: The requested view errors/404 could not be found ~ SYSPATH\classes\kohana\view.php [ 252 ]
+2011-07-10 22:31:50 --- ERROR: Kohana_View_Exception [ 0 ]: The requested view errors/404 could not be found ~ SYSPATH\classes\kohana\view.php [ 252 ]
+2011-07-10 22:33:52 --- ERROR: HTTP_Exception_404 [ 404 ]: The requested URL reportes/index was not found on this server. ~ SYSPATH\classes\kohana\request\client\internal.php [ 94 ]

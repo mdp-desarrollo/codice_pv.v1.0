@@ -1,0 +1,16 @@
+<?php defined('SYSPATH') or die('No direct script access.'); ?>
+
+2012-01-13 09:01:12 --- ERROR: ErrorException [ 8 ]: Trying to get property of non-object ~ APPPATH\views\documentos\index.php [ 71 ]
+2012-01-13 09:11:16 --- ERROR: ErrorException [ 8 ]: Undefined variable: d ~ APPPATH\views\documentos\edit.php [ 91 ]
+2012-01-13 09:11:48 --- ERROR: ErrorException [ 8 ]: Undefined variable: d ~ APPPATH\views\documentos\edit.php [ 91 ]
+2012-01-13 10:25:27 --- ERROR: ErrorException [ 8 ]: Trying to get property of non-object ~ APPPATH\views\seguimiento\ver.php [ 31 ]
+2012-01-13 10:26:07 --- ERROR: Kohana_Exception [ 0 ]: Invalid method execute called in Model_Seguimiento ~ MODPATH\orm\classes\kohana\orm.php [ 606 ]
+2012-01-13 10:27:21 --- ERROR: Kohana_Exception [ 0 ]: The nombre_destinatario property does not exist in the Model_Seguimiento class ~ MODPATH\orm\classes\kohana\orm.php [ 682 ]
+2012-01-13 10:27:49 --- ERROR: ErrorException [ 8 ]: Undefined variable: page_links ~ APPPATH\views\seguimiento\ver.php [ 45 ]
+2012-01-13 10:31:59 --- ERROR: Kohana_Exception [ 0 ]: The nombreDestinatario property does not exist in the Model_Documentos class ~ MODPATH\orm\classes\kohana\orm.php [ 682 ]
+2012-01-13 10:47:04 --- ERROR: Kohana_Exception [ 0 ]: The nombreDestinatario property does not exist in the Model_Documentos class ~ MODPATH\orm\classes\kohana\orm.php [ 682 ]
+2012-01-13 10:52:58 --- ERROR: ErrorException [ 8 ]: Undefined variable: id ~ APPPATH\classes\controller\documento.php [ 138 ]
+2012-01-13 10:57:19 --- ERROR: Kohana_Exception [ 0 ]: The nombreDestinatario property does not exist in the Model_Documentos class ~ MODPATH\orm\classes\kohana\orm.php [ 682 ]
+2012-01-13 10:58:05 --- ERROR: Kohana_Exception [ 0 ]: The nombreVia property does not exist in the Model_Documentos class ~ MODPATH\orm\classes\kohana\orm.php [ 682 ]
+2012-01-13 10:58:07 --- ERROR: Kohana_Exception [ 0 ]: The nombreVia property does not exist in the Model_Documentos class ~ MODPATH\orm\classes\kohana\orm.php [ 682 ]
+2012-01-13 11:00:16 --- ERROR: ErrorException [ 8 ]: Undefined variable: d ~ APPPATH\views\hojaruta\seguimiento.php [ 107 ]

@@ -1,0 +1,50 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables display
+ */
+table.des{
+	margin: 0 auto;
+	width: 100%;
+	clear: both;
+}
+
+table.des thead th {
+	background-color:#464543;
+	color:#CCC;
+	font-size:11px;
+	padding: 4px 10px;
+	border-bottom: 1px solid black;
+	font-weight: bold;
+	cursor: pointer;
+	* cursor: hand;
+
+}
+
+table.des tfoot th {
+	padding: 3px 10px;
+	border-top: 1px solid black;
+	font-weight: bold;
+}
+
+table.des tr.heading2 td {
+	border-bottom: 1px solid #aaa;
+}
+
+table.des td {
+	padding: 2px 9px;
+	border-bottom:solid 1px #c2c2c2;
+}
+
+table.des td.center {
+	text-align: center;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * DataTables row
+ */
+
+tr.odd {
+	background-color:  #FFFFFF;
+}
+tr.even {
+	background-color: #DCE8F5;
+}

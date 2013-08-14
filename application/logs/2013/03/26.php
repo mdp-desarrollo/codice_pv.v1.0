@@ -1,0 +1,4 @@
+<?php defined('SYSPATH') or die('No direct script access.'); ?>
+
+2013-03-26 17:01:12 --- ERROR: Database_Exception [ 0 ]: [1062] Duplicate entry 'INF/FPB/TO Nº /2013' for key 'codigo' ( INSERT INTO `documentos` (`id_user`, `codigo`, `cite_original`, `id_tipo`, `nombre_destinatario`, `cargo_destinatario`, `nombre_remitente`, `cargo_remitente`, `fecha_creacion`, `nur`, `id_seguimiento`, `original`, `id_proceso`, `id_oficina`, `id_entidad`) VALUES ('40', 'INF/FPB/TO Nº /2013', 'INF/FPB/TO Nº /2013', '3', 'Boris Gutierrez', 'Responsable de Certificación de Cumplimiento de Contrato', 'Monica Janko', 'Responsable Certificación de Tipo de Organización', '2013-03-26 17:01:12', 'FPB/2013-00011', '228', 0, '807', '51', '10') ) ~ MODPATH/database/classes/kohana/database/mysql.php [ 181 ]
+2013-03-26 17:02:39 --- ERROR: ErrorException [ 8 ]: Undefined index: aceptar ~ APPPATH/classes/controller/hojaruta.php [ 67 ]

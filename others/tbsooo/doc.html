@@ -1,0 +1,726 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>tbsOOo : TinyButStrong OOo</title>
+<meta name="Generator" content="EditPlus">
+<meta name="Author" content="Olivier LOYNET (tbsooo@free.fr)">
+<meta name="Keywords" content="tbsOOo TBS TinyButStrong TinyButStrongOOo Template engine PHP clsTinyButStrongOOo OOo OpenOffice">
+<meta name="Description" content="La documentation de la classe PHP TinyButStrongOOo">
+<style type="text/css" media="screen,projection">
+body {
+  background-color: #ECE6FB;
+  margin: 5px;
+  padding: 5px;
+  font: normal 12px Verdana, sans-serif;
+}
+
+table {
+  font: normal 12px Verdana, sans-serif;
+  border: 1px solid gray;
+  border-spacing: 0px;
+  border-collapse: collapse;
+}
+
+td, th {
+  padding: 3px;
+  margin: 0px;
+  border: 1px solid gray;
+}
+
+h1 {
+  font: bold 24px Verdana, sans-serif;
+}
+
+h2 {
+  font: bold 18px Verdana, sans-serif;
+  border-bottom: 1px solid gray;
+}
+
+h3 {
+  font: normal 14px Verdana, sans-serif;
+  background-color: #CCCCCC;
+  display: inline;
+}
+.code-std {
+	color: #0000BB;
+}
+.code-comm {
+	color: #FF8000;
+}
+.code-str {
+	color: #DD0000;
+}
+.code-lang {
+	color: #007700;
+}
+</style>
+</head>
+
+<body>
+<h1>tbsOOo : TinyButStrong OOo</h1>
+Author   : Olivier LOYNET (<a href="mailto:tbsooo@free.fr">tbsooo@free.fr</a>)<br>
+Date     : 2006-06-12<br>
+Version  : 0.7.9<br>
+Web site : <a href="http://www.tinybutstrong.com">http://www.tinybutstrong.com</a><br>
+Forum    : <a href="http://www.tinybutstrong.com/forum.php">http://www.tinybutstrong.com/forum.php</a><br>
+Released under the GNU LGPL license : <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a><br>
+<br>
+<br>
+tbsOOo PHP class extends the template engine TinyButStrong.<br>
+<br>
+This class allows to create OpenOffice documents dynamically by separating display formatting from logic and data.<br>
+In practice, you create a template using OpenOffice with the TinyButStrong tags.<br>
+Then you create a PHP script that merges the template with a data source to get a new OpenOffice document.<br>
+
+<h2 id="summary">Summary</h2>
+<ul>
+	<li><a href="#news">News</a>
+	<li><a href="#download">Download</a>
+	<li><a href="#features">Features</a>
+	<li><a href="#limitations">Limitations</a>
+	<li><a href="#requirements">Requirements</a>
+	<li><a href="#installation">Installation</a>
+	<li><a href="#tutorial">Tutorial</a>
+	<li><a href="#examples">Examples</a>
+  <li><a href="#tips">Tips</a>
+	<li><a href="#class">Class definition</a>
+</ul>
+
+<h2 id="news">News</h2>
+<ul>
+  <li><b>[2006-06-12] TinyButStrongOOo 0.7.9 released</b><br>
+  Correct a problem of EURO caracter<br>
+  Correct a problem of zip parameters<br>
+  New <a href="#AddFileToDoc">AddFileToDoc</a> method : Add a file like an image to the current document<br>
+  <br>
+  <li><b>[2006-01] Forum</b><br>
+  <a href="http://www.tinybutstrong.com/forum.php">http://www.tinybutstrong.com/forum.php</a><br>
+  <br>
+  <li><b>[2005-12-12] TinyButStrongOOo 0.7.8 released</b><br>
+  New <a href="#SetDataCharset">SetDataCharset</a> method : Define the source data's charset (ISO 8859-1, UTF8). By default ISO 8859-1 is used<br>
+  <br>
+  <li><b>[2005-11] PHP Classes : 5th place in October 2005 <a href="http://www.phpclasses.org/award/innovation/">Innovation Award</a></b><br>
+  <a href="http://www.phpclasses.org/winners.html">The winners</a><br>
+  <br>
+  <li><b>[2005-10-12] Documentation</b><br>
+  Small rectification and <a href="doc_fr.html">French version</a><br>
+  <br>
+  <li><b>[2005-09-28] TinyButStrongOOo 0.7.7 released</b><br>
+  Convert <tt>&quot;\n&quot;</tt> source character to <tt>&lt;text:line-break/&gt;</tt><br>
+  <br>
+  <li><b>[2005-09-23] TinyButStrongOOo 0.7.6 released</b><br>
+  Special thanks to Skrol (<a href="mailto:skrol29@freesurf.fr">skrol29@freesurf.fr</a>) who write TinyButStrong and helped me to extend it to produce OpenOffice document.<br>
+</ul>
+
+<h2 id="download">Download</h2>
+<ul>
+  <li><a href="http://www.tinybutstrong.com/download/download.php?file=tbsooo.zip&sid=6">Download the last version with examples</a><br>
+</ul>
+
+<h2 id="features">Features</h2>
+<ul>
+  <li>This class works on Linux, Windows and more&hellip;
+  <li>This class works with OpenOffice 1.x documents and the new format used in OpenOffice 2 (OpenDocument 1.0, OASIS standard).
+  <li>No need to install OpenOffice on your server.
+  <li>This class uses the TinyButStrong native syntax and methods. You could merge 'var' and 'blocks' using the TBS syntax like (var, block, if, then, frm, ...). The merging operation respect the layout, justification and styles used in the template.
+</ul>
+<h2 id="limitations">Limitations</h2>
+<ul>
+  <li>This class can't add or change pictures dynamically in OpenOffice documents. The pictures have to be previously added during the template design.
+  <li>This class can't add or change styles dynamically in OpenOffice documents. The style have to be previously defined during the template design.
+  <li>This class can't use native XML format like 'date', 'url', 'number' in table or spreadsheet. All the merged data are in text format. Instead you can use the 'frm' parameter in TinyButStrong tags for formatting.
+</ul>
+
+<h2 id="requirements">Requirements</h2>
+<h3>server side</h3>
+<ul>
+  <li><a href="http://www.php.net/downloads.php">PHP 4 or greater &gt;= 4.0.6</a><br>
+  <li><a href="http://www.tinybutstrong.com/download.php">TinyButStrong PHP class &gt;= 2.02.4</a><br>
+  <li><a href="http://www.info-zip.org">Zip and Unzip</a>
+</ul>
+<h3>client side</h3>
+<ul>
+  <li><a href="http://download.openoffice.org/1.1.5/index.html">OpenOffice 1.1.5 </a>
+  <li><a href="http://download.openoffice.org/">OpenOffice 2.01 (last version know)</a>
+</ul>
+
+<h2 id="installation">Installation</h2>
+<h3>Zip and Unzip</h3>
+<ul>
+  The Zip and Unzip binaries are required on server to extract/update XML files of OpenOffice documents with the class.<br>
+  The default values in class for the binaries path are set to <tt>'zip'</tt> and <tt>'unzip'</tt>.<br>
+  By the way, the server environment var 'path' could be set where the binary are installed to have the same setting for Linux and DOS environment and leave the default value.<br>
+  On Linux, the typical path where ZIP and UNZIP are installed are <tt>'/usr/bin/zip'</tt> and <tt>'/usr/bin/unzip'</tt>.<br>
+  On Win32, install <a href="http://www.info-zip.org/Zip.html#Win32">ZIP</a> and <a href="http://www.info-zip.org/UnZip.html#Win32">UNZIP</a> from <a href="http://www.info-zip.org">info-zip</a>, by example to <tt>'c:\program files\bin\zip.exe'</tt> and <tt>'c:\program files\bin\unzip.exe'</tt> and add to the PATH environment var the following path: <tt>Set PATH=c:\program files\bin;%PATH%</tt><br>
+  Ask your administrator for assistance.<br>
+</ul>
+<h3>The process directory</h3>
+<ul>
+  The process directory is required to generate new OpenOffice documents. All the operations (extract, merge, ...) are made in this directory with a unique name.<br>
+  This directory had to be writable for the PHP script (usually the Apache user).<br>
+  The default value in class is set to <tt>'tmp/'</tt> relative to the PHP scripts.<br>
+  <br>
+  Otherwise you can use the 'tmp' system directory by example :<br>
+  <ul>
+    on Linux, set to <tt>'/tmp'</tt>.<br>
+    on DOS set to <tt>'c:/windows/temp'</tt> or <tt>'c:\\windows\\temp'</tt>.<br>
+  </ul>
+</ul>
+<h3>OpenOffice</h3>
+<ul>
+  OpenOffice is required on client side to create templates and to visualize result after processing.<br>
+  To know more on the OpenOffice file format, go to the <a href="#tips">tips section</a>.<br>
+</ul>
+
+<h2 id="tutorial">Tutorial</h2>
+<h3>Step 1. Create a template with OpenOffice.</h3>
+<ul>
+<li>create an new writer document (.SXW).<br>
+<li>write in the document the following TBS code : <span class="code-std">[var.x]</span><br>
+<li>save the document as 'hello.sxw'<br>
+<a href="./example/tbsooo_us_examples_hello.sxw">click here to load this example.</a><br>
+</ul>
+<h3>Step 2. Create a PHP script with the following code.</h3>
+<ul>
+  <code><span class="code-lang"><span class="code-std">&lt;?</span><br>
+    include_once(<span class="code-str">'tbs_class.php'</span>);<br>
+    include_once(<span class="code-str">'tbsooo_class.php'</span>);<br>
+  <br>
+  <span class="code-comm">// data </span><br>
+  <span class="code-std">$x</span> = <span class="code-str">'Hello World'</span>;<br>
+  <br>
+  <span class="code-comm">// instantiate a TBS OOo class</span><br> 
+  <span class="code-std">$OOo</span> = new <span class="code-std">clsTinyButStrongOOo</span>; <br>
+  <br>
+  <span class="code-comm">// setting the object</span><br>
+  <span class="code-std">$OOo</span>-&gt;<span class="code-std">SetZipBinary</span>(<span class="code-str">'zip'</span>); <br>
+  <span class="code-std">$OOo</span>-&gt;<span class="code-std">SetUnzipBinary</span>(<span class="code-str">'unzip'</span>); <br>
+  <span class="code-std">$OOo</span>-&gt;<span class="code-std">SetProcessDir</span>(<span class="code-str">'tmp/'</span>); <br>
+  <span class="code-std">$OOo</span>-&gt;<span class="code-std">SetDataCharset</span>(<span class="code-str">'ISO 8859-1'</span>); <br>
+  <br>
+  <span class="code-comm">// create a new openoffice document from the template with an unique id <br>
+  </span><span class="code-std">$OOo</span>-&gt;<span class="code-std">NewDocFromTpl</span>(<span class="code-str">'hello.sxw'</span>); <br>
+  <br>
+  <span class="code-comm">// merge data with OOo file content.xml <br>
+  </span><span class="code-std">$OOo</span>-&gt;<span class="code-std">LoadXmlFromDoc</span>(<span class="code-str">'content.xml'</span>); <br>
+  <span class="code-std">$OOo</span>-&gt;<span class="code-std">SaveXmlToDoc</span>(); <br>
+  <br>
+  <span class="code-comm">// display <br>
+  </span><span class="code-std">header</span>(<span class="code-str">'Content-type: '</span>.<span class="code-std">$OOo</span>-&gt;<span class="code-std">GetMimetypeDoc</span>()); <br>
+  <span class="code-std">header</span>(<span class="code-str">'Content-Length: '</span>.<span class="code-std">filesize</span>(<span class="code-std">$OOo</span>-&gt;<span class="code-std">GetPathnameDoc</span>())); <br>
+  <span class="code-std">$OOo</span>-&gt;<span class="code-std">FlushDoc</span>(); <br>
+  <span class="code-std">$OOo</span>-&gt;<span class="code-std">RemoveDoc</span>(); <br>
+    ?&gt;</span></code>
+</ul>
+<h3>Step 3. Execute the script to get an new document with data merged !.</h3>
+<ul>
+<li><a href="./example/tbsooo_us_examples_hello.php">click here to execute this example</a><br>
+</ul>
+
+<h2 id="examples">Examples</h2>
+
+<ul>
+Before everything, install OpenOffice on your machine to visualize these examples.<br>
+<br>
+<table border=1>
+<tr>
+	<th>&nbsp;</th>
+	<th>template</th>
+	<th>result</th>
+</tr>
+<tr>
+	<td>invoice example show on RMLL 2005</td>
+	<td><a href="./example/example_invoice.sxw">example_invoice.sxw</a></td>
+	<td><a href="./example/example_invoice.php">example_invoice.php</a></td>
+</tr>
+<tr>
+	<td colspan=3>
+	  <div align="center"><br>
+	      <b><i>TBS examples converted to tbsOOo</i></b></div>
+	</td>
+</tr>
+<tr>
+	<th>&nbsp;</th>
+	<th>template</th>
+	<th>result</th>
+</tr>
+<tr>
+	<td>Hello World</td>
+	<td><a href="./example/tbsooo_us_examples_hello.sxw">tbsooo_us_examples_hello.sxw</a></td>
+	<td><a href="./example/tbsooo_us_examples_hello.php">tbsooo_us_examples_hello.php</a></td>
+</tr>
+<tr>
+	<td>variable merge</td>
+	<td><a href="./example/tbsooo_us_examples_var.sxw">tbsooo_us_examples_var.sxw</a></td>
+	<td><a href="./example/tbsooo_us_examples_var.php">tbsooo_us_examples_var.php</a></td>
+</tr>
+<tr>
+	<td>system variable merge</td>
+	<td><a href="./example/tbsooo_us_examples_system.sxw">tbsooo_us_examples_system.sxw</a></td>
+	<td><a href="./example/tbsooo_us_examples_system.php">tbsooo_us_examples_system.php</a></td>
+</tr>
+<tr>
+	<td>array merge</td>
+	<td><a href="./example/tbsooo_us_examples_dataarray.sxw">tbsooo_us_examples_dataarray.sxw</a></td>
+	<td><a href="./example/tbsooo_us_examples_dataarray.php">tbsooo_us_examples_dataarray.php</a></td>
+</tr>
+<tr>
+	<td>array merge horizontal</td>
+	<td><a href="./example/tbsooo_us_examples_datanum.sxc">tbsooo_us_examples_datanum.sxc</a></td>
+	<td><a href="./example/tbsooo_us_examples_datanum.php">tbsooo_us_examples_datanum.php</a></td>
+</tr>
+<tr>
+	<td>TBS frm parameter use</td>
+	<td><a href="./example/tbsooo_us_examples_prmfrm.sxw">tbsooo_us_examples_prmfrm.sxw</a></td>
+	<td><a href="./example/tbsooo_us_examples_prmfrm.php">tbsooo_us_examples_prmfrm.php</a></td>
+</tr>
+<tr>
+	<td>TBS max parameter use</td>
+	<td><a href="./example/tbsooo_us_examples_prmmax.sxw">tbsooo_us_examples_prmmax.sxw</a></td>
+	<td><a href="./example/tbsooo_us_examples_prmmax.php">tbsooo_us_examples_prmmax.php</a></td>
+</tr>
+<tr>
+	<td>TBS headergrp parameter use</td>
+	<td><a href="./example/tbsooo_us_examples_prmheader.sxw">tbsooo_us_examples_prmheader.sxw</a></td>
+	<td><a href="./example/tbsooo_us_examples_prmheader.php">tbsooo_us_examples_prmheader.php</a></td>
+</tr>
+<!-- <tr>
+	<td>TBS magnet tags</td>
+	<td><a href="./example/tbsooo_us_examples_prmmagnet.sxw">tbsooo_us_examples_prmmagnet.sxw</a></td>
+	<td>
+    <a href="./example/tbsooo_us_examples_prmmagnet.php">tbsooo_us_examples_prmmagnet.php</a><br>
+    <a href="./example/tbsooo_us_examples_prmmagnet.php?empty=1">tbsooo_us_examples_prmmagnet.php?empty=1</a><br>
+  </td>
+</tr> -->
+<tr>
+	<td>TBS block syntax</td>
+	<td><a href="./example/tbsooo_us_examples_blocks.sxw">tbsooo_us_examples_blocks.sxw</a></td>
+	<td><a href="./example/tbsooo_us_examples_blocks.php">tbsooo_us_examples_blocks.php</a></td>
+</tr>
+<tr>
+	<td>TBS sub-block syntax</td>
+	<td><a href="./example/tbsooo_us_examples_subblock.sxw">tbsooo_us_examples_subblock.sxw</a></td>
+	<td><a href="./example/tbsooo_us_examples_subblock.php">tbsooo_us_examples_subblock.php</a></td>
+</tr>
+<tr>
+	<td>TBS serial syntax</td>
+	<td><a href="./example/tbsooo_us_examples_prmserial.sxw">tbsooo_us_examples_prmserial.sxw</a></td>
+	<td><a href="./example/tbsooo_us_examples_prmserial.php">tbsooo_us_examples_prmserial.php</a></td>
+</tr>
+<tr>
+	<td>TBS conditionnal display</td>
+	<td><a href="./example/tbsooo_us_examples_cond.sxw">tbsooo_us_examples_cond.sxw</a></td>
+	<td>
+    <a href="./example/tbsooo_us_examples_cond.php">tbsooo_us_examples_cond.php</a><br>
+    <a href="./example/tbsooo_us_examples_cond.php?blk_id=1">tbsooo_us_examples_cond.php?blk_id=1</a><br>
+    <a href="./example/tbsooo_us_examples_cond.php?blk_id=2">tbsooo_us_examples_cond.php?blk_id=2</a><br>
+    <a href="./example/tbsooo_us_examples_cond.php?blk_id=3">tbsooo_us_examples_cond.php?blk_id=3</a><br>
+  </td>
+</tr>
+<tr>
+	<td>TBS event syntax</td>
+	<td><a href="./example/tbsooo_us_examples_event.sxw">tbsooo_us_examples_event.sxw</a></td>
+	<td><a href="./example/tbsooo_us_examples_event.php">tbsooo_us_examples_event.php</a></td>
+</tr>
+<tr>
+	<td>TBS loop syntax</td>
+	<td><a href="./example/tbsooo_us_examples_loops.sxw">tbsooo_us_examples_loops.sxw</a></td>
+	<td>
+    <a href="./example/tbsooo_us_examples_loops.php?nbr=10">tbsooo_us_examples_loops.php?nbr=10</a><br>
+    <a href="./example/tbsooo_us_examples_loops.php?nbr=20">tbsooo_us_examples_loops.php?nbr=20</a><br>
+    <a href="./example/tbsooo_us_examples_loops.php?nbr=30">tbsooo_us_examples_loops.php?nbr=30</a><br>
+  </td>
+</tr>
+</table>
+</ul>
+
+<h2 id="tips">Tips</h2>
+<ul>
+  <li>TinyButStrong : <br>
+    <br>
+    <ul>
+    <li><a href="http://www.tinybutstrong.com/manual.php">manual</a><br>
+    <li><a href="http://www.tinybutstrong.com/examples.php">examples</a><br>
+    </ul>
+    <br>
+
+  <li>Equivalent main tags beetween HTML and OpenOffice to use with TinyButStrong block syntax :<br>
+    <br>
+    <table border=1>
+    <tr>
+      <td>&nbsp;</td>
+      <th>HTML tags</th>
+      <th>OOo XML tags</th>
+    </tr>
+    <tr>
+      <td>&nbsp;table&nbsp;</td>
+      <td>&nbsp;&lt;table&gt;&nbsp;</td>
+      <td>&nbsp;&lt;table:table&gt;&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;row&nbsp;</td>
+      <td>&nbsp;&lt;tr&gt;&nbsp;</td>
+      <td>&nbsp;&lt;table:table-row&gt;&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;cell&nbsp;</td>
+      <td>&nbsp;&lt;td&gt;&nbsp;</td>
+      <td>&nbsp;&lt;table:table-cell&gt;&nbsp;</td>
+    </tr>
+    </table>
+    <br>
+
+  <li>OpenOffice document format :<br>
+    <br>
+    As XML has no native support for binary objects such as images, OLE objects or other media types, OpenOffice.org uses a package file to store the XML content of a document together with its associated binary data. This package is a standard Zip files, for more detail see :<br>
+    <ul>
+      <li><a href="http://xml.openoffice.org/general.html">OpenOffice.org XML File Format</a>.<br>
+      <li><a href="http://xml.openoffice.org/xml_specification.pdf">OpenOffice.org XML File Format specs</a>.<br>
+      <li><a href="http://www.xml.com/pub/a/2005/01/26/hacking-ooo.html">http://www.xml.com/pub/a/2005/01/26/hacking-ooo.html</a>.<br>
+      <li><a href="http://www-128.ibm.com/developerworks/xml/library/x-think15/">http://www-128.ibm.com/developerworks/xml/library/x-think15/</a>.<br>
+    </ul>
+    <br>
+    The main XML files in an OpenOffice document to use with this class are :<br>
+    <ul>
+      <li>content.xml (document content)
+      <li>meta.xml    (document header: document name, title, author, ...)
+      <li>styles.xml  (document style sheet)
+    </ul>
+    <br>
+
+  <li>OpenDocument specs : <a href="http://www.oasis-open.org/committees/office/faq.php">http://www.oasis-open.org/committees/office/faq.php</a>
+</ul>
+
+<h2 id="class">Class definition</h2>
+
+<h3>Constructor</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>$object = new clsTinyButStrongOOo()</tt>
+  <li><b>Description</b><br>
+    This class extend clsTinyButStrong<br>
+  <li><b>Parameter</b><br>
+    <tt>none</tt><br>
+  <li><b>Return value</b><br>
+    <tt>object</tt><br>
+  <li><b>Example</b><br>
+    <tt>$OOo = new clsTinyButStrongOOo();</tt><br>
+  </ul>
+
+<h3>Methods</h3>
+  <ul>
+  <table border=0>
+  <tr>
+    <td><tt>boolean&nbsp;<a href="#SetZipBinary">SetZipBinary</a> (string $path_binary[, $test=false])</tt></td>
+    <td>Set the zip binary to compress XML files to OpenOffice documents</td>
+  </tr>
+  <tr>
+    <td><tt>boolean&nbsp;<a href="#SetUnzipBinary">SetUnzipBinary</a> (string $path_binary [, $test=false])</tt></td>
+    <td>Set the unzip binary to uncompress XML files from OpenOffice documents</td>
+  </tr>
+  <tr>
+    <td><tt>boolean&nbsp;<a href="#SetProcessDir">SetProcessDir</a> (string $process_path)</tt></td>
+    <td>Set the folder to process temporary OpenOffice documents</td>
+  </tr>
+  <tr>
+    <td><tt>void&nbsp;&nbsp;&nbsp;&nbsp;<a href="#SetDataCharset">SetDataCharset</a> (string $charset)</tt></td>
+    <td>Fix the source data's charset (ISO 8859-1 or UTF8)</td>
+  </tr>
+  <tr>
+    <td><tt>mixed&nbsp;&nbsp;&nbsp;<a href="#NewDocFromTpl">NewDocFromTpl</a> (string $ooo_template_filename)</tt></td>
+    <td>Create an new OpenOffice document from the OpenOffice template</td>
+  </tr>
+  <tr>
+    <td><tt>boolean&nbsp;<a href="#LoadXmlFromDoc">LoadXmlFromDoc</a> (string $xml_file)</tt></td>
+    <td>Unzip the XML file from the OpenOffice file and load as a TBS template to be merged</td>
+  </tr>
+  <tr>
+    <td><tt>boolean&nbsp;<a href="#SaveXmlToDoc">SaveXmlToDoc</a> (void)</tt></td>
+    <td>Save the result from TBS into the XML file and zip into the OpenOffice document</td>
+  </tr>
+  <tr>
+    <td><tt>void&nbsp;&nbsp;&nbsp;&nbsp;<a href="#AddFileToDoc">AddFileToDoc</a> (string $filename)</tt></td>
+    <td>Add a file into the OpenOffice document</td>
+  </tr>
+  <tr>
+    <td><tt>string&nbsp;&nbsp;<a href="#GetPathnameDoc">GetPathnameDoc</a> (void)</tt></td>
+    <td>Get the path of the new OpenOffice document</td>
+  </tr>
+  <tr>
+    <td><tt>string&nbsp;&nbsp;<a href="#GetMimetypeDoc">GetMimetypeDoc</a> (void)</tt></td>
+    <td>Get the document mime type</td>
+  </tr>
+  <tr>
+    <td><tt>stream&nbsp;&nbsp;<a href="#FlushDoc">FlushDoc</a> (void)</tt></td>
+    <td>Flush the document to STDOUT</td>
+  </tr>
+  <tr>
+    <td><tt>void&nbsp;&nbsp;&nbsp;&nbsp;<a href="#RemoveDoc">RemoveDoc</a> (void)</tt></td>
+    <td>Unlink the document</td>
+  </tr>
+  <tr>
+    <td><tt>void&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ClearProcessDir">ClearProcessDir</a> ([int $hour=2 [, int $minut=0]])</tt></td>
+    <td>Clean the process directory</td>
+  </tr>
+  </table>
+  </ul>
+
+<h3 id="SetZipBinary">Method: SetZipBinary</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>boolean SetZipBinary (string $path_binary[, $test=false])</tt>
+  <li><b>Description</b><br>
+    This method is optionnal. The default value in class is set to 'zip'.<br>
+    The zip binary is needed to compress XML files into OpenOffice documents like a zip archive.<br>
+  <li><b>Parameter</b><br>
+    <tt>string $path_binary</tt> : the full pathname or not, depend on the path server environment<br>
+    <tt>boolean $test</tt> : make a test by executing zip, default false<br>
+  <li><b>Return value</b><br>
+    <tt>boolean</tt> : TRUE is successfull<br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>$OOo-&gt;SetZipBinary('zip'); // to fix the binary without the path, default value</tt><br>
+    or<br>
+    <tt>$OOo-&gt;SetZipBinary('/usr/bin/zip'); // to fix the binary with the path</tt> <br>
+    or<br>
+    <tt>$OOo-&gt;SetZipBinary('/usr/bin/zip', true); // to fix the binary with the path and make a test</tt> <br>
+  </ul>
+
+<h3 id="SetUnzipBinary">Method: SetUnzipBinary</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>boolean SetUnzipBinary (string $path_binary [, $test=false])</tt>
+  <li><b>Description</b><br>
+    This method is optionnal. The default value in class is set to 'unzip'.<br>
+    The unzip binary is needed to uncompress XML files from OpenOffice documents like a zip archive.<br>
+  <li><b>Parameter</b><br>
+    <tt>string $path_binary</tt> : the full pathname or not, depend on the path server environment<br>
+    <tt>boolean $test</tt> : make a test by executing unzip, default false<br>
+  <li><b>Return value</b><br>
+    <tt>boolean</tt> : TRUE is successfull<br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>$OOo-&gt;SetUnzipBinary('unzip'); // to fix the binary without the path, default value</tt><br>
+    or<br>
+    <tt>$OOo-&gt;SetUnzipBinary('/usr/bin/unzip'); // to fix the binary with the path</tt> <br>
+    or<br>
+    <tt>$OOo-&gt;SetUnzipBinary('/usr/bin/unzip', true); // to fix the binary with the path and make a test</tt> <br>
+  </ul>
+
+<h3 id="SetProcessDir">Method: SetProcessDir</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>boolean SetProcessDir (string $process_path)</tt>
+  <li><b>Description</b><br>
+    Set the folder to process new OpenOffice documents.
+    This directory need to be Read, Write and eXecute rights by PHP (or Apache) user.<br>
+    The default value in class is set to 'tmp/'.
+  <li><b>Parameter</b><br>
+    <tt>string $process_path</tt> : the relative path from web site root. A trailing slash is automatically added.
+    <br>
+  <li><b>Return value</b><br>
+    <tt>boolean</tt> : TRUE is successfull<br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>$OOo-&gt;SetProcessDir('tmp/'); // default value</tt><br>
+    or<br>
+    <tt>$OOo-&gt;SetProcessDir('tmp'); // same as above</tt><br>
+    or<br>
+    <tt>$OOo-&gt;SetProcessDir('./tmp'); // same as above</tt><br>
+  </ul>
+
+<h3 id="SetDataCharset">Method: SetDataCharset</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>void SetDataCharset (string $charset)</tt>
+  <li><b>Description</b><br>
+    Fix the source data's charset (ISO 8859-1 or UTF8).<br>
+    This method is optionnal. The default value in class is set to 'ISO 8859-1'.<br>
+  <li><b>Parameter</b><br>
+    <tt>string $charset</tt> : 'ISO 8859-1' or 'UTF8'.
+    <br>
+  <li><b>Return value</b><br>
+    <tt>none</tt><br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>$OOo-&gt;SetDataCharset('ISO 8859-1'); // default value</tt><br>
+    or<br>
+    <tt>$OOo-&gt;SetDataCharset('UTF8'); </tt><br>
+  </ul>
+
+<h3 id="NewDocFromTpl">Method: NewDocFromTpl</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>boolean NewDocFromTpl (string $ooo_template_filename)</tt>
+  <li><b>Description</b><br>
+    Create an new OpenOffice document from the OpenOffice template into the process directory with an unique ID.<br>
+  <li><b>Parameter</b><br>
+    <tt>string $ooo_template_filename</tt> : OpenOffice document filename source<br>
+  <li><b>Return value</b><br>
+    <tt>string</tt> : the new OpenOffice document pathname<br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>$OOo-&gt;NewDocFromTpl('example_invoice.sxw');</tt><br>
+  </ul>
+
+<h3 id="LoadXmlFromDoc">Method: LoadXmlFromDoc</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>boolean LoadXmlFromDoc (string $xml_file)</tt>
+  <li><b>Description</b><br>
+    Unzip the XML file from the OpenOffice document and load as a TBS template.<br>
+  <li><b>Parameter</b><br>
+    <tt>string $xml_file</tt> : the name of the main XML OpenOffice files are 'content.xml', 'meta.xml' and 'styles.xml'<br>
+  <li><b>Return value</b><br>
+    <tt>boolean</tt> : TRUE is successfull<br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>$OOo-&gt;LoadXmlFromDoc('content.xml');</tt><br>
+    or<br>
+    <tt>$OOo-&gt;LoadXmlFromDoc('meta.xml');</tt><br>
+    or<br>
+    <tt>$OOo-&gt;LoadXmlFromDoc('styles.xml');</tt><br>
+  </ul>
+
+<h3 id="SaveXmlToDoc">Method: SaveXmlToDoc</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>boolean SaveXmlToDoc (void)</tt>
+  <li><b>Description</b><br>
+    Save the result from TBS in the XML file and zip into the OpenOffice document.<br>
+  <li><b>Parameter</b><br>
+    <tt>none</tt>
+  <li><b>Return value</b><br>
+    <tt>boolean</tt> : TRUE is successfull<br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>$OOo-&gt;SaveXmlToDoc();</tt><br>
+  </ul>
+
+<h3 id="AddFileToDoc">Method: AddFileToDoc</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>void AddFileToDoc (string $filename)</tt>
+  <li><b>Description</b><br>
+    Add a file to the current document, like an image. The local path may be the same as the OOo document.<br>
+  <li><b>Parameter</b><br>
+    <tt>string $filename</tt><br>
+  <li><b>Return value</b><br>
+    <tt>none</tt><br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>$OOo-&gt;AddFileToDoc('Pictures/new.jpg');</tt><br>
+  </ul>
+
+
+
+<h3 id="GetPathnameDoc">Method: GetPathnameDoc</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>string GetPathnameDoc (void)</tt>
+  <li><b>Description</b><br>
+    Get the new OpenOffice document path.<br>
+    This method is useful is you want to get the pathfile of the new document to attach to a email or to convert it.<br>
+  <li><b>Parameter</b><br>
+    <tt>none</tt>
+  <li><b>Return value</b><br>
+    <tt>string</tt> : the OpenOffice document pathname<br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>$path = $OOo-&gt;GetPathnameDoc();</tt><br>
+    or<br>
+    <tt>$realpath = realpath($OOo-&gt;GetPathnameDoc());</tt><br>
+    or<br>
+    <tt>header('Location: '.$OOo-&gt;GetPathnameDoc()); // don't work with IE or if the document is proceed outside the web root</tt><br>
+  </ul>
+
+<h3 id="GetMimetypeDoc">Method: GetMimetypeDoc</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>string GetMimetypeDoc (void)</tt>
+  <li><b>Description</b><br>
+    Get the OpenOffice document mime type.<br>
+  <li><b>Parameter</b><br>
+    <tt>none</tt><br>
+  <li><b>Return value</b><br>
+    <tt>string</tt> : the document mime type<br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>$mimetype = $OOo-&gt;GetMimetypeDoc();</tt><br>
+    or<br>
+    <tt>header('Content-type: '.$OOo-&gt;GetMimetypeDoc());</tt><br>
+  </ul>
+
+<h3 id="FlushDoc">Method: FlushDoc</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>stream FlushDoc (void)</tt>
+  <li><b>Description</b><br>
+    Return the OpenOffice document binary content to STDOUT<br>
+  <li><b>Parameter</b><br>
+    <tt>none</tt><br>
+  <li><b>Return value</b><br>
+    <tt>stream</tt> : the OpenOffice document binary content<br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>header('Content-type: '.$OOo-&gt;GetMimetypeDoc());</tt><br>
+    <tt>header('Content-Length: '.filesize($OOo-&gt;GetPathnameDoc()));</tt><br>
+    <tt>$OOo-&gt;FlushDoc();</tt><br>
+  </ul>
+
+<h3 id="RemoveDoc">Method: RemoveDoc</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>void RemoveDoc (void)</tt>
+  <li><b>Description</b><br>
+    Unlink the new OpenOffice document<br>
+  <li><b>Parameter</b><br>
+    <tt>none</tt><br>
+  <li><b>Return value</b><br>
+    <tt>none</tt><br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>$OOo-&gt;RemoveDoc();</tt><br>
+    or<br>
+    <tt>header('Content-type: '.$OOo-&gt;GetMimetypeDoc());</tt><br>
+    <tt>header('Content-Length: '.filesize($OOo-&gt;GetPathnameDoc()));</tt><br>
+    <tt>$OOo-&gt;FlushDoc();</tt><br>
+    <tt>$OOo-&gt;RemoveDoc();</tt><br>
+  </ul>
+
+<h3 id="ClearProcessDir">Method: ClearProcessDir</h3>
+  <ul>
+  <li><b>Synopsis</b><br>
+    <tt>void ClearProcessDir ([int $hour=2 [, int $minut=0]])</tt>
+  <li><b>Description</b><br>
+    This method is useful to remove all files from the process directory older than now minus hours and minuts.<br>
+    Don't use this method if you use a system directory like <tt>/tmp</tt> or <tt>c:/windows/temp</tt>.<br>
+  <li><b>Parameter</b><br>
+    <tt>int $hour</tt> : the number of hours, default 2<br>
+    <tt>int $minut</tt> : the number of minuts default 0<br>
+  <li><b>Return value</b><br>
+    <tt>none</tt><br>
+  <li><b>Note</b><br>
+    This function can not be called statically.<br>
+  <li><b>Example</b><br>
+    <tt>$OOo-&gt;ClearProcessDir(); // default value</tt><br>
+    or<br>
+    <tt>$OOo-&gt;ClearProcessDir(2,0); // remove file older than 2 hours</tt><br>
+    or<br>
+    <tt>$OOo-&gt;ClearProcessDir(0,30); // remove file older than 30 minuts</tt><br>
+  </ul>
+
+</body>
+</html>

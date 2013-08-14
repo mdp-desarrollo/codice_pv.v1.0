@@ -1,0 +1,14 @@
+body{background:#fff;}
+*,body{    color: #333;
+    direction: ltr;
+    font-family: arial,sans-serif;
+    font-size: 11px;
+    margin: 0;
+    padding: 0;
+    unicode-bidi: embed;}
+a{text-decoration: none;}
+a,a:visited,a:active{color:#294F87 ;}
+a img{border: none;}
+h2{line-height: 16px;}
+h2 span{font-size: 11px; font-weight: normal; color: #aaa;}
+hr{color: #ccc;}

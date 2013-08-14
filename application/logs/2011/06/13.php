@@ -1,0 +1,16 @@
+<?php defined('SYSPATH') or die('No direct script access.'); ?>
+
+2011-06-13 08:58:38 --- ERROR: HTTP_Exception_404 [ 404 ]: The requested URL bandeja/entrada was not found on this server. ~ SYSPATH\classes\kohana\request\client\internal.php [ 94 ]
+2011-06-13 08:58:42 --- ERROR: HTTP_Exception_404 [ 404 ]: The requested URL entrada/bandeja was not found on this server. ~ SYSPATH\classes\kohana\request\client\internal.php [ 94 ]
+2011-06-13 08:58:45 --- ERROR: HTTP_Exception_404 [ 404 ]: The requested URL entrada/bandeja was not found on this server. ~ SYSPATH\classes\kohana\request\client\internal.php [ 94 ]
+2011-06-13 08:58:48 --- ERROR: HTTP_Exception_404 [ 404 ]: The requested URL entrada/bandeja was not found on this server. ~ SYSPATH\classes\kohana\request\client\internal.php [ 94 ]
+2011-06-13 11:45:55 --- ERROR: HTTP_Exception_404 [ 404 ]: The requested URL json/pdf was not found on this server. ~ SYSPATH\classes\kohana\request\client\internal.php [ 120 ]
+2011-06-13 11:48:27 --- ERROR: HTTP_Exception_404 [ 404 ]: Unable to find a route to match the URI: views/images/keys.gif ~ SYSPATH\classes\kohana\request.php [ 760 ]
+2011-06-13 11:48:27 --- ERROR: HTTP_Exception_404 [ 404 ]: Unable to find a route to match the URI: views/images/user.gif ~ SYSPATH\classes\kohana\request.php [ 760 ]
+2011-06-13 11:48:27 --- ERROR: HTTP_Exception_404 [ 404 ]: Unable to find a route to match the URI: views/images/help.gif ~ SYSPATH\classes\kohana\request.php [ 760 ]
+2011-06-13 11:50:04 --- ERROR: HTTP_Exception_404 [ 404 ]: Unable to find a route to match the URI: example}_00.php ~ SYSPATH\classes\kohana\request.php [ 760 ]
+2011-06-13 11:53:14 --- ERROR: HTTP_Exception_404 [ 404 ]: Unable to find a route to match the URI: example}_00.php ~ SYSPATH\classes\kohana\request.php [ 760 ]
+2011-06-13 11:53:20 --- ERROR: HTTP_Exception_404 [ 404 ]: Unable to find a route to match the URI: example_00300.php ~ SYSPATH\classes\kohana\request.php [ 760 ]
+2011-06-13 16:01:27 --- ERROR: HTTP_Exception_404 [ 404 ]: The requested URL entrada/bandeja was not found on this server. ~ SYSPATH\classes\kohana\request\client\internal.php [ 94 ]
+2011-06-13 16:02:58 --- ERROR: ErrorException [ 8 ]: Trying to get property of non-object ~ APPPATH\views\documentos\index.php [ 45 ]
+2011-06-13 16:17:00 --- ERROR: HTTP_Exception_404 [ 404 ]: The requested URL entrada/bandeja was not found on this server. ~ SYSPATH\classes\kohana\request\client\internal.php [ 94 ]

@@ -1,0 +1,109 @@
+.uiButton, .uiButtonSuppressed:active, .uiButtonSuppressed:focus, .uiButtonSuppressed:hover, input[type="submit"]{
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #EEEEEE;
+    background-image: url("../images/exdyUfVOjrJ.png");
+    background-position: 0 -49px;
+    background-repeat: no-repeat;
+    border-color: #999999 #999999 #888888;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: normal !important;
+    padding: 3px 6px;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: top;
+    white-space: nowrap;
+    color:#111;
+}
+.uiButton + .uiButton {
+    margin-left: 4px;
+}
+.uiButton:hover,input[type="submit"]:hover {
+    text-decoration: none;
+}
+.uiButton:active, .uiButtonDepressed {
+    background: none repeat scroll 0 0 #DDDDDD;
+    border-bottom-color: #999999;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+    color:#111;
+}
+.uiButton .img {
+    margin-top: 2px;
+    vertical-align: top;
+}
+.uiButtonLarge .img {
+    margin-top: 4px;
+}
+.uiButton .customimg {
+    margin-top: 0;
+}
+.uiButton .uiButtonText, .uiButton input {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    color: #333333;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'Lucida Grande',Tahoma,Verdana,Arial,sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    margin: 0;
+    outline: medium none;
+    padding: 1px 0 2px;
+    white-space: nowrap;
+    color:#111;
+}
+.mac .uiButton .uiButtonText, .mac .uiButton input {
+    margin-bottom: -1px;
+}
+.mac .uiButtonLarge .uiButtonText, .mac .uiButtonLarge input {
+    margin-bottom: 0;
+}
+.uiButton input:-moz-focus-inner {
+    border: 0 none;
+    padding: 0;
+}
+.uiButtonSpecial {
+    background-color: #69A74E;
+    background-image: url("../images/exdyUfVOjrJ.png");
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    border-color: #3B6E22 #3B6E22 #2C5115;
+    color: #fff;
+}
+.imgg{ background: url('../images/confirmar.png') no-repeat 0 0; padding-left:  20px; }
+.uiButtonSpecial:active {
+    background: none repeat scroll 0 0 #609946;
+    border-bottom-color: #3B6E22;
+}
+.async_saving .uiButton.uiButtonSpecial, .uiButtonSpecial.uiButtonDisabled, .uiButtonSpecial.uiButtonDisabled:active, .uiButtonSpecial.uiButtonDisabled:focus, .uiButtonSpecial.uiButtonDisabled:hover {
+    background: none repeat scroll 0 0 #B4D3A7;
+    border-color: #9DB791;
+}
+.uiButtonConfirm {
+    background-color: #5B74A8;
+    background-image: url("../images/exdyUfVOjrJ.png");
+    background-position: 0 -98px;
+    color: #fff;
+    background-repeat: no-repeat;
+    border-color: #29447E #29447E #1A356E;
+}
+.uiButtonConfirm:active {
+    background: none repeat scroll 0 0 #4F6AA3;
+    border-bottom-color: #29447E;
+}
+.async_saving .uiButton.uiButtonConfirm, .uiButtonConfirm.uiButtonDisabled, .uiButtonConfirm.uiButtonDisabled:active, .uiButtonConfirm.uiButtonDisabled:focus, .uiButtonConfirm.uiButtonDisabled:hover {
+    background: none repeat scroll 0 0 #ADBAD4;
+    border-color: #94A2BF;
+}
+.async_saving .uiButton.uiButtonSpecial .uiButtonText, .async_saving .uiButton.uiButtonSpecial input, .async_saving .uiButton.uiButtonConfirm .uiButtonText, .async_saving .uiButton.uiButtonConfirm input, .uiButtonSpecial .uiButtonText, .uiButtonSpecial input, .uiButtonSpecial.uiButtonDisabled .uiButtonText, .uiButtonSpecial.uiButtonDisabled input, .uiButtonConfirm .uiButtonText, .uiButtonConfirm input, .uiButtonConfirm.uiButtonDisabled .uiButtonText, .uiButtonConfirm.uiButtonDisabled input {
+    color: #FFFFFF;
+}

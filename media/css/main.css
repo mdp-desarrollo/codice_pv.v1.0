@@ -1,0 +1,32 @@
+@CHARSET "UTF-8"; 
+*{padding: 0;margin: 0;}
+body,html { padding:0; margin:0;height: 100%;background: #F4F4F5;}
+body,table {color: #111;font: 12px/13px Arial, Helvetica;  overflow:hidden; }
+img,a img {border: 0;text-decoration: none;}
+#modx-topbar {height: 50px;background: #414141 url("../images/headers.jpg") repeat-x top;  color: white;vertical-align: middle;border-bottom: 1px solid #656566;background-repeat: repeat-x;}
+#modx-site-name {float: left;width: 400px;padding: 10px 0 0px 5px;font-size: 32px;font-weight: bold; margin: 0; color: #efefef;}
+.modx-version {display: block;clear: left;color: #888;font-size: 12px;line-height: 25px;margin: 0;}
+#modx-logo {width: 300px;float: right;margin-top: 12px; }
+#modx-navbar {background-color: #11182D; opacity:0.9; border-top: 1px solid #182D66;height: 41px;position: relative;text-shadow: 1px -1px 0 #1f1f1f;z-index: 19;}
+/*#modx-navbar {background: -moz-linear-gradient(#666 20%, #2C395E 60%, #272E41 100%);}
+#modx-navbar {background: -webkit-gradient(linear, left bottom, left top, color-stop(0.37, #555),color-stop(0.69, #666), color-stop(0, #555) );}
+*/
+#modx-login-user {font-weight: bold;text-decoration: none;color: #ccc;}
+#rightlogin {-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #4E4E4E;bottom: 10px;color: #AAA;height: 26px;line-height: 26px;max-width: 365px;position: absolute;right: 12px;z-index: 1;}
+#rightlogin span {-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;background-color: #565656;border: 1px solid #1F1F1F;float: left;height: 26px;padding: 0 0 0 0px;}
+#rightlogin a.modx-logout {-moz-border-radius-topright: 2px;-moz-border-radius-bottomright: 2px;-webkit-border-top-right-radius: 2px;-webkit-border-bottom-right-radius: 2px;border-top-right-radius: 2px;border-bottom-right-radius: 2px;background-color: #3E3E3E;border: 1px solid #4E4E4E;color: #DDD;display: block;float: right;height: 24px;margin: 0 0 1px 7px;padding: 0 12px;text-decoration: none;text-shadow: 1px -1px 0 #5E5E5E;}
+#rightlogin a.modx-logout:hover {background-color: #175997;border: 1px solid #3D73AA;text-shadow: none;}
+.modx-page-header,.modx-page-header div {background-color: transparent !important;}
+#modx-content form.x-panel-body {background-color: transparent !important;}
+#modx-topnav-div {background: transparent;position: relative;z-index: 20;}
+#modx-topnav {width: 100%;float: left;font-size: 13px;font-weight: bold;height: 50px;list-style: none;margin: 0;padding: 0;border-bottom: 1px solid #1E1E1E;z-index: 21;}
+#top{height: 93px;line-height: 15px;padding: 0;margin: 0;border-bottom: 1px solid #c9d7f1;}
+#top h1{width: 138px;height: 20px;background: transparent ;display: block;text-indent: -9999px;}
+#top h1 a{display: block;}
+#lateral{width: 160px;float: left; background-color: #F4F4F5; z-index: 2; position: relative;}
+#content{font-size: 11px;margin-left: 165px;background: #fff;}
+#content #render{height: 100%;overflow: auto;padding: 5px;}
+#toggler{width: 8px;border-left: 1px dotted #92B4DE;border-right: 1px dotted #92B4DE;background: #EFF4FB url("../images/toggler_bg.gif") no-repeat left center;float: left;}
+#toggler:hover{background: #D1E1F4 url("../images/toggler_bg.gif") no-repeat -25px center;cursor: pointer;}
+#toggler.off{background: #c5c5c5 url("../images/toggler_off_bg.gif") no-repeat left center;margin-left: 0;}
+#toggler.off:hover{background: #C5C5C5 url("../images/toggler_off_bg.gif") no-repeat -25px center;margin-left: 0;}.sp{ font-weight: 300; color: #111;    }

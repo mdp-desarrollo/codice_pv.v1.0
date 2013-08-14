@@ -1,0 +1,247 @@
+#main-wrapper{
+	/* The main container div */
+	width:510px;
+	margin:1px auto 0;
+	
+}
+
+#main-wrapper h1{
+	font-family:Corbel,'Myriad Pro',Arial, Helvetica, sans-serif;
+	background:#fff url('images/heading.png') no-repeat center top;
+	text-indent:-9999px;
+	overflow:hidden;
+	height:90px;
+        
+}
+
+#rsidebar-wrapper #searchForm{
+	/* The search form. */        
+	padding:0px;
+	margin:0px 0;
+	position:relative;
+}
+
+
+#rsidebar-wrapper #searchInputContainer{
+	/* This div contains the transparent search box */
+	width:237px;
+	height:32px;
+	background:url("images/searchBox.png") no-repeat;
+	float:left;
+	margin-right:1px;
+        }
+
+#rsidebar-wrapper #s{
+	/* The search text box. */	
+	border:none;
+	color:#333;	
+	float:left;
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:12px;
+	height:32px;
+	line-height:26px;
+	margin-right:1px;
+	outline:medium none;
+	padding:0 0px 0 5px;
+	text-shadow:1px 1px 0 white;
+	width:206px;
+        
+}
+
+/* The UL that contains the search type icons */
+
+.icons{
+	list-style:none;
+	margin:10px 0 0 335px;
+	height:19px;
+	position:relative;
+}
+
+.icons li{
+	background:url("images/icons.png") no-repeat;
+	float:left;
+	height:19px;
+	text-indent:-9999px;
+	cursor:pointer;
+	margin-right:5px;
+}
+
+/* Styling each icon */
+
+li.web{ width:15px;}
+li.web.active,
+li.web:hover{ background-position:left bottom;}
+
+li.images{ width:22px; background-position:-18px 0;}
+li.images.active,
+li.images:hover{ background-position:-18px bottom;}
+
+li.news{ width:14px; background-position:-44px 0;}
+li.news.active,
+li.news:hover{ background-position:-44px bottom;}
+
+li.videos{ width:17px; background-position:right 0;}
+li.videos.active,
+li.videos:hover{ background-position:right bottom;}
+
+span.arrow{
+	/* The little arrow that moves below the icons */
+	width:11px;
+	height:6px;
+	margin:21px 0 0 5px;
+	position:absolute;
+	background:u-rl('images/arrow.png') no-repeat;
+	left:0;
+}
+
+
+/* The submit button */
+#rsidebar-wrapper #submitButton{
+	background:url('images/btn_search.png') no-repeat;
+	width:32px;
+	height:32px;
+	text-indent:-9999px;
+	overflow:hidden;
+	text-transform:uppercase;
+	border:none;
+	cursor:pointer;
+}
+
+#rsidebar-wrapper #submitButton:hover{
+	background-position:left bottom;
+}
+
+
+/* The Search tutorialzine.com / Search the Web radio buttons */
+
+
+#rsidebar-wrapper #searchInContainer{
+	float:left;
+	margin-top:12px;
+	width:160px;
+}
+
+#rsidebar-wrapper label{
+	color:#DDDDDD;
+	cursor:pointer;
+	font-size:11px;
+	position:relative;
+	right:-2px;
+	top:-2px;
+	margin-right:10px;
+	white-space:nowrap;
+	/*float:left;*/
+}
+
+#rsidebar-wrapper input[type=radio]{
+	cursor:pointer;
+	/*float:left;*/
+}
+
+
+
+/* Styling the search results */
+
+
+#main-wrapper .pageContainer{
+	/* Holds each page with search results. Has an inset bottom border. */
+	border-bottom:1px solid #5e7481;
+	margin-bottom:20px;	
+	/* Adding a dark bottom border with box shadow */	
+	-moz-box-shadow:0 1px 0 #798e9c;
+	-webkit-box-shadow:0 1px 0 #798e9c;
+	box-shadow:0 1px 0 #798e9c;
+}
+
+
+#main-wrapper p.notFound{
+	text-align:center;
+	padding:0 0 40px;
+}
+
+
+/* Web & news results */
+
+
+#main-wrapper .webResult{ margin-bottom:20px;}
+#main-wrapper .webResult h2{
+	background-color:#CEE0EB;
+	font-size:12px;
+	font-weight:normal;
+	padding:6px 8px;
+	/* Applying CSS3 rounded corners */
+	-moz-border-radius:1px;
+	-webkit-border-radius:1px;
+	border-radius:3px;
+}
+#main-wrapper .webResult h2 b{
+	color:#CCC;
+}
+#main-wrapper .webResult h2 a{ color:#222;border:none;text-decoration: none;}
+#main-wrapper .webResult p{ line-height:1.5;padding:15px 20px;}
+#main-wrapper .webResult p b{
+	color:#000;
+}
+#main-wrapper .webResult > a{ margin-left:20px;  }
+
+
+/* Image & video search results */
+
+
+#page .imageResult{
+	float:left;
+	height:180px;
+	margin:0 0 20px 40px;
+	text-align:center;
+	width:152px;
+	overflow:hidden;
+}
+#page .imageResult img{ display:block;border:none;}
+#page .imageResult a.pic{
+	border:1px solid #fff;
+	outline:1px solid #777;
+	display:block;
+	margin:0 auto 15px;
+}
+
+/* The show more button */
+
+#main-wrapper #more{
+	width:103px;
+	height:24px;
+	background:url('images/more.png') no-repeat;
+	cursor:pointer;
+	margin:10px auto;
+}
+
+#main-wrapper #more:hover{
+	background-position:left bottom;
+}
+
+
+
+/* Giving Credit */
+
+#main-wrapper p.credit{
+	margin:20px 0;
+	text-align:center;
+}
+
+#main-wrapper p.credit a{
+	background-color:#4B5A64;
+	border:1px solid;
+	border-color:#3D4D57 #788E9B #788E9B #3D4D57;
+	color:#c0d0d8;
+	font-size:10px;
+	padding:4px 8px;
+	text-shadow:1px 1px 0 #38464F;
+}
+
+#main-wrapper  p.credit a:hover{
+	background-color:#38464f;
+	
+}
+
+#main-wrapper .clear{
+	clear:both;
+}

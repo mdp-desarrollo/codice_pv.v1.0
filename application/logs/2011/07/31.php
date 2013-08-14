@@ -1,0 +1,16 @@
+<?php defined('SYSPATH') or die('No direct script access.'); ?>
+
+2011-07-31 01:35:21 --- ERROR: ErrorException [ 8 ]: Undefined property: Database_MySQL_Result::$id ~ APPPATH\views\documentos\listar.php [ 29 ]
+2011-07-31 01:36:29 --- ERROR: Kohana_View_Exception [ 0 ]: The requested view errors/404.php could not be found ~ SYSPATH\classes\kohana\view.php [ 268 ]
+2011-07-31 02:21:00 --- ERROR: Kohana_Exception [ 0 ]: Method find() cannot be called on loaded objects ~ MODPATH\orm\classes\kohana\orm.php [ 950 ]
+2011-07-31 02:21:18 --- ERROR: ErrorException [ 8 ]: Trying to get property of non-object ~ APPPATH\views\documentos\listar.php [ 26 ]
+2011-07-31 02:21:21 --- ERROR: ErrorException [ 8 ]: Trying to get property of non-object ~ APPPATH\views\documentos\listar.php [ 26 ]
+2011-07-31 08:05:41 --- ERROR: ErrorException [ 8 ]: Undefined offset: 0 ~ APPPATH\classes\controller\hojaruta.php [ 62 ]
+2011-07-31 08:06:24 --- ERROR: ErrorException [ 8 ]: Undefined offset: 0 ~ APPPATH\classes\controller\hojaruta.php [ 62 ]
+2011-07-31 08:11:44 --- ERROR: ErrorException [ 8 ]: Undefined property: stdClass::$image ~ APPPATH\views\templates\document.php [ 2 ]
+2011-07-31 19:48:53 --- ERROR: ErrorException [ 8 ]: Undefined offset: 0 ~ APPPATH\classes\controller\hojaruta.php [ 62 ]
+2011-07-31 19:48:58 --- ERROR: ErrorException [ 8 ]: Undefined offset: 0 ~ APPPATH\classes\controller\hojaruta.php [ 62 ]
+2011-07-31 19:50:05 --- ERROR: ErrorException [ 8 ]: Undefined offset: 0 ~ APPPATH\classes\controller\hojaruta.php [ 62 ]
+2011-07-31 21:20:36 --- ERROR: ErrorException [ 8 ]: Undefined offset: 0 ~ APPPATH\classes\controller\hojaruta.php [ 62 ]
+2011-07-31 21:29:29 --- ERROR: ErrorException [ 8 ]: Undefined offset: 0 ~ APPPATH\classes\controller\hojaruta.php [ 62 ]
+2011-07-31 21:29:50 --- ERROR: ErrorException [ 8 ]: Undefined offset: 0 ~ APPPATH\classes\controller\hojaruta.php [ 62 ]
