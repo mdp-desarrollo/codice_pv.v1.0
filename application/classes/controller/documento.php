@@ -128,7 +128,9 @@ class Controller_documento extends Controller_DefaultTemplate {
             $options[$p->id] = $p->proceso;
         }
         //$this->template->scripts = array('ckeditor/adapters/jquery.js', 'ckeditor/ckeditor.js');
-        $this->template->scripts = array('tinymce/tinymce.min.js');
+        //$this->template->scripts = array('tinymce/tinymce.min.js');
+        $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css'=>'screen');
+        $this->template->scripts = array('tinymce/tinymce.min.js','media/js/jquery-ui-1.8.16.custom.min.js','media/js/jquery.timeentry.js');///
         $this->template->title .= ' | Crear ' . $tipo->tipo;
         if ($t == 'circular') {
             $oficina = ORM::factory('oficinas')->where('id', '=', $this->user->id_oficina)->find();
