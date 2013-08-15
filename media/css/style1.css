@@ -107,7 +107,7 @@ font-weight:bold;
 
 div#menu {background:transparent; height: 41px;width:800px;clear: both;display: block;margin: 0;float: left;}
 #content table.c { display:  block; clear: both;}
-ul#nav {background:transparent;width: 800px;height: 45px;list-style: none outside none;margin: 0;padding: 0;clear: both;display: block;}
+ul#nav {background:transparent;width: 950px;height: 45px;list-style: none outside none;margin: 0;padding: 0;clear: both;display: block;}
 ul#nav li {clear: none;float: left;position: relative;width: auto;}
 ul#nav li a {background: url("../images/bkgd-nav-line.gif") no-repeat scroll right center transparent;color: #71A8DB;display: inline-block;padding: 5px 10px;text-decoration: none;text-shadow: 1px 0 10px #000000;width: auto;font-size: 12px; }
 ul#nav li a span{color:#fff; font-size: 16px; font-weight: 300;  text-transform: none; }
