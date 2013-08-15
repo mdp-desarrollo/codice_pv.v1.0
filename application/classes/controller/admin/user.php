@@ -33,12 +33,13 @@ class Controller_Admin_User extends Controller_AdminTemplate {
 
     //
     public function action_index() {
-        $oUser = New Model_Users();
-        $users = $oUser->listaGeneral();
-        if (sizeof($users) > 0) {
-            $this->template->content = View::factory('admin/users')
-                    ->bind('users', $users);
-        }
+        //$oUser = New Model_Users();
+        //$users = $oUser->listaGeneral();
+        //if (sizeof($users) > 0) {
+            //$this->template->content = View::factory('admin/users')
+                    //->bind('users', $users);
+        //}
+        $this->template->content = View::factory('admin/bienvenida');
     }
 
     public function action_nuevo() {
