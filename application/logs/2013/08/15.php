@@ -1,5 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.'); ?>
 
+<<<<<<< HEAD
 2013-08-15 14:09:28 --- ERROR: ErrorException [ 1 ]: Class 'Model_Pvpasajes' not found ~ APPPATH\classes\controller\pvpasajes.php [ 40 ]
 2013-08-15 14:10:11 --- ERROR: ErrorException [ 1 ]: Class 'Model_Pvpasajes' not found ~ APPPATH\classes\controller\pvpasajes.php [ 40 ]
 2013-08-15 14:10:59 --- ERROR: ErrorException [ 2 ]: Missing argument 1 for Model_Pvpasajes::listaautorizados(), called in E:\sistemas\codice_pv\application\classes\controller\pvpasajes.php on line 41 and defined ~ APPPATH\classes\model\pvpasajes.php [ 23 ]
@@ -81,3 +82,29 @@ and liq.id_programatica 0 ) ~ MODPATH\database\classes\kohana\database\mysql.php
                 inner join pyvactividadppt act on p.id_actividadppt = act.id
                 inner join pyvfuente fte on p.id_fuente = fte.id
                 inner join pyvorganismo org on p.id_organismo = org.id ) ~ MODPATH\database\classes\kohana\database\mysql.php [ 181 ]
+=======
+2013-08-15 10:21:33 --- ERROR: ErrorException [ 8 ]: Undefined index: fucov ~ APPPATH/classes/controller/documento.php [ 119 ]
+2013-08-15 10:23:01 --- ERROR: ErrorException [ 8 ]: Undefined index: fucov ~ APPPATH/classes/controller/documento.php [ 119 ]
+2013-08-15 10:24:14 --- ERROR: ErrorException [ 8 ]: Undefined index: fucov ~ APPPATH/classes/controller/documento.php [ 119 ]
+2013-08-15 10:38:41 --- ERROR: ErrorException [ 8 ]: Undefined index: fucov ~ APPPATH/classes/controller/documento.php [ 119 ]
+2013-08-15 10:43:55 --- ERROR: ErrorException [ 8 ]: Undefined index: fucov ~ APPPATH/classes/controller/documento.php [ 99 ]
+2013-08-15 10:53:49 --- ERROR: ErrorException [ 8 ]: Undefined index: observaciones ~ APPPATH/classes/controller/documento.php [ 117 ]
+2013-08-15 11:26:32 --- ERROR: Database_Exception [ 0 ]: [1062] Duplicate entry '0' for key 'PRIMARY' ( INSERT INTO `pvcomisiones` (`id_documento`, `detalle_comision`, `origen`, `destino`, `fecha_inicio`, `fecha_fin`, `observacion`, `estado`) VALUES (6828, 'ddddddddddd', 'dddddddd', 'dddddddddddd', '1969-12-31 11:04:38', '1969-12-31 11:04:38', 'dddddddddd', 1) ) ~ MODPATH/database/classes/kohana/database/mysql.php [ 181 ]
+2013-08-15 11:27:22 --- ERROR: Database_Exception [ 0 ]: [1062] Duplicate entry '0' for key 'PRIMARY' ( INSERT INTO `pvcomisiones` (`id_documento`, `detalle_comision`, `origen`, `destino`, `fecha_inicio`, `fecha_fin`, `observacion`, `estado`) VALUES (6829, 'qqqqqqqqqqq', 'qqqqqqqqq', 'qqqqqqqqqqqqqq', '2013-08-15 11:26:33', '2013-08-30 11:26:33', 'qqqqqqqqqqqqq', 1) ) ~ MODPATH/database/classes/kohana/database/mysql.php [ 181 ]
+2013-08-15 14:37:59 --- ERROR: Kohana_Exception [ 0 ]: The tipo property does not exist in the Model_Documentos class ~ MODPATH/orm/classes/kohana/orm.php [ 682 ]
+2013-08-15 14:39:51 --- ERROR: Kohana_Exception [ 0 ]: The tipo property does not exist in the Model_Documentos class ~ MODPATH/orm/classes/kohana/orm.php [ 682 ]
+2013-08-15 14:39:52 --- ERROR: Kohana_Exception [ 0 ]: The tipo property does not exist in the Model_Documentos class ~ MODPATH/orm/classes/kohana/orm.php [ 682 ]
+2013-08-15 14:50:31 --- ERROR: ErrorException [ 8 ]: Object of class Model_Pvcomisiones could not be converted to int ~ APPPATH/views/documentos/edit.php [ 200 ]
+2013-08-15 14:50:33 --- ERROR: ErrorException [ 8 ]: Object of class Model_Pvcomisiones could not be converted to int ~ APPPATH/views/documentos/edit.php [ 200 ]
+2013-08-15 14:52:02 --- ERROR: ErrorException [ 8 ]: Object of class Model_Pvcomisiones could not be converted to int ~ APPPATH/views/documentos/edit.php [ 200 ]
+2013-08-15 15:16:30 --- ERROR: ErrorException [ 8 ]: Trying to get property of non-object ~ APPPATH/views/documentos/edit.php [ 402 ]
+2013-08-15 15:18:02 --- ERROR: ErrorException [ 8 ]: Trying to get property of non-object ~ APPPATH/views/documentos/edit.php [ 402 ]
+2013-08-15 15:19:03 --- ERROR: ErrorException [ 8 ]: Trying to get property of non-object ~ APPPATH/views/documentos/edit.php [ 402 ]
+2013-08-15 15:44:21 --- ERROR: ErrorException [ 8 ]: Undefined property: Database_MySQL_Result::$origen ~ APPPATH/views/documentos/edit.php [ 402 ]
+2013-08-15 15:46:25 --- ERROR: ErrorException [ 8 ]: Undefined property: Database_MySQL_Result::$origen ~ APPPATH/views/documentos/edit.php [ 402 ]
+2013-08-15 16:16:13 --- ERROR: ErrorException [ 8 ]: Trying to get property of non-object ~ APPPATH/views/documentos/edit.php [ 354 ]
+2013-08-15 16:22:25 --- ERROR: ErrorException [ 8 ]: Trying to get property of non-object ~ APPPATH/views/documentos/edit.php [ 372 ]
+2013-08-15 16:34:25 --- ERROR: ErrorException [ 8 ]: Use of undefined constant Vie - assumed 'Vie' ~ APPPATH/views/documentos/edit.php [ 209 ]
+2013-08-15 16:55:55 --- ERROR: ErrorException [ 8 ]: Use of undefined constant Vie - assumed 'Vie' ~ APPPATH/views/documentos/edit.php [ 209 ]
+2013-08-15 17:03:27 --- ERROR: ErrorException [ 8 ]: Undefined variable: dia ~ APPPATH/views/documentos/edit.php [ 415 ]
+>>>>>>> 7201867f9334e060322def9d3300304a3dd99c59

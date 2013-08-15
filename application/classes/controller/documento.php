@@ -96,9 +96,32 @@ class Controller_documento extends Controller_DefaultTemplate {
                 $documento->cargo_via = $_POST['cargovia'];
                 $documento->titulo = $_POST['titulo'];
                 $documento->id_entidad = $this->user->id_entidad;
+                if(isset($_POST['fucov']))
+                    $documento->fucov = 1;
+                else
+                    $documento->fucov = 0;
+                
                 $documento->save();
                 //si se creo el documento entonces
                 if ($documento->id) {
+                    
+                    //Modificado por Freddy Velasco
+                    if(isset($_POST['fucov'])){
+                        $fi = date('Y-m-d',  strtotime(substr($_POST['fecha_inicio'],4,10))).' '.date('H:i:s',  strtotime($_POST['hora_inicio']));
+                        $ff= date('Y-m-d',  strtotime(substr($_POST['fecha_fin'],4,10))).' '.date('H:i:s',  strtotime($_POST['hora_fin']));
+                    $pvcomision = ORM::factory('pvcomisiones');
+                    $pvcomision->id_documento = $documento->id;
+                    $pvcomision->detalle_comision = $_POST['detalle_comision'];
+                    $pvcomision->origen = $_POST['origen'];
+                    $pvcomision->destino = $_POST['destino'];
+                    $pvcomision->fecha_inicio = $fi;
+                    $pvcomision->fecha_fin = $ff;
+                    $pvcomision->observacion = $_POST['observacion'];
+                    $pvcomision->estado = 1;
+                    $pvcomision->save();
+                    }
+                    ///////////end//////////////////
+                                        
                     //generamos la hoja de ruta a partir de la entidad
                     $entidad = ORM::factory('entidades', $this->user->id_entidad);
                     $oNur = New Model_nurs();
@@ -113,6 +136,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                     $rs = $documento->has('nurs', $nur_asignado);
                     $documento->add('nurs', $nur_asignado);
                     $_POST = array();
+
                     $this->request->redirect('documento/editar/' . $documento->id);
                 }
             }
@@ -363,10 +387,15 @@ class Controller_documento extends Controller_DefaultTemplate {
             foreach ($procesos as $p) {
                 $options[$p->id] = $p->proceso;
             }
+            $pvcomision='';
+            if($documento->fucov==1){
+                $pvcomision = ORM::factory('pvcomisiones')->where('id_documento','=',$documento->id)->find();
+            }
+            
             $this->template->title .= ' | ' . $documento->codigo;
-            $this->template->styles = array('media/css/tablas.css' => 'screen');
-            //$this->template->scripts = array('ckeditor/adapters/jquery.js', 'ckeditor/ckeditor.js', 'media/js/jquery.si.js');
             $this->template->scripts = array('tinymce/tinymce.min.js');
+            $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css'=>'screen','media/css/tablas.css' => 'screen');
+            $this->template->scripts = array('tinymce/tinymce.min.js','media/js/jquery-ui-1.8.16.custom.min.js','media/js/jquery.timeentry.js');///
 
             if ($tipo->tipo == 'Circular') {
                 $oficina = ORM::factory('oficinas')->where('id', '=', $this->user->id_oficina)->find();
@@ -395,7 +424,8 @@ class Controller_documento extends Controller_DefaultTemplate {
                         ->bind('options', $options)
                         ->bind('mensajes', $mensajes)
                         ->bind('archivos', $archivos)
-                        ->bind('destinatarios', $destinatarios);
+                        ->bind('destinatarios', $destinatarios)
+                        ->bind('pvcomision', $pvcomision);
             }
         } else {
             $this->template->content = 'Solo puede editar documentos creados por su usuario ';

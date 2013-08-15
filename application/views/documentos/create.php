@@ -123,7 +123,7 @@ $.datepicker.setDefaults($.datepicker.regional['es']);
 var pickerOpts  = { changeMonth: true, minDate: 0, changeYear: true, yearRange: "-10:+1", dateFormat: 'D yy-mm-dd',onSelect: function(){ feriados('fecha');}};
 $('#fecha_inicio,#fecha_fin').datepicker(pickerOpts,$.datepicker.regional['es']);
 $('#hora_inicio,#hora_fin').timeEntry({show24Hours: true, showSeconds: true});
-
+///////////////////end//////////////////////////
 });
 </script>
 <h2 class="subtitulo">Crear <?php echo $documento->tipo;?> <br/><span>LLENE CORRECTAMENTE LOS DATOS EN EL FORMULARIO</span></h2>
@@ -136,7 +136,7 @@ $('#hora_inicio,#hora_fin').timeEntry({show24Hours: true, showSeconds: true});
             else: ?>
             <legend>Proceso: <?php echo Form::select('proceso', $options, NULL);?>
                 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                <?php if ($documento->tipo == 'Memorandum'){?>FUCOV: <?php echo Form::checkbox('fucov','FUCOV',FALSE,array('id'=>'fucov','name'=>'fucov','title'=>'seleccione si quiere habilitar un memoramdum de viaje'))?><?php }?>    
+                <?php if ($documento->tipo == 'Memorandum'){?>FUCOV: <?php echo Form::checkbox('fucov',1,FALSE,array('id'=>'fucov','name'=>'fucov','title'=>'seleccione si quiere habilitar un memoramdum de viaje'))?><?php }?>    
             </legend>
             <hr/>
         <?php endif; ?>
@@ -268,9 +268,9 @@ $('#hora_inicio,#hora_fin').timeEntry({show24Hours: true, showSeconds: true});
                 con el objetivo de asistir a (detalle de comision)
                 <p><?php echo Form::textarea('detalle_comision','',array('id'=>'detalle_comision','cols'=>150,'rows'=>2)); ?></p>
                 desde el 
-                <input type="text" id="fecha_inicio" name="fecha_inicio" class="required" size='16'/> a Hrs. <input type="text" name="hora_inicio" id="hora_inicio" class="required" value="<?php echo date("H:i:s");?>" size='6'/>
+                <input type="text" id="fecha_inicio" name="fecha_inicio" size='16'/> a Hrs. <input type="text" name="hora_inicio" id="hora_inicio" value="<?php echo date("H:i:s");?>" size='6'/>
                     hasta el
-                <input type="text" id="fecha_fin" name="fecha_fin" class="required" size='16'/> a Hrs. <input type="text" id="hora_fin" name="hora_fin" class="required" value="<?php echo date("H:i:s");?>" size='6'/><br>
+                <input type="text" id="fecha_fin" name="fecha_fin" size='16'/> a Hrs. <input type="text" id="hora_fin" name="hora_fin" value="<?php echo date("H:i:s");?>" size='6'/><br>
                 Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural.
                 Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para los cual su persona deberá coordinar la elaboración del FUCOV. 
                 <?php echo Form::label('observacion', 'Observacion:',array('id'=>'label_observacion','class'=>'form'));?> 
