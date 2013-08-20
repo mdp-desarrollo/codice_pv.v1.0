@@ -49,7 +49,7 @@ class Controller_Pvpresupuesto extends Controller_DefaultTemplate {
     
 public function action_ejecucion($id = ''){
     $oPpt = new Model_Pvprogramaticas();
-    $ppt = $oPpt->ejecucion();
+    $ppt = $oPpt->ejecucionppt();
     $this->template->styles = array('media/css/tablas.css' => 'all');
     $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
     $this->template->content = View::factory('pvpresupuesto/ejecucion')
@@ -58,28 +58,178 @@ public function action_ejecucion($id = ''){
 }
 
 public function action_saldopresupuesto($id = ''){
-    $oPpt = new Model_Pyvprogramatica();
+    $oPpt = new Model_Pvprogramaticas();
     $ppt = $oPpt->saldopresupuesto($id);
     $det = $oPpt->detallesaldopresupuesto($id);
     foreach ($det as $d)
         $detalle = $d;
-    $pyvmenu = View::factory('pyv/templates/menus')->bind('menu', $this->pmenu)->set('titulo', 'PRESUPUESTO');
     $this->template->styles = array('media/css/tablas.css' => 'all');
     $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
-    //$this->template->styles = array('media/css/tablas.css' => 'all','media/css/pyv/jquery-ui.css' => 'all');
-    //$this->template->scripts = array('media/js/jquery.tablesorter.min.js','media/js/pyv/jquery-ui.js','media/js/pyv/jquery-1.9.1.js');
-    $this->template->content = View::factory('pyv/presupuesto/saldopresupuesto')
+    $this->template->content = View::factory('pvpresupuesto/saldopresupuesto')
                                     ->bind('presupuesto', $ppt)
                                     ->bind('detalle', $detalle)
-                                    ->bind('menu', $pyvmenu)
                                     ->bind('id_programatica', $id)
                                     ;
 }
 
-public function action_certificados(){
-
+public function action_addsaldoppt($id = ''){
+    $mensajes = array();
+    $programatica = ORM::factory('pvprogramaticas')->where('id', '=', $id)->and_where('estado', '=', 1)->find();
+    if ($programatica->loaded()) {
+        if (isset($_POST['submit'])) {
+            $ejecucion = ORM::factory('pvejecuciones');
+            $ejecucion->inicial = $_POST['inicial'];
+            $ejecucion->vigente = $_POST['vigente'];
+            $ejecucion->preventivo = $_POST['preventivo'];
+            $ejecucion->comprometido = $_POST['comprometido'];
+            $ejecucion->devengado = $_POST['devengado'];
+            $ejecucion->saldo_devengado = $_POST['saldoDevengado'];
+            $ejecucion->pagado = $_POST['pagado'];
+            $ejecucion->saldo_pagar = $_POST['saldoPagar'];
+            $ejecucion->estado = 1;
+            $ejecucion->gestion = $_POST['gestion'];
+            $ejecucion->id_programatica = $id;
+            $ejecucion->id_partida = $_POST['partidas'];
+            $ejecucion->save();
+            $this->request->redirect('pvpresupuesto/saldopresupuesto/'.$id);
+        }
+        $oPart = new Model_Pvpartidas();
+        $partida = $oPart->partidas_no_asignadas($id);
+        foreach($partida as $p)
+            $partidas[$p['id']] = $p['codigo'].' &nbsp;&nbsp;-&nbsp;&nbsp; '.$p['partida'];
+        $oPpt = new Model_Pvprogramaticas();
+        $ppt = $oPpt->saldopresupuesto($id);
+        $det = $oPpt->detallesaldopresupuesto($id);
+        foreach ($det as $d)
+            $detalle = $d;
+        $this->template->styles = array('media/css/tablas.css' => 'all');
+        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
+        $this->template->content = View::factory('pvpresupuesto/addsaldoppt')
+                                        ->bind('presupuesto', $ppt)
+                                        ->bind('detalle', $detalle)
+                                        ->bind('id_programatica', $id)
+                                        ->bind('partidas', $partidas);
+                                        ;
+    }
+    else {
+            $this->template->content = 'La categoria programatica no fue encontrada.';
+    }
 }
 
+
+public function action_addejecucionppt(){
+    $mensajes = array();
+    $oficinas = ORM::factory('oficinas')->where('id_entidad','=',$this->user->id_entidad)->find_all();
+    if ($oficinas) {
+        if (isset($_POST['submit'])) {
+            $programatica = ORM::factory('pvprogramaticas');
+            $programatica->id_oficina = $_POST['oficina'];
+            $programatica->id_fuente = $_POST['fuente'];
+            $programatica->id_organismo = $_POST['organismo'];
+            $programatica->id_programa = $_POST['programa'];
+            $programatica->id_proyecto = $_POST['proyecto'];
+            $programatica->id_actividadppt = $_POST['actividad'];
+            $programatica->id_da = $_POST['da'];
+            $programatica->id_ue = $_POST['ue'];
+            $programatica->estado = 1;
+            $programatica->gestion = $_POST['gestion'];
+            $programatica->save();
+            $this->request->redirect('pvpresupuesto/ejecucion/');
+        }
+        //Entidad
+        $ent = ORM::factory('entidades')->where('id','=',$this->user->id_entidad)->find();
+        $entidad = $ent->entidad;
+        //Oficinas
+        $ofi = ORM::factory('oficinas')->where('id_entidad','=',$this->user->id_entidad)->find_all();
+        foreach($ofi as $o)
+            $oficina[$o->id] = $o->oficina;
+        //Direccion Administrativa
+        $dadmin = ORM::factory('oficinas')->where('ppt_da','=',1)->and_where('id_entidad','=',$this->user->id_entidad)->find_all();
+        foreach($dadmin as $d)
+            $da[$d->id] = $d->ppt_cod_da.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$d->oficina;
+        
+        //Unidad Ejecutora
+        $uejec = ORM::factory('oficinas')->where('ppt_unid_ejecutora','=',1)->and_where('id_entidad','=',$this->user->id_entidad)->find_all();
+        foreach($uejec as $d)
+            $ue[$d->id] = $d->ppt_cod_ue.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$d->oficina;
+        
+        //Programa
+        $programa = ORM::factory('pvprogramas')->where('estado','=',1)->find_all();
+        $prog[0] = '';
+        foreach($programa as $p)
+            $prog[$p->id] = $p->codigo.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$p->programa;
+            
+        //Fuente
+        $fuente = ORM::factory('pvfuentes')->where('estado','=',1)->find_all();
+        foreach($fuente as $f)
+            $fte[$f->id] = $f->codigo.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$f->sigla;
+        
+        //Organismo
+        $organismo = ORM::factory('pvorganismos')->where('estado','=',1)->find_all();
+        foreach($organismo as $o)
+            $org[$o->id] = $o->codigo.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$o->sigla;
+        $this->template->styles = array('media/css/tablas.css' => 'all','media/css/jquery-ui-1.8.16.custom.css'=>'screen');
+        $this->template->scripts = array('media/js/jquery-ui-1.8.16.custom.min.js','media/js/jquery.tablesorter.min.js');
+        $this->template->content = View::factory('pvpresupuesto/addejecucionppt')
+                                        ->bind('entidad', $entidad)
+                                        ->bind('oficina', $oficina)
+                                        ->bind('da', $da)
+                                        ->bind('ue', $ue)
+                                        ->bind('programa', $prog)
+                                        ->bind('fuente', $fte)
+                                        ->bind('organismo', $org)
+                                        ;
+    }
+    else {
+            $this->template->content = 'La categoria programatica no fue encontrada.';
+    }
+}
+
+public function action_editsaldoppt($id = ''){
+    $mensajes = array();
+    $programatica = ORM::factory('pvprogramaticas')->where('id', '=', $id)->and_where('estado', '=', 1)->find();
+    if ($programatica->loaded()) {
+        if (isset($_POST['submit'])) {
+            $ejecucion = ORM::factory('pvejecuciones');
+            $ejecucion->inicial = $_POST['inicial'];
+            $ejecucion->vigente = $_POST['vigente'];
+            $ejecucion->preventivo = $_POST['preventivo'];
+            $ejecucion->comprometido = $_POST['comprometido'];
+            $ejecucion->devengado = $_POST['devengado'];
+            $ejecucion->saldo_devengado = $_POST['saldoDevengado'];
+            $ejecucion->pagado = $_POST['pagado'];
+            $ejecucion->saldo_pagar = $_POST['saldoPagar'];
+            $ejecucion->estado = 1;
+            $ejecucion->gestion = $_POST['gestion'];
+            $ejecucion->id_programatica = $id;
+            $ejecucion->id_partida = $_POST['partidas'];
+            $ejecucion->save();
+            $this->request->redirect('pvpresupuesto/saldopresupuesto/'.$id);
+        }
+        //$oPart = new Model_Pvpartidas();
+        //$partida = $oPart->partidas_no_asignadas($id);
+        //foreach($partida as $p)
+        //    $partidas[$p['id']] = $p['codigo'].' &nbsp;&nbsp;-&nbsp;&nbsp; '.$p['partida'];
+        $oPpt = new Model_Pvprogramaticas();
+        $ppt = $oPpt->saldopresupuesto($id);
+        $det = $oPpt->detallesaldopresupuesto($id);
+        foreach ($det as $d)
+            $detalle = $d;
+        $this->template->styles = array('media/css/tablas.css' => 'all');
+        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
+        $this->template->content = View::factory('pvpresupuesto/editsaldoppt')
+                                        ->bind('presupuesto', $ppt)
+                                        ->bind('detalle', $detalle)
+                                        ->bind('id_programatica', $id)
+        //                                ->bind('partidas', $partidas);
+                                        ;
+    }
+    else {
+            $this->template->content = 'La categoria programatica no fue encontrada.';
+    }
+}
+
+/*
 public function action_detallecertificado($id){
     //id = id_memo
     $memo = ORM::factory('documentos')->where('id', '=', $id)->find();
@@ -120,54 +270,6 @@ public function action_detallecertificado($id){
         }
 }
 
-public function action_addsaldoppt($id = ''){
-    $mensajes = array();
-    $programatica = ORM::factory('pyvprogramatica')->where('id', '=', $id)->and_where('estado', '=', 1)->find();
-    if ($programatica->loaded()) {
-        if (isset($_POST['submit'])) {
-            $ejecucion = ORM::factory('pyvejecucion');
-            $ejecucion->inicial = $_POST['inicial'];
-            $ejecucion->vigente = $_POST['vigente'];
-            $ejecucion->preventivo = $_POST['preventivo'];
-            $ejecucion->comprometido = $_POST['comprometido'];
-            $ejecucion->devengado = $_POST['devengado'];
-            $ejecucion->saldo_devengado = $_POST['saldoDevengado'];
-            $ejecucion->pagado = $_POST['pagado'];
-            $ejecucion->saldo_pagar = $_POST['saldoPagar'];
-            $ejecucion->estado = 1;
-            $ejecucion->gestion = $_POST['gestion'];
-            $ejecucion->id_programatica = $id;
-            $ejecucion->id_partida = $_POST['partidas'];
-            $ejecucion->save();
-            $this->request->redirect('pyvpresupuesto/saldopresupuesto/'.$id);
-        }
-        //$partida = ORM::factory('pyvpartidas')->where('estado','=',1)->find_all();
-        //$partidas = array();
-        $oPart = new Model_Pyvpartidas();
-        $partida = $oPart->partidas_no_asignadas($id);
-        foreach($partida as $p)
-            $partidas[$p['id']] = $p['codigo'].' &nbsp;&nbsp;-&nbsp;&nbsp; '.$p['partida'];
-        $oPpt = new Model_Pyvprogramatica();
-        $ppt = $oPpt->saldopresupuesto($id);
-        $det = $oPpt->detallesaldopresupuesto($id);
-        foreach ($det as $d)
-            $detalle = $d;
-        $pyvmenu = View::factory('pyv/templates/menus')->bind('menu', $this->pmenu)->set('titulo', 'PRESUPUESTO');
-        $this->template->styles = array('media/css/tablas.css' => 'all');
-        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
-        $this->template->content = View::factory('pyv/presupuesto/addsaldoppt')
-                                        ->bind('presupuesto', $ppt)
-                                        ->bind('detalle', $detalle)
-                                        ->bind('menu', $pyvmenu)
-                                        ->bind('id_programatica', $id)
-                                        ->bind('partidas', $partidas);
-                                        ;
-    }
-    else {
-            $this->template->content = 'La categoria programatica no fue encontrada.';
-    }
-}
-/*    
 public function action_autorizappt($id = '') {
         $fucov = ORM::factory('pyvfucov')->where('id','=',$id)->find();
         $liquidacion = ORM::factory('pyvliquidacion')->where('id_fucov','=',$id)->find();        

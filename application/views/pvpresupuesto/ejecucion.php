@@ -40,20 +40,15 @@
     td{padding:5px;}    
 </style>
 
-<div style="border: 1px black solid;">
-    <ul id="nav">
-     <?php echo $menu;?>
-    </ul>
-</div>
 <br />
 <h2 class="subtitulo">Ejecuci&oacute;n Presupuestaria<br/> <span>Lista de Fuentes de Financiamiento</span></h2>
 <?php if(sizeof($presupuesto)>0):?>
 <p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" /></p>
-<div style="float: right;"><a href="/pyvpresupuesto/adicionarejecucion/" >+ Adicionar Ejecuci&oacute;n PPT</a></div>
+<div style="float: right;"><a href="/pvpresupuesto/addejecucionppt/" >+ Adicionar</a></div>
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>
-            <th width="300">Unidad</th>
+            <th width="300">Unidad Funcional</th>
             <th>Gestion</th>
             <th>Entidad</th>
             <th>D.A.</th>    
@@ -69,7 +64,7 @@
     <?php    
     foreach( $presupuesto as $ppt): ?>
         <tr>
-            <td ><a href="/pyvpresupuesto/saldopresupuesto/<?php echo $ppt['id'];?>"><?php echo $ppt['unidad_funcional'];?></a></td>
+            <td ><a href="/pvpresupuesto/saldopresupuesto/<?php echo $ppt['id'];?>"><?php echo $ppt['oficina'];?></a></td>
             <td ><?php echo $ppt['gestion'];?></td>
             <td ><?php echo $ppt['codigo_entidad'];?></td>
             <td ><?php echo $ppt['codigo_da'];?></td>
@@ -77,7 +72,7 @@
             <td ><?php echo $ppt['codigo_prog'];?></td>
             <td ><?php echo $ppt['codigo_proy'];?></td>
             <td ><?php echo $ppt['codigo_act'].' - '.$ppt['actividad'];?></td>
-            <td ><?php echo $ppt['codigo_fte'].' '.$ppt['sigla_fuente'];;?></td>
+            <td ><?php echo $ppt['codigo_fte'].' '.$ppt['sigla_fte'];;?></td>
             <td ><?php echo $ppt['codigo_org'].' '.$ppt['sigla_org'];?></td>
         </tr>        
     <?php endforeach; ?>
