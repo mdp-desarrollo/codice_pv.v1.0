@@ -17,7 +17,8 @@ return array
 			 *
 			 * Ports and sockets may be appended to sthe hostname.
 			 */
-			'hostname'   => 'localhost',
+			//'hostname'   => 'localhost',
+            'hostname'   => '192.168.131.241',
 			'database'   => 'correspondencia_pv',
 			'username'   => 'correspondencia',
 			'password'   => 'c0rr3sp0nd3nc14',
