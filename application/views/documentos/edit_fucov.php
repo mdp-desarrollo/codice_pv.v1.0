@@ -1,32 +1,8 @@
-<script>
-    tinymce.init({
-        selector: "textarea#descripcion",
-        theme: "modern",
-        language : "es",
-        // width: 595,
-        height: 350,
-        plugins: [
-            "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
-            "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-            "save table contextmenu directionality emoticons template paste textcolor"
-        ],
-        content_css: "css/content.css",
-        theme_advanced_buttons3_add : "pastetext,pasteword,selectall",
-        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor | fullscreen", 
-        style_formats: [
-            {title: 'Bold text', inline: 'b'},
-            {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
-            {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
-            {title: 'Example 1', inline: 'span', classes: 'example1'},
-            {title: 'Example 2', inline: 'span', classes: 'example2'},
-            {title: 'Table styles'},
-            {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
-        ]
-    }); 
-</script>
 <script type="text/javascript">   
    
     $(function(){
+        
+        $('table.classy tbody tr:odd').addClass('odd'); 
         
         var tabContainers=$('div.tabs > div');
         tabContainers.hide().filter(':first').show();
@@ -86,60 +62,57 @@
             $('#referencia').focus();
             return false;
         });
+        
+        $('#id_tipoviaje').change(function(){
+            var id_tipoviaje = $('#id_tipoviaje').val();
+            var id_categoria = $('#id_categoria').val();
+            $.ajax({
+	            type: "POST",
+	            data: { id_tv: id_tipoviaje, id_ca:id_categoria},
+	            url: "/ajax/getmonto",
+	            dataType: "json",
+	            success: function(item)
+	            {
+                        if(item)
+                        {
+                            $('#div_vd').text(item.monto);
+                            $('#viatico_dia').val(item.monto);
+                            $('#div_momeda1').text(item.moneda);
+                            
+                        }
+	           }
+          });
+            
+        });
     
-//Modificaod por freddy Velasco
-<?php if($documento->fucov==1){ ?>
-$('#contenido1').hide();
-$('#label_referencia').text('Motivo');
-<?php } else { ?>
-    $('#label_contenido').hide();
-    $('#contenido2').hide();
-<?php } ?>    
-    $('#fucov').click(function(){
-    if($('#fucov').is(':checked')) {
-            $('#label_referencia').text('Motivo');
-            $('#label_contenido').show();
-            $('#contenido1').hide();
-            $('#contenido2').show();
-            // $('#viaje').show();
-            // $('#normal').hide();
-        } else {
-            $('#label_referencia').text('Referencia');
-            $('#label_contenido').hide();
-            $('#contenido1').show();
-            $('#contenido2').hide();
-            // $('#normal').show();
-            // $('#viaje').hide();
-        }  
-});
-
-$.datepicker.regional['es'] = {
-                closeText: 'Cerrar',
-                prevText: '&#x3c;Ant',
-                nextText: 'Sig&#x3e;',
-                currentText: 'Hoy',
-                monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                    'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
-                monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
-                    'Jul','Ago','Sep','Oct','Nov','Dic'],
-                dayNames: ['Domingo','Lunes','Martes','Mi&eacute;rcoles','Jueves','Viernes','S&aacute;bado'],
-                dayNamesShort: ['Dom','Lun','Mar','Mie','Juv','Vie','Sab'],
-                dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
-                weekHeader: 'Sm',
-                dateFormat: 'dd/mm/yy',
-                //dateFormat: 'Full - DD, d MM, yy',
-                firstDay: 1,
-                isRTL: false,
-                showMonthAfterYear: false,
-                yearSuffix: ''
-    };   
-$.datepicker.setDefaults($.datepicker.regional['es']);
-var pickerOpts  = { changeMonth: true, minDate: 0, changeYear: true, yearRange: "-10:+1", dateFormat: 'D yy-mm-dd',onSelect: function(){ feriados('fecha');}};
-$('#fecha_inicio,#fecha_fin').datepicker(pickerOpts,$.datepicker.regional['es']);
-$('#hora_inicio,#hora_fin').timeEntry({show24Hours: true, showSeconds: true});
+  
+        $.datepicker.regional['es'] = {
+            closeText: 'Cerrar',
+            prevText: '&#x3c;Ant',
+            nextText: 'Sig&#x3e;',
+            currentText: 'Hoy',
+            monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+            monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
+                'Jul','Ago','Sep','Oct','Nov','Dic'],
+            dayNames: ['Domingo','Lunes','Martes','Mi&eacute;rcoles','Jueves','Viernes','S&aacute;bado'],
+            dayNamesShort: ['Dom','Lun','Mar','Mie','Juv','Vie','Sab'],
+            dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
+            weekHeader: 'Sm',
+            dateFormat: 'dd/mm/yy',
+            //dateFormat: 'Full - DD, d MM, yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
+        };   
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+        var pickerOpts  = { changeMonth: true, minDate: 0, changeYear: true, yearRange: "-10:+1", dateFormat: 'D yy-mm-dd',onSelect: function(){ feriados('fecha');}};
+        $('#fecha_salida,#fecha_arribo').datepicker(pickerOpts,$.datepicker.regional['es']);
+        $('#hora_salida,#hora_arribo').timeEntry({show24Hours: true, showSeconds: true});
 
 
-/////////////end////////////////////
+        /////////////end////////////////////
 
         $('#btnword').click(function(){
             $('#word').val(1);
@@ -208,42 +181,34 @@ $('#hora_inicio,#hora_fin').timeEntry({show24Hours: true, showSeconds: true});
 
 </style>
 
-<?php 
-$origen =  '';
-$destino = '';
-$detalle_comision = '';
-$fi = '';
-$ff = '';
-$hi = '';
-$hf = '';
-$obs = '';
-$checked = '';
-$diai = '';
-$diaf = '';
-$obs = '';
-if($documento->fucov==1) {
-$origen =  $pvcomision->origen;
-$destino = $pvcomision->destino;
-$detalle_comision = $pvcomision->detalle_comision;
-$fi = date('Y-m-d', strtotime($pvcomision->fecha_inicio));
-$ff = date('Y-m-d',  strtotime($pvcomision->fecha_fin));
-$hi = date('H:i:s', strtotime($pvcomision->fecha_inicio));
-$hf = date('H:i:s',  strtotime($pvcomision->fecha_fin));
-$diai=  dia_literal(date("w", strtotime($fi)));
-$diaf=  dia_literal(date("w", strtotime($ff)));
-$obs = $pvcomision->observacion;
-$checked = 'checked';
-} 
+<?php
+
+
+    
+    $fi = date('Y-m-d', strtotime($pvfucov->fecha_salida));
+    $ff = date('Y-m-d', strtotime($pvfucov->fecha_arribo));
+    $hi = date('H:i:s', strtotime($pvfucov->fecha_salida));
+    $hf = date('H:i:s', strtotime($pvfucov->fecha_arribo));
+    $diai = dia_literal(date("w", strtotime($fi)));
+    $diaf = dia_literal(date("w", strtotime($ff)));
+    
 
 function dia_literal($n) {
     switch ($n) {
-        case 1: return 'Lun'; break;
-        case 2: return 'Mar'; break;
-        case 3: return 'Mie'; break;
-        case 4: return 'Jue'; break;
-        case 5: return 'Vie'; break;
-        case 6: return 'Sab'; break;
-        case 0: return 'Dom'; break;
+        case 1: return 'Lun';
+            break;
+        case 2: return 'Mar';
+            break;
+        case 3: return 'Mie';
+            break;
+        case 4: return 'Jue';
+            break;
+        case 5: return 'Vie';
+            break;
+        case 6: return 'Sab';
+            break;
+        case 0: return 'Dom';
+            break;
     }
 }
 ?>
@@ -252,6 +217,8 @@ function dia_literal($n) {
 <div class="tabs">
     <ul class="tabNavigation">
         <li><a href="#editar">Edición</a></li>
+        <li><a href="#poa">POA</a></li>
+        <li><a href="#pre">Presupuesto</a></li>
         <li><a href="#adjuntos">Adjuntos</a></li>        
     </ul>
     <div id="editar"> 
@@ -288,10 +255,12 @@ function dia_literal($n) {
                     echo Form::hidden('proceso', 1);
                 else:
                     ?>        
-                    <fieldset> <legend>Proceso: <?php echo Form::select('proceso', $options, $documento->id_proceso); ?>
-                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                            <?php
-                            if ($documento->id_tipo == '2') { ?>FUCOV: <?php echo Form::checkbox('fucov',1,FALSE,array('id'=>'fucov','name'=>'fucov',$checked,'title'=>'seleccione si quiere habilitar un memoramdum de viaje'))?><?php }?>    
+                    <fieldset> 
+                        <legend>Viaje: <?php
+                echo Form::select('id_tipoviaje', $opt_tv,$pvfucov->id_tipoviaje,array('id' => 'id_tipoviaje'));
+                echo Form::hidden('proceso', 1);
+                echo Form::hidden('id_categoria',$user->id_categoria,array('id' => 'id_categoria'));
+                    ?>
                         </legend>
                     <?php endif; ?>            
                     <table width="100%">
@@ -398,13 +367,13 @@ function dia_literal($n) {
                                         <?php endforeach; ?>
 
                                         <!-- Inmediato superior -->    
-                                        <?php //foreach($superior  as $v){    ?>
-                                        <li class="<?php //echo $v['genero']    ?>"><?php //echo HTML::anchor('#',$v['nombre'],array('class'=>'destino','nombre'=>$v['nombre'],'title'=>$v['cargo'],'cargo'=>$v['cargo'],'via'=>'','cargo_via'=>''));    ?></li>
-                                        <?php //}    ?>
+                                        <?php //foreach($superior  as $v){     ?>
+                                        <li class="<?php //echo $v['genero']      ?>"><?php //echo HTML::anchor('#',$v['nombre'],array('class'=>'destino','nombre'=>$v['nombre'],'title'=>$v['cargo'],'cargo'=>$v['cargo'],'via'=>'','cargo_via'=>''));      ?></li>
+                                        <?php //}     ?>
                                         <!-- dependientes -->    
-                                        <?php // foreach($dependientes  as $v){    ?>
-                                        <li class="<?php // echo $v['genero']    ?>"><?php //echo HTML::anchor('#',$v['nombre'],array('class'=>'destino','nombre'=>$v['nombre'],'title'=>$v['cargo'],'cargo'=>$v['cargo'],'via'=>'','cargo_via'=>''));    ?></li>
-                                        <?php //}    ?>
+                                        <?php // foreach($dependientes  as $v){     ?>
+                                        <li class="<?php // echo $v['genero']      ?>"><?php //echo HTML::anchor('#',$v['nombre'],array('class'=>'destino','nombre'=>$v['nombre'],'title'=>$v['cargo'],'cargo'=>$v['cargo'],'via'=>'','cargo_via'=>''));      ?></li>
+                                        <?php //}     ?>
                                     </ul>
                                 </div>
                             </td>
@@ -414,7 +383,7 @@ function dia_literal($n) {
 
                         <tr>
                             <td colspan="2" style="padding-left: 5px;">
-                                <?php echo Form::label('referencia', 'Referencia:', array('id' => 'label_referencia', 'class' => 'form')); ?> 
+                                <?php echo Form::label('referencia', 'Motivo:', array('id' => 'label_referencia', 'class' => 'form')); ?> 
                                 <textarea name="referencia" id="referencia" style="width: 510px;" class="required"><?php echo $documento->referencia ?></textarea>
                             </td>
                         </tr>
@@ -426,33 +395,72 @@ function dia_literal($n) {
                     </table>
 
                     <div style="width: 800px;float: left; ">
-                        <?php echo Form::label('contenido', 'Contenido:', array('id' => 'label_contenido', 'class' => 'form')); ?> 
-                        <div id='contenido1'>
-                            <?php
-                            echo Form::textarea('descripcion', $documento->contenido, array('id' => 'descripcion', 'cols' => 50, 'rows' => 20));
-                            ?>
-                        </div>
-                        
-                        
-                        <div id='contenido2'>
-                            <br>
-                            Por medio del presente Memorándum se ordena a su persona trasladarse desde:<br> 
-                            ciudad (origen)
-                            <?php echo Form::input('origen', $origen, array('id' => 'origen')); ?> 
-                            hasta la ciudad (destino)
-                            <?php echo Form::input('destino', $destino, array('id' => 'destino')); ?><br>
-                            con el objetivo de asistir a (detalle de comision)
-                            <p><?php echo Form::textarea('detalle_comision', $detalle_comision, array('id' => 'detalle_comision', 'cols' => 150, 'rows' => 2)); ?></p>
-                            desde el 
-                            <input type="text" id="fecha_inicio" name="fecha_inicio" size='16' value="<?php echo $diai.' '.$fi;?>"/> a Hrs. <input type="text" name="hora_inicio" id="hora_inicio" value="<?php echo $hi; ?>" size='6'/>
-                            hasta el
-                            <input type="text" id="fecha_fin" name="fecha_fin" size='16' value="<?php echo $diaf.' '.$ff?>"/> a Hrs. <input type="text" id="hora_fin" name="hora_fin" value="<?php echo $hf; ?>" size='6'/><br>
-                            Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural.
-                            Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para los cual su persona deberá coordinar la elaboración del FUCOV. 
-                            <?php echo Form::label('observacion', 'Observacion:', array('id' => 'label_observacion', 'class' => 'form')); ?> 
-                            <?php echo Form::textarea('observacion', $obs, array('id' => 'observacion', 'cols' => 150, 'rows' => 2)); ?>
-                        </div>
-                    </div>  
+                        <?php echo Form::hidden('descripcion', $documento->contenido, array('id' => 'descripcion')); ?>
+                        <table class="classy" border="1">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center;">Origen</th>
+                                    <th style="text-align:center;">Destino</th>
+                                    <th style="text-align:center;">Fecha y Hora <br>Salida</th>
+                                    <th style="text-align:center;">Fecha y Hora <br>Retorno</th>
+                                    <th style="text-align:center;">Transporte</th>
+                                    <th style="text-align:center;">Viaticos</th>
+                                    <th style="text-align:center;">Desc. IVA</th> 
+                                    <th style="text-align:center;">Gastos<br>Repres.</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><?php echo Form::input('origen',$pvfucov->origen,array('id'=>'origen','size'=>15,'class' => 'required'))?></td>
+                                    <td><?php echo Form::input('destino',$pvfucov->destino,array('id'=>'destino','size'=>15,'class' => 'required'))?></td>
+                                    <td><?php echo Form::input('fecha_salida',$diai.' '.$fi,array('id'=>'fecha_salida','size'=>12,'class' => 'required'))?> <br><?php echo Form::input('hora_salida',$hi,array('id'=>'hora_salida','size'=>12,'class' => 'required'))?></td>
+                                    <td><?php echo Form::input('fecha_arribo',$diaf.' '.$ff,array('id'=>'fecha_arribo','size'=>12,'class' => 'required'))?> <br><?php echo Form::input('hora_arribo',$hf,array('id'=>'hora_arribo','size'=>12,'class' => 'required'))?></td>
+                                    <td>
+                                        <input type="radio" name="transporte" value="Aereo" <?php if($pvfucov->transporte=='Aereo'){ echo 'checked';}?> > Aereo<br>
+                                        <input type="radio" name="transporte" value="Terrestre" <?php if($pvfucov->transporte=='Terrestre'){ echo 'checked';}?>> Terrestre<br>
+                                        <input type="radio" name="transporte" value="Vehiculo Oficial" <?php if($pvfucov->transporte=='Vehiculo Oficial'){ echo 'checked';}?>> Vehiculo<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Oficial
+                                    </td>
+                                    <td>
+                                        <input type="radio" name="cancelar" value="MDPyEP" <?php if($pvfucov->cancelar=='MDPyEP'){ echo 'checked';}?>> MDPyEP<br><br>
+                                        Otra Institucion:
+                                        <?php echo Form::input('financiador',$pvfucov->financiador,array('id'=>'financiador','size'=>15))?><br>
+                                        Cubre:<br>
+                                        <input type="radio" name="cancelar" value="Hospedaje" <?php if($pvfucov->cancelar=='Hospedaje'){ echo 'checked';}?>> Hospedaje<br>
+                                        <input type="radio" name="cancelar" value="Hospedaje y alimentacion" <?php if($pvfucov->cancelar=='Hospedaje y alimentacion'){ echo 'checked';}?>> Hospedaje y<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alimentacion<br>
+                                        <input type="radio" name="cancelar" value="Renuncia de viaticos" <?php if($pvfucov->cancelar=='Aereo'){ echo 'Renuncia de viaticos';}?>> Renuncia de<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;viaticos
+                                    </td>
+                                    <td>
+                                        <input type="radio" name="impuesto" value="Si" <?php if($pvfucov->impuesto=='Si'){ echo 'checked';}?>> Si<br>
+                                        <input type="radio" name="impuesto" value="No" <?php if($pvfucov->impuesto=='No'){ echo 'checked';}?>> No<br>
+                                    </td>
+                                    <td>
+                                        <input type="radio" name="representacion" value="Si" <?php if($pvfucov->representacion=='Si'){ echo 'checked';}?>> Si<br>
+                                        <input type="radio" name="representacion" value="No" <?php if($pvfucov->representacion=='No'){ echo 'checked';}?>> No<br>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <table width="100%">
+                        <tr>
+                            <td colspan='3'>Viatico x Dia: <?php echo Form::input('viatico_dia', $pvfucov->viatico_dia,array('id'=>'viatico_dia','size'=>8))?> <spam id="div_momeda1">Bs.</spam></td>
+                            
+                       </tr>     
+                        <tr>
+                            <td colspan='3'>Nro Dias: <div id="div_nd"></div><div id="div_momeda2"></div></td>
+                       </tr>     
+                       <tr>
+                            <td colspan='3'>% Viaticos: <div id="div_pv"></div></td>
+                       </tr>
+                        <tr>    
+                            <td>TOTAL VIATICOS: <div id="div_tv"></div><div id="div_momeda3"></div></td>
+                            <td>GASTOS DE REPRESENTACION: <div id="div_gr"></div><div id="div_momeda4"></div></td>
+                            <td>TOTAL PASAJES: <div id="div_tp"></div><div id="div_moneda5"></div></td>
+                        </tr>
+                    </table>
                     <div id="op">
                         <!-- <a href="#" class="link imagen">Insertar Imagen</a>
                          <a href="#" class="link imagen">Seleccionar todo</a>    -->
@@ -501,5 +509,11 @@ function dia_literal($n) {
                 </tbody>
             </table>    
         </div>
+    </div>
+    <div id="poa">
+        poa
+    </div>
+    <div id="pre">
+        presupuesto
     </div>
 </div>

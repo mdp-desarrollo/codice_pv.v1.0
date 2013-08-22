@@ -40,10 +40,15 @@ $('.sel').bind('click',function(){
 $('a.poplight[href^=#]').click(function() {
     var id_nur=$(this).attr('id_nur');
     var id_seg=$(this).attr('id_seg');
+    var id_documento=$(this).attr('id_documento');
+    var fucov=$(this).attr('fucov');
     var nur=$(this).attr('nuri');
     $('#id_nur').val(id_nur);
-    $('#id_seg').val(id_seg);    
-    $('#nur').val(nur);    
+    $('#id_seg').val(id_seg);
+    $('#id_documento').val(id_documento);
+    $('#fucov').val(fucov);
+    $('#nur').val(nur);
+    
     
     $('h3.mensaje').text('Generar respuesta a: '+nur);
     //$('a#aceptar').attr('href','/bandeja/responder/'+id_nur);
@@ -179,7 +184,8 @@ $('a.link2').click(function(){
                 echo 'RESPONDER CON: ';
                 echo Form::select('documento',$options,NULL,array('id'=>'documento')); 
                 echo Form::hidden('id_seg','',array('id'=>'id_seg'));
-               // echo Form::hidden('id_nur','',array('id'=>'id_nur'));
+                echo Form::hidden('id_documento','',array('id'=>'id_documento'));
+                echo Form::hidden('fucov','Hola como estas',array('id'=>'fucov'));
                 echo Form::hidden('nur','',array('id'=>'nur'));
                 ?>
                 </td>
@@ -253,7 +259,7 @@ $('a.link2').click(function(){
              </td>
              <td colspan="2">
                 <span class="opciones">
-                                    <a href="#?w=350" class="poplight link respuesta" rel="popup_name" title="Responder a la hoja de ruta <?php echo $s->nur;?>" id_nur="<?php echo $s->nur;?>" id_seg="<?php echo $s->id;?>" nuri="<?php echo $s->nur?>">Generar respuesta</a>
+                                    <a href="#?w=350" class="poplight link respuesta" rel="popup_name" title="Responder a la hoja de ruta <?php echo $s->nur;?>" id_nur="<?php echo $s->nur;?>" id_documento="<?php echo $s->id_doc;?>" fucov="<?php echo $s->fucov;?>" id_seg="<?php echo $s->id;?>" nuri="<?php echo $s->nur?>">Generar respuesta </a>
                                     | <a href="/hojaruta/derivar/?id_doc=<?php echo $s->id_doc;?>" class="link derivar " title="Derivar " id_nur="<?php echo $s->nur;?>" id_seg="<?php echo $s->id;?>" nuri="<?php echo $s->nur?>">Derivar</a> 
            <?php if($s->hijo==1):?> |  <a href="/bandeja/agrupado/?nur=<?php echo $s->nur;?>" class="link agrupado">Agrupado</a><?php endif;?>
            
