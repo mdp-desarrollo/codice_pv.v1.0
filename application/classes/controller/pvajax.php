@@ -23,20 +23,15 @@ class Controller_Pvajax extends Controller {
     public function action_actividadppt()
     {   
         $id = $_POST['id'];
-        $actividad = ORM::factory('pvactividadppt')->where('id_programa','=',$id)->and_where('estado','=',1)->find_all();
+        $actividad = ORM::factory('pvpptactividades')->where('id_programa','=',$id)->and_where('estado','=',1)->find_all();
         $obj = '<option value = "0" selected>000</option>';
         
         if($actividad->count() > 0)
         {
-            //$obj = '';
             foreach($actividad as $a){
                 $obj = $obj.'<option value="'.$a->id.'">'.$a->codigo.' - '.$a->actividad.'</option>';
             }
         }
-        /*else
-        {
-            $obj = '<option value = "0" selected>000</option>';
-        }*/
         echo json_encode($obj);
     }
 /*    

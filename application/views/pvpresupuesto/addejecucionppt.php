@@ -28,6 +28,7 @@ $(function(){
             act = 'actividadppt';
             ctrl = $('#actividad');
             ajaxs(id, act, ctrl);
+            //alert(id);
         }
     });
     

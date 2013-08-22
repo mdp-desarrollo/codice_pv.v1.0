@@ -13,7 +13,7 @@ class Model_Pvprogramaticas extends ORM{
                 inner join oficinas ue on p.id_ue = ue.id
                 inner join pvprogramas prog on p.id_programa = prog.id
                 inner join pvproyectos proy on p.id_proyecto = proy.id
-                inner join pvactividadppt act on p.id_actividadppt = act.id
+                inner join pvpptactividades act on p.id_actividadppt = act.id
                 inner join pvfuentes fte on p.id_fuente = fte.id
                 inner join pvorganismos org on p.id_organismo = org.id
                 ";
@@ -44,7 +44,7 @@ class Model_Pvprogramaticas extends ORM{
                 inner join oficinas ue on p.id_ue = ue.id
                 inner join pvprogramas prog on p.id_programa = prog.id
                 inner join pvproyectos proy on p.id_proyecto = proy.id 
-                inner join pvactividadppt act on p.id_actividadppt = act.id
+                inner join pvpptactividades act on p.id_actividadppt = act.id
                 inner join pvfuentes fte on p.id_fuente = fte.id
                 inner join pvorganismos org on p.id_organismo = org.id
                 where p.id = $id";

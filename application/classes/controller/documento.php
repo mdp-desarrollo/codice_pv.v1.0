@@ -247,20 +247,28 @@ class Controller_documento extends Controller_DefaultTemplate {
                 foreach ($seguimiento as $s) {
                     if (($s->derivado_a == $this->user->id) || ($s->derivado_por == $this->user->id) || $this->user->prioridad == 1)
                         $ok = true;
+                    ///rodrigo, estado=recibido => mostrar el detallepv 210813
+                    if ($s->derivado_a == $this->user->id) $estado = $s->estado;
+                    ///210813
                 }
             }
             if ($ok) {
                 $tipo = $documento->tipos->action;
                 //archivo
                 $archivo = ORM::factory('archivos')->where('id_documento', '=', $id)->find_all();
-                $this->template->scripts = array('ckeditor/adapters/jquery.js', 'ckeditor/ckeditor.js');
+                ///rodrigo detallepasajes, 210813
+                $detallepv = $this->pvmodificar($id,$estado);
+                $this->template->scripts = array('media/js/jquery-ui-1.8.16.custom.min.js','media/js/jquery.timeentry.js');
+                $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css'=>'screen');
+                ///210813
                 $this->template->title .= ' | ' . $documento->codigo;
                 $this->template->content = View::factory('documentos/detalle')
                         ->bind('d', $documento)
                         ->bind('tipo', $tipo)
                         ->bind('archivo', $archivo)
                         ->bind('errors', $errors)
-                        ->bind('mensajes', $mensajes);
+                        ->bind('mensajes', $mensajes)
+                        ->bind('detallepv', $detallepv);
             } else {
                 $this->template->content = View::factory('no_access');
             }
@@ -471,6 +479,35 @@ class Controller_documento extends Controller_DefaultTemplate {
         $this->template->content = View::factory('documentos/archivos')
                 ->bind('results', $archivo);
     }
+    
+    ///rodrigo(opciones por usuario) 210813
+    public function pvmodificar($id,$estado){
+        $detallepv = '';
+        $fucov = ORM::factory('pvfucovs')->where('id_memo','=',$id)->find();
+        if($fucov->loaded())
+        {
+            $nivel = $this->user->nivel;
+            switch ($nivel) {
+                case 6:
+                    $pasajes = ORM::factory('pvpasajes')->where('id_fucov','=',$fucov->id)->find_all();
+                    $detallepv = View::factory('pvpasajes/detalle')
+                        ->bind('fucov', $fucov)
+                        ->bind('pasajes',$pasajes)
+                        ->bind('estado',$estado)
+                        ;
+                    break;
+                case 7:
+                    $detallepv = '7';
+                    break;
+                case 8:
+                    $detallepv = '8';
+                    break;
+            }
+            
+        }
+        return $detallepv;
+    }
+    ///210813
 
 }
 
