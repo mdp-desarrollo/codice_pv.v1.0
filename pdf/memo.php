@@ -24,10 +24,10 @@ INNER JOIN entidades AS c ON b.id_entidad = c.id WHERE a.id = '$id'");
             if ($rs2->logo) {
                 $image_file = '../media/logos/' . $rs2->logo;
             }
-            $id_entidad=$rs2->id;
+            $id_entidad = $rs2->id;
         }
-        if($id_entidad<>2 && $id_entidad<>4){
-        $this->Image($image_file, 89, 5, 40, 23, 'PNG');
+        if ($id_entidad <> 2 && $id_entidad <> 4) {
+            $this->Image($image_file, 89, 5, 40, 23, 'PNG');
         }
         $this->SetFont('helvetica', 'B', 20);
         //$this->Ln(120);
@@ -48,20 +48,39 @@ INNER JOIN entidades AS c ON b.id_entidad = c.id WHERE a.id = '$id'");
         while ($rs = $stmt->fetch(PDO::FETCH_OBJ)) {
             $pie1 = $rs->pie_1;
             $pie2 = $rs->pie_2;
-            $id_entidad=$rs->id;
+            $id_entidad = $rs->id;
         }
-        if($id_entidad<>2 && $id_entidad<>4){
-        // Linea vertical negra
-            
-        $style = array('width' => 1.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0));
-        $this->Line(140, 257, 140, 272, $style);
-        // logo quinua
-        $this->Image('../media/logos/logo_quinua.jpg', 140, 253, 40, 22, 'JPG');
-        // Pie de pagina
-        $this->SetFont('helvetica', 'I', 7);
-        $this->MultiCell(85, 0, $pie1, 0, 'R', false, 1, 50, 260, true, 0, false, true, 0, 'T', false);
-        $this->MultiCell(90, 0, $pie2, 0, 'R', false, 1, 45, 266, true, 0, false, true, 0, 'T', false);
-        $this->SetY(30);
+        if ($id_entidad <> 2 && $id_entidad <> 4) {
+            // Linea vertical negra
+
+            $style = array('width' => 1.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0));
+            $this->Line(140, 257, 140, 272, $style);
+            // logo quinua
+            $this->Image('../media/logos/logo_quinua.jpg', 140, 253, 40, 22, 'JPG');
+            // Pie de pagina
+            $this->SetFont('helvetica', 'I', 7);
+            $this->MultiCell(85, 0, $pie1, 0, 'R', false, 1, 50, 260, true, 0, false, true, 0, 'T', false);
+            $this->MultiCell(90, 0, $pie2, 0, 'R', false, 1, 45, 266, true, 0, false, true, 0, 'T', false);
+            $this->SetY(30);
+        }
+    }
+
+    function dia_literal($n) {
+        switch ($n) {
+            case 1: return 'Lun';
+                break;
+            case 2: return 'Mar';
+                break;
+            case 3: return 'Mie';
+                break;
+            case 4: return 'Jue';
+                break;
+            case 5: return 'Vie';
+                break;
+            case 6: return 'Sab';
+                break;
+            case 0: return 'Dom';
+                break;
         }
     }
 
@@ -89,17 +108,17 @@ $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 $dbh = New db();
-$sql="SELECT d.id_entidad FROM documentos d WHERE d.id='$id'";
+$sql = "SELECT d.id_entidad FROM documentos d WHERE d.id='$id'";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 while ($rs = $stmt->fetch(PDO::FETCH_OBJ)) {
-            $id_entidad=$rs->id_entidad;
-        } 
-$margin_top=33;
-if($id_entidad==2){
-    $margin_top=33;
-}elseif ($id_entidad==4) {
-    $margin_top=60;
+    $id_entidad = $rs->id_entidad;
+}
+$margin_top = 33;
+if ($id_entidad == 2) {
+    $margin_top = 33;
+} elseif ($id_entidad == 4) {
+    $margin_top = 60;
 }
 
 //set margins
@@ -124,14 +143,14 @@ $pdf->AddPage();
 $nombre = 'memorandum';
 try {
     $dbh = New db();
-    $stmt = $dbh->prepare("SELECT * FROM documentos d 
+    $stmtp = $dbh->prepare("SELECT d.* FROM documentos d 
                                INNER JOIN tipos t ON d.id_tipo=t.id
                                WHERE d.id='$id'");
     // call the stored procedure
-    $stmt->execute();
+    $stmtp->execute();
     //echo "<B>outputting...</B><BR>";
     //$pdf->Ln(7);
-    while ($rs = $stmt->fetch(PDO::FETCH_OBJ)) {
+    while ($rs = $stmtp->fetch(PDO::FETCH_OBJ)) {
         $pdf->SetFont('Helvetica', 'B', 15);
         $pdf->Write(0, strtoupper($rs->tipo), '', 0, 'C');
         $pdf->Ln();
@@ -178,11 +197,42 @@ try {
         $pdf->Write(0, $fecha, '', 0, 'L');
         $pdf->Ln(10);
         $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Cell(15, 5, 'Ref:');
+        if ($rs->fucov == 1)
+            $pdf->Cell(15, 5, 'Motivo:');
+        else
+            $pdf->Cell(15, 5, 'Ref:');
+
         $pdf->SetFont('Helvetica', '', 10);
         $pdf->MultiCell(170, 5, utf8_encode($rs->referencia), 0, 'L');
         $pdf->Ln(10);
-        $pdf->writeHTML($rs->contenido);
+        if ($rs->fucov == 1) {
+            $pv = $dbh->prepare("SELECT * FROM pvcomisiones WHERE id_documento='$id'");
+            $pv->execute();
+            while ($pv_row = $pv->fetch(PDO::FETCH_OBJ)) {
+                $detalle_comision = $pv_row->detalle_comision;
+                $origen = $pv_row->origen;
+                $destino = $pv_row->destino;
+                
+                $fi = date('Y-m-d', strtotime($pv_row->fecha_inicio));
+                $ff = date('Y-m-d',  strtotime($pv_row->fecha_fin));
+                $hi = date('H:i:s', strtotime($pv_row->fecha_inicio));
+                $hf = date('H:i:s',  strtotime($pv_row->fecha_fin));
+                $diai=  dia_literal(date("w", strtotime($fi)));
+                $diaf=  dia_literal(date("w", strtotime($ff)));
+
+                
+                $observacion = $pv_row->observacion;
+            }
+            $cad_contenido = '<p>Por medio del presente Memor&aacute;ndum se ordena a su persona trasladarse desde:</p>
+                            <p>ciudad (origen) ' . $origen . ' hasta la ciudad de (destino) ' . $destino . ' con el objetivo de asistir a ' . $detalle_comision . '.</p>
+                            <p>desde el ' . $diai . ' '.$fi.' a Hrs. ' . $hi . ' hasta el ' . $$diaf . ' '.$ff.' a Hrs. '.$hf.'.</p>
+                            <p>Una vez completada la comisi&oacute;n s&iacute;rvase hacer llegar el informe de descargo dentro de los pr&oacute;ximos 8 d&iacute;as h&aacute;biles de conclu&iacute;da la comisi&oacute;n de acuerdo al art&iacute;culo 25 del reglamento de Pasajes y vi&aacute;ticos del Ministerio de Desarrollo Productivo y Economía Plural. S&iacute;rvase tramitar ante la Direcci&oacute;n General de Asuntos Administrativos la asignaci&oacute;n de pasajes y vi&iacute;ticos de acuerdo a escala autorizada para los cual su persona deber&aacute; coordinar la elaboraci&oacute;n del FUCOV.</p>    
+                ';
+            $pdf->writeHTML($cad_contenido);
+        } else {
+            $pdf->writeHTML($rs->contenido);
+        }
+
         $pdf->Ln(10);
         $pdf->SetFont('Helvetica', '', 5);
         $pdf->writeHTML('cc. ' . strtoupper($rs->copias));

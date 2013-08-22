@@ -63,7 +63,7 @@ class Model_Seguimiento extends ORM{
     //estados mejorado en velocidad
     public function pendiente($id_user){
         $sql="SELECT s.id, s.padre,s.hijo,s.id_seguimiento,s.nur, s.nombre_emisor,s.cargo_emisor,s.de_oficina,s.fecha_emision as fecha,s.fecha_recepcion as fecha2, c.accion, s.oficial, s.hijo, s.proveido,s.adjuntos,s.archivos
-             , d.codigo, d.nombre_destinatario, d.cargo_destinatario, p.proceso,d.referencia,d.id as id_doc,s.prioridad
+             , d.codigo, d.nombre_destinatario, d.cargo_destinatario, p.proceso,d.referencia,d.id as id_doc,s.prioridad,d.fucov
               FROM seguimiento s
               INNER JOIN documentos d ON s.nur=d.nur
               INNER JOIN acciones c ON s.accion=c.id      
