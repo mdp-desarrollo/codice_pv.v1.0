@@ -46,84 +46,70 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
                                         ;    
     }
     
-public function action_autorizados(){
-    
-}
+    public function action_asignarpasaje($id = '') {
+        $fucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
+        if ($fucov->loaded()) {
+            $pasajes = ORM::factory('pvpasajes');
+            $pasajes->id_fucov = $id;
+            $pasajes->transporte = $_POST['transporte'];
+            $pasajes->empresa = $_POST['empresa'];
+            $pasajes->nro_boleto = $_POST['nroboleto'];
+            //$pasajes->fecha_salida = strtotime($_POST['fechasalida'].$_POST['horasalida']);
+            $pasajes->fecha_arribo = $_POST['fechaarribo'];
+            $pasajes->costo = $_POST['empresa'];
+            $pasajes->origen = $_POST['nroboleto'];
+            $pasajes->destino = $_POST['fechasalida'];
+          //$pasajes->save();
+         ///actualizar fucovs
+            //if($pasajes->id){
+                //$fucov->etapa_proceso = 2;
+                //$fucov->save();
+                $this->request->redirect('documento/detalle/'.$fucov->id_memo);
+            //}
+        }
+        else
+            $this->template->content = 'El FUCOV no existe';
+    }
+/*    
+    public function action_autorizados(){
+        
+    }
 
-public function action_detalleautorizados($id){
-    //id = id_memo
-    $memo = ORM::factory('documentos')->where('id', '=', $id)->find();
-        if ($memo->loaded()) {
-        $fucov = ORM::factory('pyvfucov')->where('id_memo', '=', $id)->find();
-        $documento = ORM::factory('documentos')->where('id','=', $fucov->id_documento)->find();
-            if($fucov->loaded()){
-            //$pasaje = ORM::factory('pyvpasajes')->where('id_fucov','=',$fucov->id);
-            $oPsj = new Model_Pyvpasajes();
-            $pas = $oPsj->pasaje_asignado($fucov->id);
-            foreach ($pas as $p) $pasaje = $p; 
-    //$this->template->scripts = array('media/js/jquery-ui-1.8.16.custom.min.js','media/js/jquery.timeentry.js');            
-                        $this->template->content = View::factory('pyv/pasajes/detalleautorizados')
-                                ->bind('memo', $memo)
-                                ->bind('d', $documento)
-                                //->bind('tipo', $tipo)
-                                //->bind('archivo', $archivo)
-                                //->bind('errors', $errors)
-                                //->bind('mensajes', $mensajes)
-                                ->bind('f',$fucov)
-                                ->bind('pasaje',$pasaje)
-                                //->bind('estado_seguimiento',$estado)
-                                //->bind('nivel',$nivel)
-                                //->bind('user',$this->user)
-                                ;
+    public function action_detalleautorizados($id){
+        //id = id_memo
+        $memo = ORM::factory('documentos')->where('id', '=', $id)->find();
+            if ($memo->loaded()) {
+            $fucov = ORM::factory('pyvfucov')->where('id_memo', '=', $id)->find();
+            $documento = ORM::factory('documentos')->where('id','=', $fucov->id_documento)->find();
+                if($fucov->loaded()){
+                //$pasaje = ORM::factory('pyvpasajes')->where('id_fucov','=',$fucov->id);
+                $oPsj = new Model_Pyvpasajes();
+                $pas = $oPsj->pasaje_asignado($fucov->id);
+                foreach ($pas as $p) $pasaje = $p; 
+        //$this->template->scripts = array('media/js/jquery-ui-1.8.16.custom.min.js','media/js/jquery.timeentry.js');            
+                            $this->template->content = View::factory('pyv/pasajes/detalleautorizados')
+                                    ->bind('memo', $memo)
+                                    ->bind('d', $documento)
+                                    //->bind('tipo', $tipo)
+                                    //->bind('archivo', $archivo)
+                                    //->bind('errors', $errors)
+                                    //->bind('mensajes', $mensajes)
+                                    ->bind('f',$fucov)
+                                    ->bind('pasaje',$pasaje)
+                                    //->bind('estado_seguimiento',$estado)
+                                    //->bind('nivel',$nivel)
+                                    //->bind('user',$this->user)
+                                    ;
+                }
+                else
+                    $this->template->content = 'No hay FUCOV asignado';
             }
             else
-                $this->template->content = 'No hay FUCOV asignado';
-        }
-        else
-        {
-            $this->template->content = 'El Memor&aacute;ndum no existe';
-        }
-}
+            {
+                $this->template->content = 'El Memor&aacute;ndum no existe';
+            }
+    }*/
 
-/*    
-public function action_autorizappt($id = '') {
-        $fucov = ORM::factory('pyvfucov')->where('id','=',$id)->find();
-        $liquidacion = ORM::factory('pyvliquidacion')->where('id_fucov','=',$id)->find();        
-        if ($liquidacion->loaded() && $fucov->loaded()) {
-            if( ($fucov->etapa_proceso == 2  || $fucov->etapa_proceso == 3 ) ){
-            $liquidacion->etapa_proceso = 1;
-            $liquidacion->fecha_liquidacion = date('Y-m-d H:i:s');
-            //$liquidacion->cod_cat_programatica = $_POST['fuente'];
-            //ides: unidad_funcional,  direccion_administrativa, unidad_ejecutora, id_organismo, id_fuente, id_categoria_programatica            
-            $fuente = $_POST['fuente'];
-            $ides = explode("-", $fuente);
-                $id_unidad_funcional = $ides[0];
-                $id_dir_admin = $ides[1];
-                $id_unidad_ejec = $ides[2];
-                $id_organismo = $ides[3];
-                $id_fuente = $ides[4];
-                $id_cat_programatica = $ides[5];
-            $liquidacion->id_unidad_funcional = $id_unidad_funcional;
-            $liquidacion->id_da = $id_dir_admin;
-            $liquidacion->id_ue = $id_unidad_ejec;
-            $liquidacion->id_organismo = $id_organismo;
-            $liquidacion->id_fuente = $id_fuente;
-            $liquidacion->id_cat_prog = $id_cat_programatica;
-            
-            $liquidacion->save();
-            
-            $fucov->etapa_proceso = 3;
-            $fucov->save();
-            $this->request->redirect('pyv/detalle/'.$_POST['idMemo']);
-            
-        }
-        else
-            $this->template->content = 'El documento no se puede modificar';    
-    }
-    else
-        $this->template->content = 'El documento no existe';
-}
-*/
 }
 
 ?>
