@@ -346,6 +346,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                 $documento->save();
 
                 //Modificado por Freddy Velasco
+                // cuando se crea un memoramdum
                 if (isset($_POST['fucov'])) {
                     $fi = date('Y-m-d', strtotime(substr($_POST['fecha_inicio'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_inicio']));
                     $ff = date('Y-m-d', strtotime(substr($_POST['fecha_fin'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_fin']));
@@ -359,6 +360,35 @@ class Controller_documento extends Controller_DefaultTemplate {
                     $pvcomision->observacion = $_POST['observacion'];
                     //$pvcomision->estado = 1;
                     $pvcomision->save();
+                }
+                
+                //cuando se edita un fucov
+                if($_POST['id_tipo']==13){
+                    $fi = date('Y-m-d', strtotime(substr($_POST['fecha_salida'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_salida']));
+                    $ff = date('Y-m-d', strtotime(substr($_POST['fecha_arribo'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_arribo']));
+                    $pvfucov = ORM::factory('pvfucovs')->where('id_documento','=',$id)->find();
+                    $pvfucov->origen = $_POST['origen'];
+                    $pvfucov->destino = $_POST['destino'];
+                    $pvfucov->fecha_salida = $fi;
+                    $pvfucov->fecha_arribo = $ff;
+                    $pvfucov->cancelar = $_POST['cancelar'];
+                    $pvfucov->porcentaje_viatico = $_POST['porcentaje_viatico'];
+                    $pvfucov->financiador = $_POST['financiador'];
+                    $pvfucov->transporte = $_POST['transporte'];
+                    $pvfucov->representacion = $_POST['representacion'];
+                    $pvfucov->gasto_representacion = $_POST['gasto_representacion'];
+                    $pvfucov->impuesto = $_POST['impuesto'];
+                    $pvfucov->gasto_imp = $_POST['gasto_imp'];
+                    $pvfucov->justificacion_finsem = $_POST['justificacion_finsem'];
+                    $pvfucov->total_viatico = $_POST['total_viatico'];
+                    $pvfucov->total_pasaje = $_POST['total_pasaje'];
+                    $pvfucov->id_categoria = $_POST['id_categoria'];
+                    $pvfucov->id_tipoviaje = $_POST['id_tipoviaje'];
+                    $pvfucov->etapa_proceso = 1;
+                    $pvfucov->tipo_cambio = $_POST['tipo_cambio'];
+                    $pvfucov->tipo_moneda = $_POST['tipo_moneda'];
+                    $pvfucov->viatico_dia = $_POST['viatico_dia'];
+                    $pvfucov->save();
                 }
                 ///////////end//////////////////
 

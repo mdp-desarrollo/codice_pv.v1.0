@@ -125,6 +125,8 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                         $pvfucov->destino = $pvcomision->destino;
                         $pvfucov->fecha_salida = $pvcomision->fecha_inicio;
                         $pvfucov->fecha_arribo = $pvcomision->fecha_fin;
+                        $pvfucov->cancelara = 'MDPyEP';
+                        $pvfucov->transporte = 'Aereo';
                         $pvfucov->representacion = 'No';
                         $pvfucov->impuesto = 'No';
                         $pvfucov->id_tipoviaje = 0;

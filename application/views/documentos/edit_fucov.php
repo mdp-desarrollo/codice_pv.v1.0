@@ -62,7 +62,7 @@
             $('#referencia').focus();
             return false;
         });
-        
+        //Modificado por Freddy//
         $('#id_tipoviaje').change(function(){
             var id_tipoviaje = $('#id_tipoviaje').val();
             var id_categoria = $('#id_categoria').val();
@@ -75,15 +75,33 @@
 	            {
                         if(item)
                         {
-                            $('#div_vd').text(item.monto);
                             $('#viatico_dia').val(item.monto);
-                            $('#div_momeda1').text(item.moneda);
-                            
+                            if(item.moneda==0){
+                                $('#div_momeda1').text('Bs.');
+                                $('#div_momeda2').text('Bs.');
+                                $('#div_momeda3').text('Bs.');
+                                $('#div_momeda4').text('Bs.');
+                                $('#div_momeda5').text('Bs.');
+                            }
+                            else{
+                                $('#div_momeda1').text('$us.');
+                                $('#div_momeda2').text('$us.');
+                                $('#div_momeda3').text('$us.');
+                                $('#div_momeda4').text('$us.');
+                                $('#div_momeda5').text('$us.');
+                            }
+                                                            
                         }
 	           }
           });
             
         });
+        
+//function calculo_viaticos(){
+//    var vd=$('#viatico_dia').val();
+//    var fi=$('#fecha_salida').val();
+//    
+//}
     
   
         $.datepicker.regional['es'] = {
@@ -259,38 +277,17 @@ function dia_literal($n) {
                         <legend>Viaje: <?php
                 echo Form::select('id_tipoviaje', $opt_tv,$pvfucov->id_tipoviaje,array('id' => 'id_tipoviaje'));
                 echo Form::hidden('proceso', 1);
+                echo Form::hidden('id_tipo', $documento->id_tipo);
                 echo Form::hidden('id_categoria',$user->id_categoria,array('id' => 'id_categoria'));
+                echo Form::hidden('titulo', '');
+                echo Form::hidden('tipo_cambio', '6.96');
+                echo Form::hidden('tipo_moneda', $pvfucov->tipo_moneda);
                     ?>
                         </legend>
                     <?php endif; ?>            
                     <table width="100%">
                         <tr>
                             <td style=" border-right:1px dashed #ccc; padding-left: 5px;">
-                                <?php if ($documento->id_tipo == '5'): ?>
-                                    <p>
-                                        <label>Titulo:</label>
-                                        <select name="titulo" class="required">
-                                            <option></option>
-                                            <option <?php
-                                if ($documento->titulo == 'Señor') {
-                                    echo 'selected';
-                                }
-                                    ?> >Señor</option>
-                                            <option <?php
-                                            if ($documento->titulo == 'Señora') {
-                                                echo 'selected';
-                                            }
-                                    ?>>Señora</option>
-                                            <option <?php
-                                            if ($documento->titulo == 'Señores') {
-                                                echo 'selected';
-                                            }
-                                    ?>>Señores</option>    
-                                        </select>
-                                    </p>
-                                <?php else: ?>
-                                    <input type="hidden" name="titulo" />   
-                                <?php endif; ?>    
                                 <p>
                                     <?php
                                     echo Form::hidden('id_doc', $documento->id);
@@ -446,19 +443,27 @@ function dia_literal($n) {
                     </div>
                     <table width="100%">
                         <tr>
-                            <td colspan='3'>Viatico x Dia: <?php echo Form::input('viatico_dia', $pvfucov->viatico_dia,array('id'=>'viatico_dia','size'=>8))?> <spam id="div_momeda1">Bs.</spam></td>
-                            
-                       </tr>     
+                            <td colspan='2'>% Viaticos: <?php echo Form::input('porcentaje_viatico', $pvfucov->porcentaje_viatico,array('id'=>'porcentaje_viatico','size'=>8))?> %</td>
+                       </tr>
                         <tr>
-                            <td colspan='3'>Nro Dias: <div id="div_nd"></div><div id="div_momeda2"></div></td>
+                            <td colspan='2'>Viatico x Dia: <?php echo Form::input('viatico_dia', $pvfucov->viatico_dia,array('id'=>'viatico_dia','size'=>8))?> <span id="div_momeda1">Bs.</span></td>
                        </tr>     
                        <tr>
-                            <td colspan='3'>% Viaticos: <div id="div_pv"></div></td>
-                       </tr>
+                            <td colspan='2'>Importe IVA 13 %: <?php echo Form::input('gasto_imp', $pvfucov->gasto_imp,array('id'=>'gasto_imp','size'=>8))?> <span id="div_momeda2">Bs.</span></td>
+                       </tr> 
+                       <tr>
+                            <td colspan='2'>Gastos de Representación: <?php echo Form::input('gasto_representacion', $pvfucov->gasto_imp,array('id'=>'gasto_representacion','size'=>8))?> <span id="div_momeda3">Bs.</span></td>
+                       </tr> 
+                       
                         <tr>    
-                            <td>TOTAL VIATICOS: <div id="div_tv"></div><div id="div_momeda3"></div></td>
-                            <td>GASTOS DE REPRESENTACION: <div id="div_gr"></div><div id="div_momeda4"></div></td>
-                            <td>TOTAL PASAJES: <div id="div_tp"></div><div id="div_moneda5"></div></td>
+                            <td>TOTAL VIATICOS: <?php echo Form::input('total_viatico', $pvfucov->total_viatico,array('id'=>'total_viatico','size'=>8))?> <span id="div_momeda4"></span></td>
+                            <td>TOTAL PASAJES: <?php echo Form::input('total_pasaje', $pvfucov->total_pasaje,array('id'=>'total_pasaje','size'=>8))?> <span id="div_momeda5"></span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding-left: 5px;">
+                                <?php echo Form::label('justificacion', 'Justificacion Fin de Semana:', array('id' => 'justificacion', 'class' => 'form')); ?> 
+                                <textarea name="justificacion_finsem" id="justificacion_finsem" style="width: 510px;" class="required"><?php echo $pvfucov->justificacion_finsem ?></textarea>
+                            </td>
                         </tr>
                     </table>
                     <div id="op">
@@ -473,9 +478,16 @@ function dia_literal($n) {
                     </p>
                 </fieldset>
 
-            </form>
+            
         </div>
     </div>
+    <div id="poa">
+        poa
+    </div>
+    <div id="pre">
+        presupuesto
+    </div>
+    </form>
     <div id="adjuntos">
         <div class="formulario">        
             <form method="post" enctype="multipart/form-data" action="" >
@@ -510,10 +522,5 @@ function dia_literal($n) {
             </table>    
         </div>
     </div>
-    <div id="poa">
-        poa
-    </div>
-    <div id="pre">
-        presupuesto
-    </div>
+    
 </div>
