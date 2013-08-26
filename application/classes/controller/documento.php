@@ -351,6 +351,10 @@ class Controller_documento extends Controller_DefaultTemplate {
                 $documento->cargo_via = $_POST['cargovia'];
                 $documento->titulo = $_POST['titulo'];
                 $documento->id_proceso = $_POST['proceso'];
+                 if (isset($_POST['fucov']))
+                    $documento->fucov = 1;
+                else
+                    $documento->fucov = 0;
                 $documento->save();
 
                 //Modificado por Freddy Velasco
@@ -371,7 +375,8 @@ class Controller_documento extends Controller_DefaultTemplate {
                 }
                 
                 //cuando se edita un fucov
-                if($_POST['id_tipo']==13){
+                $pvfucov = ORM::factory('pvfucovs')->where('id_documento', '=', $id)->find();
+                if($pvfucov->loaded()){
                     $fi = date('Y-m-d', strtotime(substr($_POST['fecha_salida'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_salida']));
                     $ff = date('Y-m-d', strtotime(substr($_POST['fecha_arribo'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_arribo']));
                     $pvfucov = ORM::factory('pvfucovs')->where('id_documento','=',$id)->find();
@@ -540,6 +545,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                         ///POA
                         
             } else {
+                $pvcomision = ORM::factory('pvcomisiones')->where('id_documento', '=', $documento->id)->find();
                 $this->template->content = View::factory('documentos/edit')
                         ->bind('documento', $documento)
                         ->bind('archivos', $archivos)
