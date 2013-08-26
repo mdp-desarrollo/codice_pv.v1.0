@@ -91,6 +91,14 @@
 <?php if($documento->fucov==1){ ?>
 $('#contenido1').hide();
 $('#label_referencia').text('Motivo');
+//adicionar atributos
+$("#origen").attr("class", "required");
+$("#destino").attr("class", "required");
+$("#fecha_inicio").attr("class", "required");
+$("#fecha_fin").attr("class", "required");
+$("#hora_inicio").attr("class", "required");
+$("#hora_fin").attr("class", "required");
+$("#detalle_comision").attr("class","required");
 <?php } else { ?>
     $('#label_contenido').hide();
     $('#contenido2').hide();
@@ -101,15 +109,27 @@ $('#label_referencia').text('Motivo');
             $('#label_contenido').show();
             $('#contenido1').hide();
             $('#contenido2').show();
-            // $('#viaje').show();
-            // $('#normal').hide();
+            //adicionar atributos
+            $("#origen").attr("class", "required");
+            $("#destino").attr("class", "required");
+            $("#fecha_inicio").attr("class", "required");
+            $("#fecha_fin").attr("class", "required");
+            $("#hora_inicio").attr("class", "required");
+            $("#hora_fin").attr("class", "required");
+            $("#detalle_comision").attr("class","required");
         } else {
             $('#label_referencia').text('Referencia');
             $('#label_contenido').hide();
             $('#contenido1').show();
             $('#contenido2').hide();
-            // $('#normal').show();
-            // $('#viaje').hide();
+            //elimar atribuitos
+             $("#origen").removeAttr("class");
+             $("#destino").removeAttr("class");
+             $("#fecha_inicio").removeAttr("class");
+             $("#fecha_fin").removeAttr("class");
+             $("#hora_inicio").removeAttr("class");
+             $("#hora_fin").removeAttr("class");
+             $("#detalle_comision").removeAttr("class");
         }  
 });
 
@@ -220,7 +240,7 @@ $obs = '';
 $checked = '';
 $diai = '';
 $diaf = '';
-$obs = '';
+
 if($documento->fucov==1) {
 $origen =  $pvcomision->origen;
 $destino = $pvcomision->destino;

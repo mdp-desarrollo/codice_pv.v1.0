@@ -113,6 +113,7 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                 $documento->id_proceso = $proceso->id_proceso;
                 $documento->id_oficina = $this->user->id_oficina;
                 $documento->id_entidad = $this->user->id_entidad;
+                $documento->fucov = 0;
                 $documento->save();
 
                 if ($documento->id) {
@@ -125,7 +126,7 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                         $pvfucov->destino = $pvcomision->destino;
                         $pvfucov->fecha_salida = $pvcomision->fecha_inicio;
                         $pvfucov->fecha_arribo = $pvcomision->fecha_fin;
-                        $pvfucov->cancelara = 'MDPyEP';
+                        $pvfucov->cancelar = 'MDPyEP';
                         $pvfucov->transporte = 'Aereo';
                         $pvfucov->representacion = 'No';
                         $pvfucov->impuesto = 'No';

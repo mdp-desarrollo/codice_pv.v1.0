@@ -87,15 +87,29 @@ $('#fucov').click(function(){
             $('#label_contenido').show();
             $('#contenido1').hide();
             $('#contenido2').show();
-            // $('#viaje').show();
-            // $('#normal').hide();
+            //adicionar atributos
+            $("#origen").attr("class", "required");
+            $("#destino").attr("class", "required");
+            $("#fecha_inicio").attr("class", "required");
+            $("#fecha_fin").attr("class", "required");
+            $("#hora_inicio").attr("class", "required");
+            $("#hora_fin").attr("class", "required");
+            $("#detalle_comision").attr("class","required");
+            
         } else {
             $('#label_referencia').text('Referencia');
             $('#label_contenido').hide();
             $('#contenido1').show();
             $('#contenido2').hide();
-            // $('#normal').show();
-            // $('#viaje').hide();
+            
+            //elimar atribuitos
+             $("#origen").removeAttr("class");
+             $("#destino").removeAttr("class");
+             $("#fecha_inicio").removeAttr("class");
+             $("#fecha_fin").removeAttr("class");
+             $("#hora_inicio").removeAttr("class");
+             $("#hora_fin").removeAttr("class");
+             $("#detalle_comision").removeAttr("class");
         }  
 });
 
@@ -120,7 +134,7 @@ $.datepicker.regional['es'] = {
                 yearSuffix: ''
     };   
 $.datepicker.setDefaults($.datepicker.regional['es']);
-var pickerOpts  = { changeMonth: true, minDate: 0, changeYear: true, yearRange: "-10:+1", dateFormat: 'D yy-mm-dd',onSelect: function(){ feriados('fecha');}};
+var pickerOpts  = { changeMonth: true, minDate: 0, changeYear: true, yearRange: "-10:+1", dateFormat: 'D yy-mm-dd'};
 $('#fecha_inicio,#fecha_fin').datepicker(pickerOpts,$.datepicker.regional['es']);
 $('#hora_inicio,#hora_fin').timeEntry({show24Hours: true, showSeconds: true});
 ///////////////////end//////////////////////////
@@ -268,9 +282,9 @@ $('#hora_inicio,#hora_fin').timeEntry({show24Hours: true, showSeconds: true});
                 con el objetivo de asistir a (detalle de comision)
                 <p><?php echo Form::textarea('detalle_comision','',array('id'=>'detalle_comision','cols'=>150,'rows'=>2)); ?></p>
                 desde el 
-                <input type="text" id="fecha_inicio" name="fecha_inicio" size='16'/> a Hrs. <input type="text" name="hora_inicio" id="hora_inicio" value="<?php echo date("H:i:s");?>" size='6'/>
+                <input type="text" id="fecha_inicio" name="fecha_inicio" size='16'/> a Hrs. <input type="text" name="hora_inicio" id="hora_inicio" value="00:00:00" size='6'/>
                     hasta el
-                <input type="text" id="fecha_fin" name="fecha_fin" size='16'/> a Hrs. <input type="text" id="hora_fin" name="hora_fin" value="<?php echo date("H:i:s");?>" size='6'/><br>
+                <input type="text" id="fecha_fin" name="fecha_fin" size='16'/> a Hrs. <input type="text" id="hora_fin" name="hora_fin" value="00:00:00" size='6'/><br>
                 Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural.
                 Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para los cual su persona deberá coordinar la elaboración del FUCOV. 
                 <?php echo Form::label('observacion', 'Observacion:',array('id'=>'label_observacion','class'=>'form'));?> 

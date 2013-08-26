@@ -414,5 +414,18 @@ class Controller_Ajax extends Controller {
         }
         echo json_encode($resul);
     }
+    
+    public function action_docfucov() {
+        $id_doc = $_POST['id_doc'];
+        $pvfucov = new Model_Pvfucovs();
+        
+        $sql="SELECT id FROM pvfucovs WHERE id_memo=$id_doc";
+        $resp = $pvfucov->memofucov($sql);
+        $resul= array();
+        foreach ($resp as $value) {
+            $resul = array('id'=>$value['id']);
+        }
+        echo json_encode($resul);
+    }
     ///////////////end///////////////////////
 }
