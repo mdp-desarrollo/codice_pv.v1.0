@@ -80,5 +80,13 @@ class Model_Oficinas extends ORM{
             FROM oficinas o INNER JOIN entidades e ON o.id_entidad=e.id";
         return db::query(Database::SELECT, $sql)->execute();
     }
+    
+    ///rodrigo - Unidad ejecutora 260813
+    public function uejecutorapoa($id)
+    {
+        $sql="select * from oficinas where id = (select poa_unid_ejecutora from oficinas where id= $id)";
+        return db::query(Database::SELECT, $sql)->execute();
+    }
+    ///260813
 }
 ?>

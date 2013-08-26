@@ -396,7 +396,15 @@ class Controller_documento extends Controller_DefaultTemplate {
                     $pvfucov->tipo_cambio = $_POST['tipo_cambio'];
                     $pvfucov->tipo_moneda = $_POST['tipo_moneda'];
                     $pvfucov->viatico_dia = $_POST['viatico_dia'];
+                    $pvfucov->id_programatica = $_POST['fuente'];///rodrigo
                     $pvfucov->save();
+                    /// rodrigo -modificar POA 260813
+                    $pvpoas = ORM::factory('pvpoas')->where('id_fucov','=',$pvfucov->id)->find();
+                    $pvpoas->fecha_modificacion = date('Y-m-d H:i:s');
+                    $pvpoas->id_obj_gestion = $_POST['obj_gestion'];
+                    $pvpoas->id_obj_esp = $_POST['obj_esp'];
+                    $pvpoas->save();
+                    ///
                 }
                 ///////////end//////////////////
 
@@ -470,8 +478,43 @@ class Controller_documento extends Controller_DefaultTemplate {
                 $opt_tv = array();
                 foreach ($pvtipoviaje as $tv) {
                     $opt_tv[$tv->id] = $tv->tipoviaje;
-                    
                 }
+                
+                ///rodrigo 260813, Unidad Ejecutora POA para el usuario
+                $uEjepoa = New Model_oficinas();
+                $uejecutora = $uEjepoa->uejecutorapoa($this->user->id_oficina);///unidad ejecutora
+                foreach ($uejecutora as $ue)
+                    $ue_poa = $ue['oficina'];
+                $oFuente = New Model_Pvprogramaticas();///fuentes de financiamiento
+                $fte = $oFuente->listafuentesuser($this->user->id_oficina);
+                $fuente = array();
+                $fuente['']='Seleccione Una Fuente de Financiamiento';
+                foreach ($fte as $f)
+                    $fuente[$f->id] = $f->actividad;
+                $ogestion = ORM::factory('pvogestiones')->where('id_oficina','=',$this->user->id_oficina)->find_all();///objetivos de gestion
+                $objespecifico = array();
+                $objgestion = array();
+                $objgestion[''] = 'Seleccione Objetivo de Gestion';
+                    foreach ($ogestion as $og)
+                        $objgestion[$og->id] = $og->codigo;
+                
+                $pvpoas = ORM::factory('pvpoas')->where('id_fucov','=',$pvfucov->id)->find();
+                if($pvpoas->id_obj_gestion <> 0)
+                {
+                    $det = ORM::factory('pvogestiones')->where('id','=',$pvpoas->id_obj_gestion)->find();///Detalle Objetivo de Gestion
+                    $detalleges = $det->objetivo;
+                    $oesp = ORM::factory('pvoespecificos')->where('id_obj_gestion','=',$pvpoas->id_obj_gestion)->find_all();///objetivo especifico
+                    $objespecifico[''] = 'Seleccione Objetivo Especifico';
+                        foreach ($oesp as $oe){
+                            $objespecifico[$oe->id] = $oe->codigo;
+                            if($oe->id == $pvpoas->id_obj_esp)
+                                $detalleesp = $oe->objetivo;
+                        }
+                    $oPart = New Model_Pvprogramaticas();
+                    $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica,$pvfucov->total_pasaje, $pvfucov->total_viatico,$pvfucov->id_tipoviaje, $pvfucov->gasto_representacion);
+                }
+                /// fin 260813
+                
                 $this->template->content = View::factory('documentos/edit_fucov')
                         ->bind('documento', $documento)
                         ->bind('archivos', $archivos)
@@ -483,7 +526,19 @@ class Controller_documento extends Controller_DefaultTemplate {
                         ->bind('archivos', $archivos)
                         ->bind('destinatarios', $destinatarios)
                         ->bind('opt_tv', $opt_tv)
-                        ->bind('pvfucov', $pvfucov);
+                        ->bind('pvfucov', $pvfucov)
+                        ///rodrigo-POA
+                        ->bind('ue_poa', $ue_poa)//unidad ejecurtora del POA 
+                        ->bind('obj_gestion', $objgestion)//ista de objetivos de gestion para la oficina
+                        ->bind('det_obj_gestion', $detalleges)//detalle del objetivo de gestion
+                        ->bind('obj_esp', $objespecifico)
+                        ->bind('det_obj_esp', $detalleesp)
+                        ->bind('fuente', $fuente)//lista de fuentes de financiamiento por oficina
+                        ->bind('pvpoas', $pvpoas)
+                        ->bind('partidasgasto', $partidasgasto)
+                        ;
+                        ///POA
+                        
             } else {
                 $this->template->content = View::factory('documentos/edit')
                         ->bind('documento', $documento)

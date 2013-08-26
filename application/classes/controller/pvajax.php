@@ -34,32 +34,81 @@ class Controller_Pvajax extends Controller {
         }
         echo json_encode($obj);
     }
-/*    
-public function action_codobjetivoespecifico()
+
+public function action_detobjgestion()
     {       
         $id = $_POST['id'];
-        $objetivo = ORM::factory('pyvobjetivoespecifico')->where('id_obj_gestion','=',$id)->find_all();
-        $obj = '<option value = "" selected></option>';
+        $objetivo = ORM::factory('pvogestiones')->where('id','=',$id)->find();
+        $desc = $objetivo->objetivo;
+        echo json_encode($desc);
+    }
+
+public function action_objespecifico()
+    {       
+        $id = $_POST['id'];
+        $objetivo = ORM::factory('pvoespecificos')->where('id_obj_gestion','=',$id)->find_all();
+        $obj = '<option value = "" selected>Seleccione Objetivo Especifico</option>';
         foreach($objetivo as $o){
-            $obj = $obj.'<option value="'.$o->id.'">'.$o->cod_objetivo_especifico.'</option>';
+            $obj = $obj.'<option value="'.$o->id.'">'.$o->codigo.'</option>';
         }        
         echo json_encode($obj);
     }
     
-public function action_descobjetivogestion()
+public function action_detobjespecifico()
     {       
         $id = $_POST['id'];
-        $objetivo = ORM::factory('pyvobjetivogestion')->where('id','=',$id)->find();
-        $desc = $objetivo->objetivo_gestion;
+        $objetivo = ORM::factory('pvoespecificos')->where('id','=',$id)->find();
+        $desc = $objetivo->objetivo;
         echo json_encode($desc);
     }
-public function action_descobjetivoespecifico()
-    {       
+
+public function action_pptdisponibleuser()
+    {
         $id = $_POST['id'];
-        $objetivo = ORM::factory('pyvobjetivoespecifico')->where('id','=',$id)->find();
-        $desc = $objetivo->objetivo_especifico;
-        echo json_encode($desc);
+        $pasaje = $_POST['pasaje'];
+        $viatico = $_POST['viatico'];
+        $viaje = $_POST['viaje'];
+        $gasto = $_POST['gasto'];
+        
+        $oDisp = new Model_Pvprogramaticas();
+        $disp = $oDisp->saldopresupuesto($id);
+        $result = "<table class=\"classy\" border=\"1px\"><thead><th>C&oacute;digo</th><th>Partida</th><th>Saldo Disponible</th><th>Solicitado</th><th>Nuevo Saldo</th></thead><tbody>";
+        foreach($disp as $d)
+        {
+            if( $viaje == 1 || $viaje == 2){
+                if( $d['codigo'] == '22110')///pasaje al interio del pais
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$pasaje."</td><td>".($d['saldo_devengado'] - $pasaje)."</td></tr>";
+                if( $d['codigo'] == '22210')///viatico al interior
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$viatico."</td><td>".($d['saldo_devengado'] - $viatico)."</td></tr>";
+            }
+            else
+            {
+                if( $d['codigo'] == '22120')///pasaje al exterior
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$pasaje."</td><td>".($d['saldo_devengado'] - $pasaje)."</td></tr>";
+                if( $d['codigo'] == '22220')///viaticos al exterior
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$viatico."</td><td>".($d['saldo_devengado'] - $viatico)."</td></tr>";
+                if( $d['codigo'] == '26910')///gastos de representacion
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$gasto."</td><td>".($d['saldo_devengado'] - $gasto)."</td></tr>";
+            }
+        }
+        $result .= "</tbody></table>";
+        echo json_encode($result);
     }
+
+/*  
+public function action_pptdisponible()
+    {
+        $id = $_POST['id'];
+        $oDisp = new Model_Pvprogramaticas();
+        $disp = $oDisp->saldopresupuesto($id);
+        $result = "<table border=\"1px\"><tr><td>C&oacute;digo</td><td>Partida</td><td>Vigente</td><td>Preventivo</td><td>Comprometido</td><td>Devengado</td><td>Saldo Disponible</td></tr>";
+        foreach($disp as $d)
+            //$result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['vigente']."</td><td>".$d['preventivo']."</td><td>".$d['comprometido']."</td><td>".$d['devengado']."</td>";
+            $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['vigente']."</td><td>".$d['preventivo']."</td><td>".$d['comprometido']."</td><td>".$d['devengado']."</td><td>".$d['saldo_devengado']."</td></tr>";
+        $result .= "</table>";
+        echo json_encode($result);
+    }
+
 public function action_paisorigen()
     {
         $id = $_POST['id'];
@@ -115,17 +164,6 @@ public function action_cargouser()
         echo json_encode($user->cargo);
     }    
     
-public function action_pptdisponible()
-    {
-        $id = $_POST['id'];
-        $oDisp = new Model_Pyvprogramatica();
-        $disp = $oDisp->saldopresupuesto($id);
-        $result = "<table border=\"1px\"><tr><td>C&oacute;digo</td><td>Partida</td><td>Vigente</td><td>Preventivo</td><td>Comprometido</td><td>Devengado</td><td>Saldo Disponible</td></tr>";
-        foreach($disp as $d)
-            //$result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['vigente']."</td><td>".$d['preventivo']."</td><td>".$d['comprometido']."</td><td>".$d['devengado']."</td>";
-        $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['vigente']."</td><td>".$d['preventivo']."</td><td>".$d['comprometido']."</td><td>".$d['devengado']."</td><td>".$d['saldo_devengado']."</td></tr>";
-        $result .= "</table>";
-        echo json_encode($result);
-    }
+
 */
 }
