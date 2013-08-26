@@ -52,22 +52,64 @@ class Model_Pvprogramaticas extends ORM{
         //return DB::query(1, $sql)->execute();
     }
     
-    /*
+    public function listafuentesuser($id){
+        $sql = "select p.id, concat(p.codigo_entidad,'-',da.ppt_cod_da,'-',ue.ppt_cod_ue,'-' , prog.codigo,'-', proy.codigo,'-', act.codigo,'-',fte.codigo,'-', org.codigo,' : ', act.actividad) actividad
+                from pvprogramaticas p 
+                inner join oficinas da on p.id_da = da.id
+                inner join oficinas ue on p.id_ue = ue.id
+                inner join pvpptactividades act on p.id_actividadppt = act.id 
+                inner join pvfuentes fte on p.id_fuente = fte.id
+                inner join pvorganismos org on p.id_organismo = org.id
+                inner join pvprogramas prog on p.id_programa = prog.id
+                inner join pvproyectos proy on p.id_proyecto = proy.id
+                where p.id_oficina = $id";
+        return $this->_db->query(Database::SELECT, $sql, TRUE);
+    }
+    
     public function listafuentes($id){
-        $sql = "select p.id, concat(p.codigo_entidad,'-',da.codigo_da,'-',ue.codigo_ue,'-' , prog.codigo,'-', proy.codigo,'-', act.codigo,'-',fte.codigo,'-', org.codigo,' : ', act.actividad) actividad
-                from pyvprogramatica p 
-                inner join pyvunidadfuncional da on p.id_da = da.id
-                inner join pyvunidadfuncional ue on p.id_ue = ue.id
-                inner join pyvactividadppt act on p.id_actividadppt = act.id 
-                inner join pyvfuente fte on p.id_fuente = fte.id
-                inner join pyvorganismo org on p.id_organismo = org.id
-                inner join pyvprograma prog on p.id_programa = prog.id
-                inner join pyvproyecto proy on p.id_proyecto = proy.id
-                where p.id_unidad_funcional = $id
+        $sql = "select p.id, concat(p.codigo_entidad,'-',da.ppt_cod_da,'-',ue.ppt_cod_ue,'-' , prog.codigo,'-', proy.codigo,'-', act.codigo,'-',fte.codigo,'-', org.codigo,' : ', act.actividad) actividad
+                from pvprogramaticas p 
+                inner join oficinas da on p.id_da = da.id
+                inner join oficinas ue on p.id_ue = ue.id
+                inner join pvpptactividades act on p.id_actividadppt = act.id 
+                inner join pvfuentes fte on p.id_fuente = fte.id
+                inner join pvorganismos org on p.id_organismo = org.id
+                inner join pvprogramas prog on p.id_programa = prog.id
+                inner join pvproyectos proy on p.id_proyecto = proy.id
+                where p.id_oficina = $id
                 or act.actividad = 'GESTION ADMINISTRATIVA FINANCIERA'";
         return $this->_db->query(Database::SELECT, $sql, TRUE);
     }
     
+    public function pptdisponibleuser($id, $pasaje, $viatico, $viaje, $gasto)
+    {
+        $oDisp = new Model_Pvprogramaticas();
+        $disp = $oDisp->saldopresupuesto($id);
+        $result = "<table class=\"classy\" border=\"1px\"><thead><th>C&oacute;digo</th><th>Partida</th><th>Saldo Disponible</th><th>Solicitado</th><th>Nuevo Saldo</th></thead><tbody>";
+        foreach($disp as $d)
+        {
+            if( $viaje == 1 || $viaje == 2){
+                if( $d['codigo'] == '22110')///pasaje al interio del pais
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$pasaje."</td><td>".($d['saldo_devengado'] - $pasaje)."</td></tr>";
+                if( $d['codigo'] == '22210')///viatico al interior
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$viatico."</td><td>".($d['saldo_devengado'] - $viatico)."</td></tr>";
+            }
+            else
+            {
+                if( $d['codigo'] == '22120')///pasaje al exterior
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$pasaje."</td><td>".($d['saldo_devengado'] - $pasaje)."</td></tr>";
+                if( $d['codigo'] == '22220')///viaticos al exterior
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$viatico."</td><td>".($d['saldo_devengado'] - $viatico)."</td></tr>";
+                if( $d['codigo'] == '26910')///gastos de representacion
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$gasto."</td><td>".($d['saldo_devengado'] - $gasto)."</td></tr>";
+            }
+        }
+        $result .= "</tbody></table>";
+        //echo json_encode($result);
+        return $result;
+    }
+    
+    /*
 
     
 

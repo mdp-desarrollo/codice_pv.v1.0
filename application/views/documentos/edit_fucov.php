@@ -1,5 +1,5 @@
 <script type="text/javascript">   
-   
+
     $(function(){
         calculo_dias();
         $('table.classy tbody tr:odd').addClass('odd'); 
@@ -129,6 +129,9 @@
             $('#gasto_representacion').val(gastos_rep.toFixed(2));
             $('#total_viatico').val(total_viatico.toFixed(2));
             $("#porcentaje_viatico").val(porcentaje);
+            ///rodrigo fuente de presupuesto - 060813
+            ajaxppt();
+            ///fin 060813
         }
 
         function calculo_dias(){
@@ -188,6 +191,74 @@
 
 
         /////////////end////////////////////
+        
+        ///Modificado Rodrigo 260813
+        $('#obj_gestion').change(function(){
+            var id = $('#obj_gestion').val();
+            $('#det_obj_gestion').html('');
+            $('#obj_esp').html('');
+                $('#det_obj_esp').html('');
+                var act = 'detobjgestion';///detalle del Objetivo de Gestion 
+                var ctr = $('#det_obj_gestion');
+                ajaxs(id, act, ctr);
+                act = 'objespecifico';
+                ctr = $('#obj_esp');
+                ajaxs(id, act, ctr);
+        });
+        $('#obj_esp').change(function(){
+            var id = $('#obj_esp').val();
+            $('#det_obj_esp').html('');
+                var act = 'detobjespecifico';///detalle del Objetivo Especifico 
+                var ctr = $('#det_obj_esp');
+                ajaxs(id, act, ctr);
+            
+        });
+        
+        function ajaxs(id, accion, control)
+        {        
+                $.ajax({
+        	            type: "POST",
+        	            data: { id: id},
+        	            url: "/pvajax/"+accion,
+        	            dataType: "json",
+        	            success: function(item)
+        	            {
+        	               $(control).html(item);
+        	           },
+                       error: $(control).html(''),
+                  });
+        }
+        $('#fuente').change(function(){
+            ajaxppt();
+        });
+        function ajaxppt()
+        {
+            var id = $('#fuente').val();
+            control = $('#saldoppt');
+            if(id){
+                var pasaje = $('#total_pasaje').val();
+                var viatico = $('#total_viatico').val();
+                var viaje = $('#id_tipoviaje').val();
+                var gasto = $('#gasto_representacion').val();
+                $.ajax({
+            	            type: "POST",
+            	            data: { id: id, pasaje:pasaje, viatico:viatico, viaje:viaje, gasto:gasto},
+            	            url: "/pvajax/pptdisponibleuser",
+            	            dataType: "json",
+            	            success: function(item)
+            	            {
+            	               $(control).html(item);
+            	           },
+                           error: $(control).html('error'),
+                      });
+            }
+            else
+                control.html('');
+        }
+    $("#total_pasaje").blur(function(){
+        ajaxppt();
+    });
+        ///Fin - 260813
 
         $('#btnword').click(function(){
             $('#word').val(1);
@@ -195,7 +266,7 @@
 
         });
         $('#save').click(function(){
-            $('#frmEditar').submit();        
+            $('#frmEditar').submit();
         });
         $('#subir').click(function(){
             var id=$(this).attr('rel');
@@ -560,10 +631,70 @@ echo Form::input('remitente', $documento->nombre_remitente, array('id' => 'remit
         </div>
     </div>
     <div id="poa">
-        poa
+        <div class="formulario">        
+            <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;  ">
+            <h2 style="text-align:center;">Certificaci&oacute;n POA </h2><hr/>
+            <fieldset>
+                <table width="100%" border="1px">
+                    <tr>
+                        <td><?php //echo $ue;?>
+                            <?php echo Form::label('unidad_ejecutora','Unidad Ejecutora:',array('class'=>'form'));?>
+                        </td>
+                        <td>
+                            <?php echo $ue_poa?>
+                            <?php // echo Form::input('unidadEjecutora',$ue_poa,array('size'=>'75','id'=>'unidadEjecutora','name'=>'unidadEjecutora'))?>
+                            <input type="hidden" id="idUnidadEjecutora" name="idUnidadEjecutora" value="<?php // echo $idunidadejecutora;?>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php echo Form::label('obj_gestion','C&oacute;digo Objetivo de Gesti&oacute;n:',array('class'=>'form'));?>
+                        </td>
+                        <td>
+                            <?php echo Form::select('obj_gestion',$obj_gestion,$pvpoas->id_obj_gestion,array('class'=>'form','name'=>'obj_gestion','id'=>'obj_gestion','class'=>'required'));?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php echo Form::label('detalle_obj_gestion','Detalle Objetivo de Gesti&oacute;n:',array('class'=>'form'));?>
+                        </td>
+                        <td>
+                            <br />
+                            <textarea name="det_obj_gestion" id="det_obj_gestion" style="width: 600px;" disabled="true" ><?php echo $det_obj_gestion;?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php echo Form::label('obj_esp','C&oacute;digo Objetivo Espec&iacute;fico:',array('class'=>'form'));?>
+                        </td>
+                        <td>
+                            <?php echo Form::select('obj_esp',$obj_esp,$pvpoas->id_obj_esp,array('class'=>'form','class'=>'required','id'=>'obj_esp','name'=>'obj_esp'));?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php echo Form::label('det_obj_esp','Detalle Objetivo Espec&iacutefico:',array('class'=>'form'));?>
+                        </td>
+                        <td>
+                            <textarea name="det_obj_esp" id="det_obj_esp" style="width: 600px;" disabled="true" ><?php echo $det_obj_esp;?></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            </div>
+        </div>
     </div>
     <div id="pre">
-        presupuesto
+        <div class="formulario">        
+            <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;  ">
+                <h2 style="text-align:center;">Presupuesto</h2><hr/>
+                <fieldset>
+                Fuentes de Financiamiento:
+                <?php echo Form::select('fuente',$fuente,$pvfucov->id_programatica,array('id'=>'fuente','class'=>'required'))?>
+                <div id="saldoppt"><?php echo $partidasgasto;?></div>
+                </fieldset>
+            </div>
+        </div>
     </div>
 </form>
 <div id="adjuntos">
