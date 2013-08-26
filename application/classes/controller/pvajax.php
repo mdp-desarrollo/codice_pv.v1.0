@@ -34,6 +34,85 @@ class Controller_Pvajax extends Controller {
         }
         echo json_encode($obj);
     }
+    
+ public function action_adicionpasaje()
+    {   
+        $id_fucov = $_POST['id_fucov'];
+        $origen = $_POST['origen'];
+        $destino = $_POST['destino'];
+        $fecha_salida = $_POST['fecha_salida'];
+        $fecha_arribo = $_POST['fecha_arribo'];
+        $transporte = $_POST['transporte'];
+        $nro_boleto = $_POST['nro_boleto'];
+        $costo = $_POST['costo'];
+        $empresa = $_POST['empresa'];
+        
+        $pasajes = ORM::factory('pvpasajes');
+        $pasajes->id_fucov = $id_fucov;
+        $pasajes->origen = $origen;
+        $pasajes->destino = $destino;
+        $pasajes->fecha_salida = $fecha_salida;
+        $pasajes->fecha_arribo = $fecha_salida;
+        $pasajes->transporte = $transporte;
+        $pasajes->nro_boleto = $nro_boleto;
+        $pasajes->costo = $costo;
+        $pasajes->empresa = $empresa;
+        $pasajes->etapa_proceso = 0;
+        $pasajes->save();
+        if($pasajes->id)
+        {
+            $obj = "<table class = \"classy\">
+                        <thead>
+                            <th>TRAMO</th>
+                            <th>ORIGEN</th>
+                            <th>DESTINO</th>
+                            <th>FECHA Y HORA<br /> DE SALIDA</th>
+                            <th>FECHA Y HORA<br /> DE ARRIBO</th>
+                            <th>TRANSPORTE</th>
+                            <th>N. BOLETO</th>
+                            <th>COSTO</th>
+                            <th>EMPRESA</th>
+                        </thead>
+                    ";
+            $pasajes=ORM::factory('pvpasajes')->where('id_fucov','=',$id_fucov)->find_all();
+            $c = 1;
+            foreach($pasajes as $p):
+                $obj .= "<tbody>
+                    <tr>
+                        <td>".$c."</td>
+                        <td>".$p->origen."</td>
+                        <td>".$p->destino."</td>
+                        <td>".$p->fecha_salida."</td>
+                        <td>".$p->fecha_arribo."</td>
+                        <td>".$p->transporte."</td>
+                        <td>".$p->nro_boleto."</td>
+                        <td>".$p->costo."</td>
+                        <td>".$p->empresa."</td>
+                    </tr>";
+                $c++;
+            endforeach;
+            $obj .='</tbody></table>';
+        }
+        else
+        {
+            $obj = "<b>No se pudo guardar.</b>";
+            $obj = "3";
+        }
+        
+        /*
+        $actividad = ORM::factory('pvpptactividades')->where('id_programa','=',$id)->and_where('estado','=',1)->find_all();
+        $obj = '<option value = "0" selected>000</option>';
+        
+        if($actividad->count() > 0)
+        {
+            foreach($actividad as $a){
+                $obj = $obj.'<option value="'.$a->id.'">'.$a->codigo.' - '.$a->actividad.'</option>';
+            }
+        }*/
+        //$obj = "<table class =\"classy\"><thead><th></th></thead><tbody><tr><td>456456</td></tr></tbody></table>";
+        echo json_encode($obj);
+    }    
+    
 
 public function action_detobjgestion()
     {       

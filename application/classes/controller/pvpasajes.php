@@ -53,12 +53,16 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
             $pasajes->id_fucov = $id;
             $pasajes->transporte = $_POST['transporte'];
             $pasajes->empresa = $_POST['empresa'];
-            $pasajes->nro_boleto = $_POST['nroboleto'];
-            //$pasajes->fecha_salida = strtotime($_POST['fechasalida'].$_POST['horasalida']);
-            $pasajes->fecha_arribo = $_POST['fechaarribo'];
-            $pasajes->costo = $_POST['empresa'];
-            $pasajes->origen = $_POST['nroboleto'];
-            $pasajes->destino = $_POST['fechasalida'];
+            $pasajes->nro_boleto = $_POST['nro_boleto'];
+            //$pasajes->fecha_salida = strtotime($_POST['fechasalida'].' '.$_POST['horasalida']);
+            //$pasajes->fecha_arribo = strtotime($_POST['fechaarribo'].' '.$_POST['horaarribo']);
+            $fs = date('Y-m-d', strtotime(substr($_POST['fecha_salida'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_salida']));
+            $fa = date('Y-m-d', strtotime(substr($_POST['fecha_arribo'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_arribo']));
+            $pasajes->fecha_salida = $fs;
+            $pasajes->fecha_arribo = $fa;
+            $pasajes->costo = $_POST['costo'];
+            $pasajes->origen = $_POST['origen'];
+            $pasajes->destino = $_POST['destino'];
           //$pasajes->save();
          ///actualizar fucovs
             //if($pasajes->id){

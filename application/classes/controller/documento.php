@@ -257,8 +257,8 @@ class Controller_documento extends Controller_DefaultTemplate {
                 $archivo = ORM::factory('archivos')->where('id_documento', '=', $id)->find_all();
                 ///rodrigo detallepasajes, 210813
                 $detallepv = $this->pvmodificar($id,$estado);
-                $this->template->scripts = array('media/js/jquery-ui-1.8.16.custom.min.js','media/js/jquery.timeentry.js');
-                $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css'=>'screen');
+                $this->template->scripts = array('tinymce/tinymce.min.js','media/js/jquery-ui-1.8.16.custom.min.js','media/js/jquery.timeentry.js');
+                $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen','media/css/tablas.css' => 'screen');
                 ///210813
                 $this->template->title .= ' | ' . $documento->codigo;
                 $this->template->content = View::factory('documentos/detalle')
@@ -615,7 +615,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                 case 6:
                     $pasajes = ORM::factory('pvpasajes')->where('id_fucov','=',$fucov->id)->find_all();
                     $detallepv = View::factory('pvpasajes/detalle')
-                        ->bind('fucov', $fucov)
+                        ->bind('pvfucov', $fucov)
                         ->bind('pasajes',$pasajes)
                         ->bind('estado',$estado)
                         ;

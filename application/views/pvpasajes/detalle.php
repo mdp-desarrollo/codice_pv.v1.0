@@ -1,193 +1,194 @@
 <script type="text/javascript">
-/*
-function validar(){
+function ajaxs(control)
+{   
+    //control = $('#asignados');
+    var id_fucov = $('#id_fucov').val();
+    var origen = $('#origen').val();
+    var destino = $('#destino').val();
+    var fecha_salida = $('#fecha_salida').val();
+    var hora_salida = $('#hora_salida').val();
+    var fecha_arribo = $('#fecha_arribo').val();
+    var hora_arribo = $('#hora_arribo').val();
+    fecha_salida = fecha_salida.substr(4,10)+' '+hora_salida;
+    fecha_arribo = fecha_arribo.substr(4,10)+' '+hora_arribo;
+    var transporte = $('#transporte').val();
+    var nro_boleto = $('#nro_boleto').val();
+    var costo = $('#costo').val();
+    var empresa = $('#empresa').val();
+    $.ajax({
+	    type: "POST",
+	    data: { id_fucov:id_fucov, origen: origen, destino: destino, fecha_salida: fecha_salida, fecha_arribo:fecha_arribo, transporte:transporte, nro_boleto: nro_boleto, costo:costo, empresa:empresa},
+	    url: "/pvajax/adicionpasaje",
+        dataType: "json",
+        success: function(item)
+        {
+            //$(control).html(item);
+            $('#asignados').html(item);
+        },
+    });
+}
+$(function(){
+$.datepicker.regional['es'] = {
+            closeText: 'Cerrar',
+            prevText: '&#x3c;Ant',
+            nextText: 'Sig&#x3e;',
+            currentText: 'Hoy',
+            monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+            monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
+                'Jul','Ago','Sep','Oct','Nov','Dic'],
+            dayNames: ['Domingo','Lunes','Martes','Mi&eacute;rcoles','Jueves','Viernes','S&aacute;bado'],
+            dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],
+            dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
+            weekHeader: 'Sm',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''};
+$.datepicker.setDefaults($.datepicker.regional['es']);
+
+ var pickerOpts = { changeMonth: true, minDate: 0, changeYear: true, yearRange: "-10:+1", dateFormat: 'D yy-mm-dd'};
+    $('#fecha_inicio, #fecha_fin,#fecha_salida,#fecha_arribo').datepicker(pickerOpts,$.datepicker.regional['es']);
+    $('#hora_salida,#hora_arribo').timeEntry({show24Hours: true, showSeconds: true});
     
-    if(('#financiamiento').val() == 100) {        
-        var answer = confirm("Para "+$('#autorizar').html()+" el Documento haga clic en Aceptar");
-            if (answer)
-                $('#frmAutorizar').submit();
-            else
-                return false;
-    }
-    else
-        alert('No ha Asignado Pasajes');
-}
-
-function calcular(id,ctrl){
-    if ( ctrl == 'fechaIda' || ctrl == 'fechaRet' || ctrl == 'harribo')
-    {    
-        var fecha1 = $('#fechaSalidaIda').val();
-        var fecha2 = $('#fechaArriboRet').val();
-        var diferencia =  Math.floor(( Date.parse(fecha2) - Date.parse(fecha1) ) / 86400000);        
-        if(diferencia < 0) {diferencia = diferencia*(-1);}
-        if(diferencia == 0)
-            diferencia = 1;
-        else{
-            if($('#horaArriboRet').val()>'12:00:00')
-                diferencia += 1;
-        }
-        $('#dias_cal').val(diferencia);
-    }
-    var viaticos = parseFloat($("#viaticoDia").val());
-    var dias = $("#dias_cal").val();        
-    var factor = $('#porcentaje').val();                          
-        $("#totalViaticos").val((viaticos * dias * factor) /100);    
-}
-*/
-$(function(){/*
-$.datepicker.regional['es'] = {
-            closeText: 'Cerrar',
-            prevText: '&#x3c;Ant',
-            nextText: 'Sig&#x3e;',
-            currentText: 'Hoy',
-            monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
-            monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
-                'Jul','Ago','Sep','Oct','Nov','Dic'],
-            dayNames: ['Domingo','Lunes','Martes','Mi&eacute;rcoles','Jueves','Viernes','S&aacute;bado'],
-            dayNamesShort: ['Dom','Lun','Mar','Mie','Juv','Vie','Sab'],
-            dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
-            weekHeader: 'Sm',
-            dateFormat: 'dd/mm/yy',
-            //dateFormat: 'Full - DD, d MM, yy',
-            firstDay: 1,
-            isRTL: false,
-            showMonthAfterYear: false,
-            yearSuffix: ''};
-$.datepicker.setDefaults($.datepicker.regional['es']);
-var pickerOpts2 = { changeMonth: true, minDate: 0, changeYear: true, yearRange: "-10:+1", dateFormat: 'yy-mm-dd',onSelect: function(){ var id = $("#fechaSalidaIda").val(); calcular(id,'fechaIda');}};
-var pickerOpts3 = { changeMonth: true, minDate: 0, changeYear: true, yearRange: "-10:+1", dateFormat: 'yy-mm-dd',onSelect: function(){ var id = $("#fechaArriboRet").val(); calcular(id,'fechaRet');}};
-$("#fechaSalidaIda").datepicker(pickerOpts2,$.datepicker.regional['es']);
-$("#fechaArriboRet").datepicker(pickerOpts3,$.datepicker.regional['es']);
-
-$("#fechaSalidaIda,#fechaArriboRet,#dias_cal,#viaticoDia,#cambio").keydown(function(event) {
-    return false;});
-
-$("#horaArriboRet").change(function(){
-    id = $("#horaArriboRet").val();
-    calcular(id,'harribo');    
-});    
-
-$("#costoIda,#costoRet").keydown(function(event) {
-    if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 ||
-        (event.keyCode == 65 && event.ctrlKey === true) || (event.keyCode >= 35 && event.keyCode <= 39) || (event.keyCode == 110 || event.keyCode == 190) ) {
-            return;
-        }
-        else {
-        
-            if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) ) {
-                event.preventDefault();
-            }
-        }   
-});
-
-$("#costoIda,#costoRet").blur(function(){
-    var ida = parseFloat($("#costoIda").val());
-    var ret = parseFloat($("#costoRet").val());
-    if(!ida || ida < 0) ida = 0;
-    if(!ret || ret < 0) ret = 0;
-    $("#pasajeIda").val(ida);$("#costoIda").val(ida);
-    $("#pasajeRetorno").val(ret);$("#costoRet").val(ret);
-    $("#totalPasajes").val(ida + ret);
-});
-*/
-
-$.datepicker.regional['es'] = {
-            closeText: 'Cerrar',
-            prevText: '&#x3c;Ant',
-            nextText: 'Sig&#x3e;',
-            currentText: 'Hoy',
-            monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
-            monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
-                'Jul','Ago','Sep','Oct','Nov','Dic'],
-            dayNames: ['Domingo','Lunes','Martes','Mi&eacute;rcoles','Jueves','Viernes','S&aacute;bado'],
-            dayNamesShort: ['Dom','Lun','Mar','Mie','Juv','Vie','Sab'],
-            dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
-            weekHeader: 'Sm',
-            dateFormat: 'dd/mm/yy',
-            firstDay: 1,
-            isRTL: false,
-            showMonthAfterYear: false,
-            yearSuffix: ''};
-$.datepicker.setDefaults($.datepicker.regional['es']);
-
-var pickerOpts = { changeMonth: true, minDate: 0, changeYear: true, yearRange: "-10:+1", dateFormat: 'yy-mm-dd'};
-$('#fechasalida,#fechaarribo').datepicker(pickerOpts,$.datepicker.regional['es']);
-$('#horasalida,#horaarribo').timeEntry({show24Hours: true, showSeconds: true});
-$('#frmAsignar').validate();
+    $('#adicionar').click(function(){
+        $("#asignados_inicial").hide();
+        ctrl = $('#asignados');
+        ajaxs(ctrl);
+        $('#origen, #destino, #nro_boleto, #costo, #empresa').val('');
+    });
+    
 });
 </script>
-<style>
-    #file-word{ display: none;  }
-    td{padding:5px;}    
-</style>
-<div style="text-align:rigth;margin-top: 5px; margin-bottom: 15px;">
-<!--<a href="/pyvpasajes/autorizados" class="uibutton" title="Solicitudes Autorizadas" ><img src="/media/images/print.png"/>Solicitudes Autorizadas</a>-->
-</div>
-<h2>PASAJES Y VI&Aacute;TICOS</h2>
-<br />
-<?php if(sizeof($pasajes)>0):?> 
-    <h2>Pasajes Asignados:</h2>
-    <table>
-        <thead>
-            <td>Empresa</td>
-            <td>Nro. Boleto</td>
-            <td>Fecha Salida</td>
-            <td>Fecha Arribo</td>
-        </thead>
-        <tbody>
-        <?php foreach($pasajes as $p):?>
-        <tr>
-            <td><?php echo $p['empresa']?></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <?php endforeach;?>
-        </tbody>
-    </table>
-<?php else:?>
-    <h2>No hay Pasajes Asignados</h2>
-<?php endif;?>
-<?php if($estado == 2):?>
-    <?php if( $fucov->etapa_proceso == 0 || $fucov->etapa_proceso == 2):?>
-        <form action="/pvpasajes/asignarpasaje/<?php echo $fucov->id;?>" method="post" id="frmAsignar">
+<?php
+    $fi = date('Y-m-d', strtotime($pvfucov->fecha_salida));
+    $ff = date('Y-m-d', strtotime($pvfucov->fecha_arribo));
+    $hi = date('H:i:s', strtotime($pvfucov->fecha_salida));
+    $hf = date('H:i:s', strtotime($pvfucov->fecha_arribo));
+    $diai = dia_literal(date("w", strtotime($fi)));
+    $diaf = dia_literal(date("w", strtotime($ff)));
+function dia_literal($n) {
+    switch ($n) {
+        case 1: return 'Lun';
+            break;
+        case 2: return 'Mar';
+            break;
+        case 3: return 'Mie';
+            break;
+        case 4: return 'Jue';
+            break;
+        case 5: return 'Vie';
+            break;
+        case 6: return 'Sab';
+            break;
+        case 0: return 'Dom';
+            break;
+    }
+}
+?>
+<input type="hidden" id="id_fucov" value="<?php echo $pvfucov->id;?>" />
+<h2 style="text-align: center;"> PASAJES Y VI&Aacute;TICOS</h2>
+        <div class="formulario">
+            <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;">
+                INFORMACI&Oacute;N DE LA COMISI&Oacute;N:<br />
+                    
+                        <table border="0px">
+                            <tr>
+                                <td>Fecha y Hora de Inicio</td>
+                                <td><?php echo Form::input('fecha_inicio',$diai.' '.$fi,array('id'=>'fecha_inicio','size'=>14,'class' => 'required'))?><?php echo Form::input('hora_salida',$hi,array('id'=>'hora_salida','size'=>12,'class' => 'required'))?><br /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Fecha y Hora de Conclusi&oacute;n:</td>
+                                <td><?php echo Form::input('fecha_fin',$diaf.' '.$ff,array('id'=>'fecha_fin','size'=>14,'class' => 'required'))?><?php echo Form::input('hora_arribo',$hf,array('id'=>'hora_arribo','size'=>12,'class' => 'required'))?><br /></td>
+                                <td><button id="modificar_comision" class="uibutton">Modificar Comision</button></td>                    
+                            </tr>
+                        </table>
+            </div>
+        </div>
             <br />
-            <h2>Asignación de Pasajes</h2>
-            <table width="100%" border="1px" >
-                <thead>
-                    <th>Origen</th>
-                    <th>Destino</th>
-                    <th>Fecha y Hora de Salida</th>
-                    <th>Fecha y Hora de Arribo</th>
-                    <th>Transporte</th>
-                    <th>Nro. Boleto</th>
-                    <th>Costo</th>
-                    <th>Empresa</th>
-                </thead>
-                <tbody>
-                    <tr>
-                    <td><?php echo Form::input('origen','',array('class'=>'form','id'=>'origen','size'=>'15','class'=>'required'))?></td>
-                    <td><?php echo Form::input('destino','',array('class'=>'form','id'=>'destino','size'=>'15','class'=>'required'));?></td>
-                    <td>
-                        <?php echo Form::input('fechasalida','',array('class'=>'form','id'=>'fechasalida','size'=>'15','class'=>'required','name'=>'fechasalida'))?>
-                        <?php echo Form::input('horasalida',date("H:m:s"),array('class'=>'form','id'=>'horasalida','size'=>'7','class'=>'required'))?>
-                    </td>
-                    <td>
-                        <?php echo Form::input('fechaarribo','',array('class'=>'form','id'=>'fechaarribo','size'=>'15','class'=>'required'));?>
-                        <?php echo Form::input('horaarribo',date("H:m:s"),array('class'=>'form','id'=>'horaarribo','size'=>'7','class'=>'required'))?>
-                    </td>
-                    <td><?php echo Form::select('transporte',array('aereo'=>'Aereo','terrestre'=>'Terrestre','oficial'=>'Oficial'),NULL,array('class'=>'form','id'=>'transporte','class'=>'required'))?></td>
-                    <td><?php echo Form::input('nroboleto','',array('class'=>'form','id'=>'nroboleto','name'=>'nroboleto','size'=>'10','class'=>'required'))?></td>
-                    <td><?php echo Form::input('costo','',array('class'=>'form','id'=>'costo','name'=>'costo','size'=>'5','class'=>'required'));?></td>      
-                    <td><?php echo Form::input('empresa','',array('class'=>'form','id'=>'empresa','name'=>'empresa','size'=>'10','class'=>'required'))?></td>
-                    </tr>
-                </tbody>
-            </table>
-        
-            <input type="submit" value="Asignar Pasaje" class="uibutton" name="submit" id="crear" title="Asignar Pasaje"/>
-            <a href="/hojaruta/derivar/?id_doc=<?php echo $fucov->id_memo; ?>" class="link derivar" title="Derivar a partir del documento, si ya esta derivado muestra el seguimiento" >Derivar</a>
-        </form>
+                <!--<button id="asignar" class="uibutton">+Asignar Pasaje</button>-->
+                <div id="pasajes" class="formulario" >
+                <b>ADICIONAR PASAJES:</b>
+                    <?php if($estado == 2):?>
+                        <?php if( $pvfucov->etapa_proceso == 1 || $pvfucov->etapa_proceso == 2):?>
+                            <br />
+                            <table id="x_tableMeta" class="classy" border="1">
+                                <thead>
+                                    <th>ORIGEN</th>
+                                    <th>DESTINO</th>
+                                    <th>FECHA Y HORA<br /> DE SALIDA</th>
+                                    <th>FECHA Y HORA<br /> DE ARRIBO</th>
+                                    <th>TRANSPORTE</th>
+                                    <th>N. BOLETO</th>
+                                    <th>COSTO</th>
+                                    <th>EMPRESA</th>
+                                </thead>
+                                    <tr>
+                                        <td><?php echo Form::input('origen','',array('id'=>'origen','size'=>'12'));?></td>
+                                        <td><?php echo Form::input('destino','',array('id'=>'destino','size'=>'12'));?></td>
+                                        <td><?php echo Form::input('fecha_salida',dia_literal(date("w")).' '.date("Y-m-d"),array('id'=>'fecha_salida','size'=>'15'));?><br /> <?php echo Form::input('hora_salida',date("h:m:s"),array('id'=>'hora_salida','size'=>'10'));?></td>
+                                        <td><?php echo Form::input('fecha_arribo',dia_literal(date("w")).' '.date("Y-m-d"),array('id'=>'fecha_arribo','size'=>'15'));?><br /><?php echo Form::input('hora_arribo',date("h:m:s"),array('id'=>'hora_arribo','size'=>'10'));?></td>
+                                        <td><?php echo Form::select('transporte',array('Aereo'=>'Aereo','Terrestre'=>'Terrestre','Vehiculo Oficial'=>'Vehiculo Oficial'),'',array('id'=>'transporte'));?></td>
+                                        <td><?php echo Form::input('nro_boleto','',array('id'=>'nro_boleto','size'=>'5'));?></td>
+                                        <td><?php echo Form::input('costo','',array('id'=>'costo','size'=>'5'));?></td>
+                                        <td><?php echo Form::input('empresa','',array('id'=>'empresa','size'=>'8'));?></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8" style="text-align: center;"><button id="adicionar">Adicionar</button><!--<button id="cancelar" class="uibutton">Cancelar</button>--></td>                                        
+                                    </tr>                                    
+                            </table>
+                        <?php endif;?>
+                    <?php endif;?>
+                </div>
+                <br />
+                                 
+                <?php //if(sizeof($pasajes)>0):?> 
+                <div id="asignados_inicial" class="formulario" >
+                <b>LISTA DE PASAJES ASIGNADOS:</b><br />
+                    <table class="classy">
+                        <thead>
+                            <th>TRAMO</th>
+                            <th>ORIGEN</th>
+                            <th>DESTINO</th>
+                            <th>FECHA Y HORA<br /> DE SALIDA</th>
+                            <th>FECHA Y HORA<br /> DE ARRIBO</th>
+                            <th>TRANSPORTE</th>
+                            <th>N. BOLETO</th>
+                            <th>COSTO</th>
+                            <th>EMPRESA</th>
+                        </thead>
+                        <tbody>
+                        <?php $c=1; foreach($pasajes as $p):?>
+                        <tr>
+                            <td><?php echo $c; $c++;?></td>
+                            <td><?php echo $p->origen;?></td>
+                            <td><?php echo $p->destino;?></td>
+                            <td><?php echo $p->fecha_salida;?></td>
+                            <td><?php echo $p->fecha_arribo;?></td>
+                            <td><?php echo $p->transporte;?></td>
+                            <td><?php echo $p->nro_boleto;?></td>
+                            <td><?php echo $p->costo;?></td>
+                            <td><?php echo $p->empresa;?></td>
+                        </tr>
+                        <?php endforeach;?>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <br />
+                <?php /*else:?>
+                A&Uacute;N NO HA ASIGNADO PASAJES<br />
+                <br />
+                <?php endif;*/ ?>
+            
+                <div id="asignados"></div>
+   <!--
+<br />
+<br />
+    <input type="submit" value="Autorizar" class="uibutton" name="submit" id="crear" title="Autorizar"/>
+    <?php if($pvfucov->etapa_proceso == 2):?>
+        <a href="/hojaruta/derivar/?id_doc=<?php echo $pvfucov->id_memo; ?>" class="link derivar" title="Derivar a partir del documento, si ya esta derivado muestra el seguimiento" >Derivar</a>
     <?php endif;?>
-<?php endif;?>
+                -->
