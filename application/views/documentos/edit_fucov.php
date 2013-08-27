@@ -2,6 +2,11 @@
 
     $(function(){
         calculo_dias();
+        var id_tipoviaje = $('#id_tipoviaje').val();
+        if(id_tipoviaje==1 || id_tipoviaje==2){
+            $("#representacion_si").attr("disabled",true);
+            $("#representacion_no").attr("checked",true);
+        }
         $('table.classy tbody tr:odd').addClass('odd'); 
         
         var tabContainers=$('div.tabs > div');
@@ -66,6 +71,15 @@
         $('#id_tipoviaje').change(function(){
             var id_tipoviaje = $('#id_tipoviaje').val();
             var id_categoria = $('#id_categoria').val();
+            //viaje al exterio habilitamos gastos de representacion
+            if(id_tipoviaje==3 || id_tipoviaje==4){
+                $("#representacion_si").removeAttr("disabled");
+                
+            }else{
+                $("#representacion_si").attr("disabled",true);
+                $("#representacion_no").attr("checked",true);
+            }
+            
             $.ajax({
                 type: "POST",
                 data: { id_tv: id_tipoviaje, id_ca:id_categoria},
@@ -96,7 +110,18 @@
                 }
             });
         });
-        $("input[name='cancelar'], input[name='impuesto'], input[name='representacion']").click(function(){
+        $("input[name='cancelar']").click(function(){
+            var cancelar = $("input[name='cancelar']:checked").val();
+            if(cancelar =='Hospedaje' || cancelar == 'Hospedaje y alimentacion'){
+                $("#financiador").attr("class", "required");
+            }else{
+                $("#financiador").removeAttr("class");
+                $("#financiador").val("");
+            }
+            calculo_viaticos();
+        });
+        
+        $("input[name='impuesto'], input[name='representacion']").click(function(){
             calculo_viaticos();
         });
 
@@ -135,12 +160,48 @@
         }
 
         function calculo_dias(){
+            $("#justificacion_finsem").removeAttr("class");
             var fecha_s = $("#fecha_salida").val();
             var dia_s = fecha_s.substring(0, 3);
             fecha_s = fecha_s.substring(4, 14);
             var fecha_a = $("#fecha_arribo").val();
             var dia_a = fecha_a.substring(0, 3);
             fecha_a = fecha_a.substring(4, 14);
+            
+            //validamos fin de semana
+            var sw = 0;
+            var f1= new Date(fecha_s);
+            var f2= new Date(fecha_a);
+            while (f1<=f2){
+                //alert(f1.getUTCDay());
+                if(f1.getUTCDay()==6 || f1.getUTCDay()==0){
+                    $("#justificacion_finsem").attr("class", "required");
+                    sw = 1;
+                    break;
+                }
+                f1.setDate(f1.getDate()+1);
+            }
+            // validamos feriados
+            if(sw==0){
+                $.ajax({
+            	            type: "POST",
+            	            data: { fecha1:fecha_s, fecha2:fecha_a},
+            	            url: "/pvajax/feriados",
+            	            dataType: "json",
+            	            success: function(item)
+            	            {
+                                    if(item){
+                                        alert('Comision durante el feriado: '+item);
+                                        $("#justificacion_finsem").attr("class", "required");
+                                    }
+                                    else{
+                                         $("#justificacion_finsem").removeAttr("class");
+                                    }
+            	           }
+                        });
+                
+            }
+            //calculo de viaticos
             if(fecha_s != '' && fecha_a !='') {
                 var diferencia =  Math.floor(( Date.parse(fecha_a) - Date.parse(fecha_s) ) / 86400000);
                 if(diferencia >= 0){
@@ -174,7 +235,7 @@
             monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
                 'Jul','Ago','Sep','Oct','Nov','Dic'],
             dayNames: ['Domingo','Lunes','Martes','Mi&eacute;rcoles','Jueves','Viernes','S&aacute;bado'],
-            dayNamesShort: ['Dom','Lun','Mar','Mie','Juv','Vie','Sab'],
+            dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],
             dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
             weekHeader: 'Sm',
             dateFormat: 'dd/mm/yy',
@@ -197,36 +258,36 @@
             var id = $('#obj_gestion').val();
             $('#det_obj_gestion').html('');
             $('#obj_esp').html('');
-                $('#det_obj_esp').html('');
-                var act = 'detobjgestion';///detalle del Objetivo de Gestion 
-                var ctr = $('#det_obj_gestion');
-                ajaxs(id, act, ctr);
-                act = 'objespecifico';
-                ctr = $('#obj_esp');
-                ajaxs(id, act, ctr);
+            $('#det_obj_esp').html('');
+            var act = 'detobjgestion';///detalle del Objetivo de Gestion 
+            var ctr = $('#det_obj_gestion');
+            ajaxs(id, act, ctr);
+            act = 'objespecifico';
+            ctr = $('#obj_esp');
+            ajaxs(id, act, ctr);
         });
         $('#obj_esp').change(function(){
             var id = $('#obj_esp').val();
             $('#det_obj_esp').html('');
-                var act = 'detobjespecifico';///detalle del Objetivo Especifico 
-                var ctr = $('#det_obj_esp');
-                ajaxs(id, act, ctr);
+            var act = 'detobjespecifico';///detalle del Objetivo Especifico 
+            var ctr = $('#det_obj_esp');
+            ajaxs(id, act, ctr);
             
         });
         
         function ajaxs(id, accion, control)
         {        
-                $.ajax({
-        	            type: "POST",
-        	            data: { id: id},
-        	            url: "/pvajax/"+accion,
-        	            dataType: "json",
-        	            success: function(item)
-        	            {
-        	               $(control).html(item);
-        	           },
-                       error: $(control).html(''),
-                  });
+            $.ajax({
+                type: "POST",
+                data: { id: id},
+                url: "/pvajax/"+accion,
+                dataType: "json",
+                success: function(item)
+                {
+                    $(control).html(item);
+                },
+                error: $(control).html(''),
+            });
         }
         $('#fuente').change(function(){
             ajaxppt();
@@ -241,23 +302,23 @@
                 var viaje = $('#id_tipoviaje').val();
                 var gasto = $('#gasto_representacion').val();
                 $.ajax({
-            	            type: "POST",
-            	            data: { id: id, pasaje:pasaje, viatico:viatico, viaje:viaje, gasto:gasto},
-            	            url: "/pvajax/pptdisponibleuser",
-            	            dataType: "json",
-            	            success: function(item)
-            	            {
-            	               $(control).html(item);
-            	           },
-                           error: $(control).html('error'),
-                      });
+                    type: "POST",
+                    data: { id: id, pasaje:pasaje, viatico:viatico, viaje:viaje, gasto:gasto},
+                    url: "/pvajax/pptdisponibleuser",
+                    dataType: "json",
+                    success: function(item)
+                    {
+                        $(control).html(item);
+                    },
+                    error: $(control).html('error'),
+                });
             }
             else
                 control.html('');
         }
-    $("#total_pasaje").blur(function(){
-        ajaxppt();
-    });
+        $("#total_pasaje").blur(function(){
+            ajaxppt();
+        });
         ///Fin - 260813
 
         $('#btnword').click(function(){
@@ -370,9 +431,9 @@ function dia_literal($n) {
                 <a href="#" class="link save" id="save" title="Guardar cambios hechos al documento" > Guardar</a>
                 | <a href="/pdf/<?php echo $tipo->action ?>.php?id=<?php echo $documento->id; ?>" class="link pdf" target="_blank" title="Imprimir PDF" >PDF</a>
                 |  
-<?php if ($documento->estado == 1): ?> 
+                <?php if ($documento->estado == 1): ?> 
                     <a href="/seguimiento/?nur=<?php echo $documento->nur; ?>" class="link derivar" title="Ver seguimiento" >Derivado</a>      
-<?php else: ?>
+                <?php else: ?>
                     <a href="/hojaruta/derivar/?id_doc=<?php echo $documento->id; ?>" class="link derivar" title="Derivar a partir del documento, si ya esta derivado muestra el seguimiento" >Derivar</a>      
                 <?php endif; ?>
                 <?php
@@ -386,17 +447,17 @@ function dia_literal($n) {
                 <?php if (sizeof($mensajes) > 0): ?>
                     <div class="info">
                         <p><span style="float: left; margin-right: .3em;" class="ui-icon-info"></span>
-                    <?php foreach ($mensajes as $k => $v): ?>
+                            <?php foreach ($mensajes as $k => $v): ?>
                                 <strong><?= $k ?>: </strong> <?php echo $v; ?></p>
-    <?php endforeach; ?>
+                        <?php endforeach; ?>
                     </div>
-                        <?php endif; ?>        
+                <?php endif; ?>        
                 <br/>
-                    <?php
-                    if ($documento->id_tipo == 5):
-                        echo Form::hidden('proceso', 1);
-                    else:
-                        ?>        
+                <?php
+                if ($documento->id_tipo == 5):
+                    echo Form::hidden('proceso', 1);
+                else:
+                    ?>        
                     <fieldset> 
                         <legend>Viaje: <?php
                 echo Form::select('id_tipoviaje', $opt_tv, $pvfucov->id_tipoviaje, array('id' => 'id_tipoviaje'));
@@ -406,18 +467,18 @@ function dia_literal($n) {
                 echo Form::hidden('titulo', '');
                 echo Form::hidden('tipo_cambio', '6.96');
                 echo Form::hidden('tipo_moneda', $pvfucov->tipo_moneda);
-                        ?>
+                    ?>
                         </legend>
-                        <?php endif; ?>            
+                    <?php endif; ?>            
                     <table width="100%">
                         <tr>
                             <td style=" border-right:1px dashed #ccc; padding-left: 5px;">
                                 <p>
-<?php
-echo Form::hidden('id_doc', $documento->id);
-echo Form::label('destinatario', 'Nombre del destinatario:', array('class' => 'form'));
-echo Form::input('destinatario', $documento->nombre_destinatario, array('id' => 'destinatario', 'size' => 45, 'class' => 'required'));
-?>
+                                    <?php
+                                    echo Form::hidden('id_doc', $documento->id);
+                                    echo Form::label('destinatario', 'Nombre del destinatario:', array('class' => 'form'));
+                                    echo Form::input('destinatario', $documento->nombre_destinatario, array('id' => 'destinatario', 'size' => 45, 'class' => 'required'));
+                                    ?>
                                 </p>
                                 <p>
                                     <?php
@@ -425,21 +486,21 @@ echo Form::input('destinatario', $documento->nombre_destinatario, array('id' => 
                                     echo Form::input('cargo_des', $documento->cargo_destinatario, array('id' => 'cargo_des', 'size' => 45, 'class' => 'required'));
                                     ?>
                                 </p> 
-                                    <?php if ($documento->id_tipo == 5): ?>
+                                <?php if ($documento->id_tipo == 5): ?>
                                     <p>
                                         <label>Institución Destinatario</label>
                                         <input type="text" size="40" value="<?php echo $documento->institucion_destinatario; ?>" name="institucion_des" />    
                                     </p>
                                     <input type="hidden" size="40" value="" name="via" />    
                                     <input type="hidden" size="40" value="" name="cargovia" />    
-<?php else: ?>
+                                <?php else: ?>
                                     <input type="hidden" size="40" value="" name="institucion_des" />    
 
                                     <p>
-                                    <?php
-                                    echo Form::label('via', 'Via:', array('class' => 'form'));
-                                    echo Form::input('via', $documento->nombre_via, array('id' => 'via', 'size' => 45/* ,'class'=>'required' */));
-                                    ?>
+                                        <?php
+                                        echo Form::label('via', 'Via:', array('class' => 'form'));
+                                        echo Form::input('via', $documento->nombre_via, array('id' => 'via', 'size' => 45/* ,'class'=>'required' */));
+                                        ?>
                                         <?php
                                         echo Form::label('cargovia', 'Cargo Via:', array('class' => 'form'));
                                         echo Form::input('cargovia', $documento->cargo_via, array('id' => 'cargovia', 'size' => 45/* ,'class'=>'required' */));
@@ -450,10 +511,10 @@ echo Form::input('destinatario', $documento->nombre_destinatario, array('id' => 
                             </td>
                             <td style=" border-right:1px dashed #ccc; padding-left: 5px;">
                                 <p>
-<?php
-echo Form::label('remitente', 'Nombre del remitente: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mosca', array('class' => 'form'));
-echo Form::input('remitente', $documento->nombre_remitente, array('id' => 'remitente', 'size' => 32, 'class' => 'required'));
-?>            
+                                    <?php
+                                    echo Form::label('remitente', 'Nombre del remitente: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mosca', array('class' => 'form'));
+                                    echo Form::input('remitente', $documento->nombre_remitente, array('id' => 'remitente', 'size' => 32, 'class' => 'required'));
+                                    ?>            
                                     <?php
                                     //  echo Form::label('mosca','Mosca:');
                                     echo Form::input('mosca', $documento->mosca_remitente, array('id' => 'mosca', 'size' => 4));
@@ -476,24 +537,24 @@ echo Form::input('remitente', $documento->nombre_remitente, array('id' => 'remit
 
 
                             <td rowspan="2" style="padding-left: 5px;">
-<?php echo Form::label('dest', 'Mis destinatarios:'); ?>
+                                <?php echo Form::label('dest', 'Mis destinatarios:'); ?>
                                 <div id="vias">
                                     <ul>
 
                                         <!-- Vias -->    
 
                                         <!-- Destinatario -->    
-<?php foreach ($vias as $v): ?>
+                                        <?php foreach ($vias as $v): ?>
                                             <li class="<?php echo $v['genero'] ?>"><?php echo HTML::anchor('#', $v['nombre'], array('class' => 'destino', 'nombre' => $v['nombre'], 'title' => $v['cargo'], 'cargo' => $v['cargo'], 'via' => $v['via'], 'cargo_via' => $v['cargo_via'])); ?></li>
-<?php endforeach; ?>
+                                        <?php endforeach; ?>
 
                                         <!-- Inmediato superior -->    
                                         <?php //foreach($superior  as $v){      ?>
-                                        <li class="<?php //echo $v['genero']      ?>"><?php //echo HTML::anchor('#',$v['nombre'],array('class'=>'destino','nombre'=>$v['nombre'],'title'=>$v['cargo'],'cargo'=>$v['cargo'],'via'=>'','cargo_via'=>''));      ?></li>
-<?php //}      ?>
+                                        <li class="<?php //echo $v['genero']       ?>"><?php //echo HTML::anchor('#',$v['nombre'],array('class'=>'destino','nombre'=>$v['nombre'],'title'=>$v['cargo'],'cargo'=>$v['cargo'],'via'=>'','cargo_via'=>''));       ?></li>
+                                        <?php //}      ?>
                                         <!-- dependientes -->    
                                         <?php // foreach($dependientes  as $v){     ?>
-                                        <li class="<?php // echo $v['genero']       ?>"><?php //echo HTML::anchor('#',$v['nombre'],array('class'=>'destino','nombre'=>$v['nombre'],'title'=>$v['cargo'],'cargo'=>$v['cargo'],'via'=>'','cargo_via'=>''));       ?></li>
+                                        <li class="<?php // echo $v['genero']        ?>"><?php //echo HTML::anchor('#',$v['nombre'],array('class'=>'destino','nombre'=>$v['nombre'],'title'=>$v['cargo'],'cargo'=>$v['cargo'],'via'=>'','cargo_via'=>''));        ?></li>
                                         <?php //}     ?>
                                     </ul>
                                 </div>
@@ -504,7 +565,7 @@ echo Form::input('remitente', $documento->nombre_remitente, array('id' => 'remit
 
                         <tr>
                             <td colspan="2" style="padding-left: 5px;">
-<?php echo Form::label('referencia', 'Motivo:', array('id' => 'label_referencia', 'class' => 'form')); ?> 
+                                <?php echo Form::label('referencia', 'Motivo:', array('id' => 'label_referencia', 'class' => 'form')); ?> 
                                 <textarea name="referencia" id="referencia" style="width: 510px;" class="required"><?php echo $documento->referencia ?></textarea>
                             </td>
                         </tr>
@@ -516,7 +577,7 @@ echo Form::input('remitente', $documento->nombre_remitente, array('id' => 'remit
                     </table>
 
                     <div style="width: 800px;float: left; ">
-<?php echo Form::hidden('descripcion', $documento->contenido, array('id' => 'descripcion')); ?>
+                        <?php echo Form::hidden('descripcion', $documento->contenido, array('id' => 'descripcion')); ?>
                         <table class="classy" border="1">
                             <thead>
                                 <tr>
@@ -538,48 +599,66 @@ echo Form::input('remitente', $documento->nombre_remitente, array('id' => 'remit
                                     <td><?php echo Form::input('fecha_salida', $diai . ' ' . $fi, array('id' => 'fecha_salida', 'size' => 12, 'class' => 'required')) ?> <br><?php echo Form::input('hora_salida', $hi, array('id' => 'hora_salida', 'size' => 12, 'class' => 'required')) ?></td>
                                     <td><?php echo Form::input('fecha_arribo', $diaf . ' ' . $ff, array('id' => 'fecha_arribo', 'size' => 12, 'class' => 'required')) ?> <br><?php echo Form::input('hora_arribo', $hf, array('id' => 'hora_arribo', 'size' => 12, 'class' => 'required')) ?></td>
                                     <td>
-                                        <input type="radio" name="transporte" value="Aereo" <?php if ($pvfucov->transporte == 'Aereo') {
-    echo 'checked';
-} ?> > Aereo<br>
-                                        <input type="radio" name="transporte" value="Terrestre" <?php if ($pvfucov->transporte == 'Terrestre') {
-    echo 'checked';
-} ?>> Terrestre<br>
-                                        <input type="radio" name="transporte" value="Vehiculo Oficial" <?php if ($pvfucov->transporte == 'Vehiculo Oficial') {
-    echo 'checked';
-} ?>> Vehiculo<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Oficial
+                                        <input type="radio" name="transporte" value="Aereo" <?php
+                        if ($pvfucov->transporte == 'Aereo') {
+                            echo 'checked';
+                        }
+                        ?> > Aereo<br>
+                                        <input type="radio" name="transporte" value="Terrestre" <?php
+                        if ($pvfucov->transporte == 'Terrestre') {
+                            echo 'checked';
+                        }
+                        ?>> Terrestre<br>
+                                        <input type="radio" name="transporte" value="Vehiculo Oficial" <?php
+                                               if ($pvfucov->transporte == 'Vehiculo Oficial') {
+                                                   echo 'checked';
+                                               }
+                        ?>> Vehiculo<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Oficial
                                     </td>
                                     <td>
-                                        <input type="radio" name="cancelar" value="MDPyEP" porcentaje="100" <?php if ($pvfucov->cancelar == 'MDPyEP') {
-    echo 'checked';
-} ?>> MDPyEP<br><br>
+                                        <input type="radio" name="cancelar" value="MDPyEP" porcentaje="100" <?php
+                                               if ($pvfucov->cancelar == 'MDPyEP') {
+                                                   echo 'checked';
+                                               }
+                        ?>> MDPyEP<br><br>
                                         Otra Institucion:
-<?php echo Form::input('financiador', $pvfucov->financiador, array('id' => 'financiador', 'size' => 15)) ?><br>
+                                        <?php echo Form::input('financiador', $pvfucov->financiador, array('id' => 'financiador', 'size' => 15)) ?><br>
                                         Cubre:<br>
-                                        <input type="radio" name="cancelar" value="Hospedaje" porcentaje="70" <?php if ($pvfucov->cancelar == 'Hospedaje') {
-    echo 'checked';
-} ?>> Hospedaje<br>
-                                        <input type="radio" name="cancelar" value="Hospedaje y alimentacion" porcentaje="25" <?php if ($pvfucov->cancelar == 'Hospedaje y alimentacion') {
-    echo 'checked';
-} ?>> Hospedaje y<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alimentacion<br>
-                                        <input type="radio" name="cancelar" value="Renuncia de viaticos" porcentaje="0" <?php if ($pvfucov->cancelar == 'Aereo') {
-    echo 'Renuncia de viaticos';
-} ?>> Renuncia de<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;viaticos
+                                        <input type="radio" name="cancelar" value="Hospedaje" porcentaje="70" <?php
+                                        if ($pvfucov->cancelar == 'Hospedaje') {
+                                            echo 'checked';
+                                        }
+                                        ?>> Hospedaje<br>
+                                        <input type="radio" name="cancelar" value="Hospedaje y alimentacion" porcentaje="25" <?php
+                                        if ($pvfucov->cancelar == 'Hospedaje y alimentacion') {
+                                            echo 'checked';
+                                        }
+                                        ?>> Hospedaje y<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alimentacion<br>
+                                        <input type="radio" name="cancelar" value="Renuncia de viaticos" porcentaje="0" <?php
+                                               if ($pvfucov->cancelar == 'Aereo') {
+                                                   echo 'Renuncia de viaticos';
+                                               }
+                                        ?>> Renuncia de<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;viaticos
                                     </td>
                                     <td>
-                                        <input type="radio" name="impuesto" value="Si" <?php if ($pvfucov->impuesto == 'Si') {
-    echo 'checked';
-} ?>> Si<br>
-                                        <input type="radio" name="impuesto" value="No" <?php if ($pvfucov->impuesto == 'No') {
-    echo 'checked';
-} ?>> No<br>
+                                        <input type="radio" name="impuesto" value="Si" <?php
+                                               if ($pvfucov->impuesto == 'Si') {
+                                                   echo 'checked';
+                                               }
+                                        ?>> Si<br>
+                                        <input type="radio" name="impuesto" value="No" <?php
+                                               if ($pvfucov->impuesto == 'No') {
+                                                   echo 'checked';
+                                               }
+                                        ?>> No<br>
                                     </td>
                                     <td>
-                                        <input type="radio" name="representacion" value="Si" <?php if ($pvfucov->representacion == 'Si') {
-    echo 'checked';
-} ?>> Si<br>
-                                        <input type="radio" name="representacion" value="No" <?php if ($pvfucov->representacion == 'No') {
-    echo 'checked';
-} ?>> No<br>
+                                        <input type="radio" name="representacion" value="Si" id="representacion_si" <?php if ($pvfucov->representacion == 'Si') {
+                                                   echo 'checked';
+                                               } ?>> Si<br>
+                                        <input type="radio" name="representacion" value="No" id="representacion_no" <?php if ($pvfucov->representacion == 'No') {
+                                                   echo 'checked';
+                                               } ?>> No<br>
                                     </td>
 
                                 </tr>
@@ -601,7 +680,7 @@ echo Form::input('remitente', $documento->nombre_remitente, array('id' => 'remit
                             <td colspan='2'>Descuento IVA 13 %: <?php echo Form::input('gasto_imp', $pvfucov->gasto_imp, array('id' => 'gasto_imp', 'size' => 8)) ?> <span id="div_momeda2">Bs.</span></td>
                         </tr> 
                         <tr>
-                            <td colspan='2'>Gastos de Representación: <?php echo Form::input('gasto_representacion', $pvfucov->gasto_imp, array('id' => 'gasto_representacion', 'size' => 8)) ?> <span id="div_momeda3">Bs.</span></td>
+                            <td colspan='2'>Gastos de Representación: <?php echo Form::input('gasto_representacion', $pvfucov->gasto_representacion, array('id' => 'gasto_representacion', 'size' => 8)) ?> <span id="div_momeda3">Bs.</span></td>
                         </tr> 
 
                         <tr>    
@@ -611,7 +690,7 @@ echo Form::input('remitente', $documento->nombre_remitente, array('id' => 'remit
                         <tr>
                             <td colspan="2" style="padding-left: 5px;">
 <?php echo Form::label('justificacion', 'Justificacion Fin de Semana:', array('id' => 'justificacion', 'class' => 'form')); ?> 
-                                <textarea name="justificacion_finsem" id="justificacion_finsem" style="width: 510px;" class="required"><?php echo $pvfucov->justificacion_finsem ?></textarea>
+                                <textarea name="justificacion_finsem" id="justificacion_finsem" style="width: 510px;" ><?php echo $pvfucov->justificacion_finsem ?></textarea>
                             </td>
                         </tr>
                     </table>
@@ -633,54 +712,54 @@ echo Form::input('remitente', $documento->nombre_remitente, array('id' => 'remit
     <div id="poa">
         <div class="formulario">        
             <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;  ">
-            <h2 style="text-align:center;">Certificaci&oacute;n POA </h2><hr/>
-            <fieldset>
-                <table width="100%" border="1px">
-                    <tr>
-                        <td><?php //echo $ue;?>
-                            <?php echo Form::label('unidad_ejecutora','Unidad Ejecutora:',array('class'=>'form'));?>
-                        </td>
-                        <td>
-                            <?php echo $ue_poa?>
-                            <?php // echo Form::input('unidadEjecutora',$ue_poa,array('size'=>'75','id'=>'unidadEjecutora','name'=>'unidadEjecutora'))?>
-                            <input type="hidden" id="idUnidadEjecutora" name="idUnidadEjecutora" value="<?php // echo $idunidadejecutora;?>" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <?php echo Form::label('obj_gestion','C&oacute;digo Objetivo de Gesti&oacute;n:',array('class'=>'form'));?>
-                        </td>
-                        <td>
-                            <?php echo Form::select('obj_gestion',$obj_gestion,$pvpoas->id_obj_gestion,array('class'=>'form','name'=>'obj_gestion','id'=>'obj_gestion','class'=>'required'));?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <?php echo Form::label('detalle_obj_gestion','Detalle Objetivo de Gesti&oacute;n:',array('class'=>'form'));?>
-                        </td>
-                        <td>
-                            <br />
-                            <textarea name="det_obj_gestion" id="det_obj_gestion" style="width: 600px;" disabled="true" ><?php echo $det_obj_gestion;?></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <?php echo Form::label('obj_esp','C&oacute;digo Objetivo Espec&iacute;fico:',array('class'=>'form'));?>
-                        </td>
-                        <td>
-                            <?php echo Form::select('obj_esp',$obj_esp,$pvpoas->id_obj_esp,array('class'=>'form','class'=>'required','id'=>'obj_esp','name'=>'obj_esp'));?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <?php echo Form::label('det_obj_esp','Detalle Objetivo Espec&iacutefico:',array('class'=>'form'));?>
-                        </td>
-                        <td>
-                            <textarea name="det_obj_esp" id="det_obj_esp" style="width: 600px;" disabled="true" ><?php echo $det_obj_esp;?></textarea>
-                        </td>
-                    </tr>
-                </table>
-            </fieldset>
+                <h2 style="text-align:center;">Certificaci&oacute;n POA </h2><hr/>
+                <fieldset>
+                    <table width="100%" border="1px">
+                        <tr>
+                            <td><?php //echo $ue; ?>
+<?php echo Form::label('unidad_ejecutora', 'Unidad Ejecutora:', array('class' => 'form')); ?>
+                            </td>
+                            <td>
+<?php echo $ue_poa ?>
+                                <?php // echo Form::input('unidadEjecutora',$ue_poa,array('size'=>'75','id'=>'unidadEjecutora','name'=>'unidadEjecutora')) ?>
+                                <input type="hidden" id="idUnidadEjecutora" name="idUnidadEjecutora" value="<?php // echo $idunidadejecutora;?>" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+<?php echo Form::label('obj_gestion', 'C&oacute;digo Objetivo de Gesti&oacute;n:', array('class' => 'form')); ?>
+                            </td>
+                            <td>
+                                <?php echo Form::select('obj_gestion', $obj_gestion, $pvpoas->id_obj_gestion, array('class' => 'form', 'name' => 'obj_gestion', 'id' => 'obj_gestion', 'class' => 'required')); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+<?php echo Form::label('detalle_obj_gestion', 'Detalle Objetivo de Gesti&oacute;n:', array('class' => 'form')); ?>
+                            </td>
+                            <td>
+                                <br />
+                                <textarea name="det_obj_gestion" id="det_obj_gestion" style="width: 600px;" disabled="true" ><?php echo $det_obj_gestion; ?></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+<?php echo Form::label('obj_esp', 'C&oacute;digo Objetivo Espec&iacute;fico:', array('class' => 'form')); ?>
+                            </td>
+                            <td>
+                    <?php echo Form::select('obj_esp', $obj_esp, $pvpoas->id_obj_esp, array('class' => 'form', 'class' => 'required', 'id' => 'obj_esp', 'name' => 'obj_esp')); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+<?php echo Form::label('det_obj_esp', 'Detalle Objetivo Espec&iacutefico:', array('class' => 'form')); ?>
+                            </td>
+                            <td>
+                                <textarea name="det_obj_esp" id="det_obj_esp" style="width: 600px;" disabled="true" ><?php echo $det_obj_esp; ?></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
             </div>
         </div>
     </div>
@@ -689,9 +768,9 @@ echo Form::input('remitente', $documento->nombre_remitente, array('id' => 'remit
             <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;  ">
                 <h2 style="text-align:center;">Presupuesto</h2><hr/>
                 <fieldset>
-                Fuentes de Financiamiento:
-                <?php echo Form::select('fuente',$fuente,$pvfucov->id_programatica,array('id'=>'fuente','class'=>'required'))?>
-                <div id="saldoppt"><?php echo $partidasgasto;?></div>
+                    Fuentes de Financiamiento:
+<?php echo Form::select('fuente', $fuente, $pvfucov->id_programatica, array('id' => 'fuente', 'class' => 'required')) ?>
+                    <div id="saldoppt"><?php echo $partidasgasto; ?></div>
                 </fieldset>
             </div>
         </div>
