@@ -46,7 +46,7 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
                                         ;    
     }
     
-    public function action_asignarpasaje($id = '') {
+    public function action_adicionarpasaje($id = '') {
         $fucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
         if ($fucov->loaded()) {
             $pasajes = ORM::factory('pvpasajes');
@@ -54,8 +54,28 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
             $pasajes->transporte = $_POST['transporte'];
             $pasajes->empresa = $_POST['empresa'];
             $pasajes->nro_boleto = $_POST['nro_boleto'];
-            //$pasajes->fecha_salida = strtotime($_POST['fechasalida'].' '.$_POST['horasalida']);
-            //$pasajes->fecha_arribo = strtotime($_POST['fechaarribo'].' '.$_POST['horaarribo']);
+            $fs = date('Y-m-d', strtotime(substr($_POST['fecha_ida'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_ida']));
+            $fa = date('Y-m-d', strtotime(substr($_POST['fecha_llegada'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_llegada']));
+            $pasajes->fecha_salida = $fs;
+            $pasajes->fecha_arribo = $fa;
+            $pasajes->costo = $_POST['costo'];
+            $pasajes->origen = $_POST['origen'];
+            $pasajes->destino = $_POST['destino'];
+            $pasajes->save();
+            $this->request->redirect('documento/detalle/'.$fucov->id_memo);
+        }
+        else
+            $this->template->content = 'El FUCOV no existe';
+    }
+    
+    public function action_eliminarpasaje($id = '') {
+        $fucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
+        if ($fucov->loaded()) {
+            $pasajes = ORM::factory('pvpasajes');
+            $pasajes->id_fucov = $id;
+            $pasajes->transporte = $_POST['transporte'];
+            $pasajes->empresa = $_POST['empresa'];
+            $pasajes->nro_boleto = $_POST['nro_boleto'];
             $fs = date('Y-m-d', strtotime(substr($_POST['fecha_salida'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_salida']));
             $fa = date('Y-m-d', strtotime(substr($_POST['fecha_arribo'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_arribo']));
             $pasajes->fecha_salida = $fs;
@@ -63,13 +83,32 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
             $pasajes->costo = $_POST['costo'];
             $pasajes->origen = $_POST['origen'];
             $pasajes->destino = $_POST['destino'];
-          //$pasajes->save();
-         ///actualizar fucovs
-            //if($pasajes->id){
-                //$fucov->etapa_proceso = 2;
-                //$fucov->save();
-                $this->request->redirect('documento/detalle/'.$fucov->id_memo);
+            //$pasajes->save();
+            $this->request->redirect('documento/detalle/'.$fucov->id_memo);
+        }
+        else
+            $this->template->content = 'El FUCOV no existe';
+    }
+    
+    public function action_editarfucov($id = '') {
+        $fucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
+        if ($fucov->loaded()) {
+        ///actualizar fucovs
+            //$fucov->etapa_proceso = 2;
+            $fucov->save();
+            $this->request->redirect('documento/detalle/'.$fucov->id_memo);
             //}
+        }
+        else
+            $this->template->content = 'El FUCOV no existe';
+    }
+    
+    public function action_autorizarfucov($id = '') {
+        $fucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
+        if ($fucov->loaded()) {
+            $fucov->etapa_proceso = 2;
+            $fucov->save();
+            $this->request->redirect('documento/detalle/'.$fucov->id_memo);
         }
         else
             $this->template->content = 'El FUCOV no existe';

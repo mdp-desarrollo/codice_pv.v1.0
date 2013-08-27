@@ -613,7 +613,7 @@ class Controller_documento extends Controller_DefaultTemplate {
             $nivel = $this->user->nivel;
             switch ($nivel) {
                 case 6:
-                    $pasajes = ORM::factory('pvpasajes')->where('id_fucov','=',$fucov->id)->find_all();
+                    $pasajes = ORM::factory('pvpasajes')->where('id_fucov','=',$fucov->id)->order_by('id','asc')->find_all();
                     $detallepv = View::factory('pvpasajes/detalle')
                         ->bind('pvfucov', $fucov)
                         ->bind('pasajes',$pasajes)
