@@ -238,6 +238,7 @@ class Controller_documento extends Controller_DefaultTemplate {
         $documento = ORM::factory('documentos')->where('id', '=', $id)->find();
         if ($documento->loaded()) {
             $ok = true;
+            $estado = 0;
             if ($documento->estado == 1) { //si esta derivado entonces el documento solo pueden ver aquellos quienes intevienen en el seguimiento
                 $ok = false;
                 $seguimiento = ORM::factory('seguimiento')
@@ -607,27 +608,72 @@ class Controller_documento extends Controller_DefaultTemplate {
     ///rodrigo(opciones por usuario) 210813
     public function pvmodificar($id,$estado){
         $detallepv = '';
-        $fucov = ORM::factory('pvfucovs')->where('id_memo','=',$id)->find();
-        if($fucov->loaded())
-        {
-            $nivel = $this->user->nivel;
-            switch ($nivel) {
-                case 6:
-                    $pasajes = ORM::factory('pvpasajes')->where('id_fucov','=',$fucov->id)->order_by('id','asc')->find_all();
-                    $detallepv = View::factory('pvpasajes/detalle')
-                        ->bind('pvfucov', $fucov)
-                        ->bind('pasajes',$pasajes)
-                        ->bind('estado',$estado)
-                        ;
-                    break;
-                case 7:
-                    $detallepv = '7';
-                    break;
-                case 8:
-                    $detallepv = '8';
-                    break;
+        if($estado == 2){
+            $pvfucov = ORM::factory('pvfucovs')->where('id_memo','=',$id)->find();
+            $memo = ORM::factory('documentos')->where('id','=',$pvfucov->id_memo)->find();
+            $oficina = ORM::factory('oficinas')->where('id','=',$memo->id_oficina)->find();
+            if($pvfucov->loaded()){
+                $nivel = $this->user->nivel;
+                switch ($nivel) {
+                    case 6:
+                        $pasajes = ORM::factory('pvpasajes')->where('id_fucov','=',$pvfucov->id)->order_by('id','asc')->find_all();
+                        $detallepv = View::factory('pvpasajes/detalle')
+                            ->bind('pvfucov', $pvfucov)
+                            ->bind('estado',$estado)
+                            ->bind('pasajes',$pasajes)
+                            ;
+                        break;
+                    case 7:
+                        $oFuente = New Model_Pvprogramaticas();
+                        $fte = $oFuente->listafuentesppt($oficina->ppt_unid_ejecutora);///fuente por oficina + dgaa 
+                        $fuente = array();
+                        $fuente['']='Seleccione Una Fuente de Financiamiento';
+                        foreach ($fte as $f)
+                            $fuente[$f->id] = $f->actividad;
+                        
+                        $oPart = New Model_Pvprogramaticas();
+                        $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica,$pvfucov->total_pasaje, $pvfucov->total_viatico,$pvfucov->id_tipoviaje, $pvfucov->gasto_representacion);
+                    
+                        $detallepv = View::factory('pvpresupuesto/detalle')
+                            ->bind('pvfucov', $pvfucov)
+                            ->bind('estado',$estado)
+                            ->bind('fuente',$fuente)
+                            ->bind('partidasgasto',$partidasgasto)
+                            ;
+                        break;
+                    case 8:
+                        $pvpoas = ORM::factory('pvpoas')->where('id_fucov','=',$pvfucov->id)->find();
+                        $obj_gest = ORM::factory('pvogestiones')->where('id_oficina','=',$oficina->poa_unid_ejecutora)->and_where('estado','=',1)->find_all();
+                        foreach ($obj_gest as $g){
+                            $ogestion[$g->id] = $g->codigo;
+                            if($g->id == $pvpoas->id_obj_gestion){
+                                $det_obj_gestion = $g->objetivo;
+                            }
+                        }
+                        $oesp = ORM::factory('pvoespecificos')->where('id_obj_gestion','=',$pvpoas->id_obj_gestion)->and_where('estado','=',1)->find_all();
+                        foreach ($oesp as $e){
+                            $oespecifico[$e->id] = $e->codigo;
+                            if($e->id == $pvpoas->id_obj_esp){
+                                $det_obj_esp = $e->objetivo;
+                            }
+                        }
+                        $uejecutora = ORM::factory('oficinas')->where('id','=',$oficina->poa_unid_ejecutora)->find();
+                        $ue_poa = $uejecutora->oficina;
+                        //$office = $memo->id_oficina;
+                        $detallepv = View::factory('pvplanificacion/detalle')
+                            ->bind('pvfucov', $pvfucov)
+                            ->bind('estado',$estado)
+                            ->bind('pvpoas',$pvpoas)
+                            ->bind('obj_gestion',$ogestion)
+                            ->bind('det_obj_gestion',$det_obj_gestion)
+                            ->bind('obj_esp',$oespecifico)
+                            ->bind('det_obj_esp',$det_obj_esp)
+                            ->bind('ue_poa',$ue_poa)
+                            ;
+                        break;
+                }
+                
             }
-            
         }
         return $detallepv;
     }

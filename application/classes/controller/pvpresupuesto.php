@@ -229,6 +229,63 @@ public function action_editsaldoppt($id = ''){
     }
 }
 
+public function action_editarfucov($id = '') {
+        $fucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
+        if ($fucov->loaded()) {
+            if ($fucov->etapa_proceso == 2){
+            $fucov->id_programatica = $_POST['fuente'];
+            $fucov->save();
+            $this->request->redirect('documento/detalle/'.$fucov->id_memo);
+            }
+            else
+            $this->template->content = '<b>EL DOCUMENTO YA FUE AUTORIZADO Y NO SE PUEDE MODIFICAR.</b><div class="info" style="text-align:center;margin-top: 50px; width:800px">
+                                        <p><span style="float: left; margin-right: .3em;" class=""></span>    
+                                        &larr;<a onclick="javascript:history.back(); return false;" href="#" style="font-weight: bold; text-decoration: underline;  " > Regresar<a/></p>    
+</div>';    
+        }
+        else
+            $this->template->content = 'El FUCOV no existe';
+    }
+
+public function action_autorizarfucov($id = '') {
+        $pvfucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
+        if ($pvfucov->loaded()) {
+            if($pvfucov->id_tipoviaje == 1 || $pvfucov->id_tipoviajes == 2){
+                $partidas = array("22110" => $pvfucov->total_pasaje, "22210" => $pvfucov->total_viatico);
+            }
+            else{
+                $partidas = array("22120" => $pvfucov->total_pasaje, "22220" => $pvfucov->total_viatico, "26910" => $pvfucov->gasto_representacion);
+            }
+            foreach($partidas as $key=>$value){
+                $partida = ORM::factory('pvpartidas')->where('codigo','=',$key)->find();
+                $ejecucion = ORM::factory('pvejecuciones')->where('id_partida','=',$partida->id)->and_where('id_programatica','=',$pvfucov->id_programatica)->find();
+                $liquidacion = ORM::factory('pvliquidaciones');
+                $liquidacion->fecha_creacion = date("Y-m-d H:i:s");
+                $liquidacion->importe_certificado = $value;
+                $liquidacion->cs_preventivo = $ejecucion->preventivo;
+                $liquidacion->cs_comprometido = $ejecucion->comprometido;
+                $liquidacion->cs_devengado = $ejecucion->devengado;
+                $liquidacion->cs_saldo_devengado = $ejecucion->saldo_devengado;
+                $liquidacion->cs_pagado = $ejecucion->pagado;
+                $liquidacion->cs_saldo_pagar = $ejecucion->saldo_pagar;
+                $liquidacion->estado = 1;
+                $liquidacion->cod_partida= $partida->codigo;
+                $liquidacion->partida = $partida->partida;
+                $liquidacion->id_partida = $partida->id;
+                $liquidacion->id_fucov = $pvfucov->id;
+                $liquidacion->save();
+                $ejecucion->preventivo = $ejecucion->preventivo + $value;
+                $ejecucion->saldo_devengado = $ejecucion->saldo_devengado - $value;
+                $ejecucion->save();
+            }
+            $pvfucov->etapa_proceso = 3;
+            $pvfucov->save();
+            $this->request->redirect('documento/detalle/'.$pvfucov->id_memo);
+    }
+    else
+        $this->template->content = 'El documento no existe';
+}
+
 /*
 public function action_detallecertificado($id){
     //id = id_memo

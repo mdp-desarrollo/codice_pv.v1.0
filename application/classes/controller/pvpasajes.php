@@ -93,11 +93,17 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
     public function action_editarfucov($id = '') {
         $fucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
         if ($fucov->loaded()) {
-        ///actualizar fucovs
-            //$fucov->etapa_proceso = 2;
+            $fs = date('Y-m-d', strtotime(substr($_POST['fecha_salida'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_salida']));
+            $fa = date('Y-m-d', strtotime(substr($_POST['fecha_arribo'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_arribo']));
+            $fucov->fecha_salida = $fs;
+            $fucov->fecha_arribo = $fa;
+            $fucov->gasto_representacion = $_POST['gasto_representacion'];
+            $fucov->gasto_imp = $_POST['gasto_imp'];
+            $fucov->total_viatico = $_POST['total_viatico'];
+            $fucov->total_pasaje = $_POST['total_pasaje'];
+            $fucov->fecha_modificacion = date('Y-m-d H:i:s');
             $fucov->save();
             $this->request->redirect('documento/detalle/'.$fucov->id_memo);
-            //}
         }
         else
             $this->template->content = 'El FUCOV no existe';
@@ -110,8 +116,6 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
             $fucov->save();
             $this->request->redirect('documento/detalle/'.$fucov->id_memo);
         }
-        else
-            $this->template->content = 'El FUCOV no existe';
     }
 /*    
     public function action_autorizados(){

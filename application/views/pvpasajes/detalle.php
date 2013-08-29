@@ -167,17 +167,19 @@ else{
                         <td>Viaticos</td>
                         <td>Viatico x Dia</td>
                         <td>IVA 13 %: </td>
-                        <td>Gastos de Representaci&oacute;n:</td>
-                        <td>TOTAL VIATICOS</td>
-                        <td>TOTAL PASAJES</td>
+                        <td>Gastos Representaci&oacute;n:</td>
+                        <td>Cambio</td>
+                        <td>Total Vi&aacute;ticos</td>
+                        <td>Total Pasajes</td>
                     </tr>
                     <tr>
-                        <td><?php echo Form::input('nro_dias', $dias, array('id' => 'nro_dias', 'size' => 3,'class'=>'required')) ?></td>
-                        <td><?php echo Form::input('porcentaje_viatico', $pvfucov->porcentaje_viatico, array('id' => 'porcentaje_viatico', 'size' => 3,'class'=>'required','readonly')) ?> %</td>
-                        <td><?php echo Form::input('viatico_dia', $pvfucov->viatico_dia, array('id' => 'viatico_dia', 'size' => 5,'class'=>'required'));echo $moneda;?> </td>
-                        <td><?php echo Form::input('gasto_imp', $pvfucov->gasto_imp, array('id' => 'gasto_imp', 'size' => 8,'class'=>'required'));echo $moneda;?></td>
-                        <td><?php echo Form::input('gasto_representacion', $pvfucov->gasto_imp, array('id' => 'gasto_representacion', 'size' => 8,'class'=>'required')); echo $moneda;?></td>
-                        <td><?php echo Form::input('total_viatico', $pvfucov->total_viatico, array('id' => 'total_viatico', 'size' => 8,'class'=>'required'));echo $moneda; ?></span></td>
+                        <td><?php echo Form::input('nro_dias', $dias, array('id' => 'nro_dias', 'size' => 3,'readonly')) ?></td>
+                        <td><?php echo Form::input('porcentaje_viatico', $pvfucov->porcentaje_viatico, array('id' => 'porcentaje_viatico', 'size' => 3,'readonly')) ?> %</td>
+                        <td><?php echo Form::input('viatico_dia', $pvfucov->viatico_dia, array('id' => 'viatico_dia', 'size' => 5,'readonly'));echo $moneda;?> </td>
+                        <td><?php echo Form::input('gasto_imp', $pvfucov->gasto_imp, array('id' => 'gasto_imp', 'size' => 8,'readonly'));echo $moneda;?></td>
+                        <td><?php echo Form::input('gasto_representacion', $pvfucov->gasto_representacion, array('id' => 'gasto_representacion', 'size' => 8,'readonly')); echo $moneda;?></td>
+                        <td><?php echo Form::input('tipo_cambio', $pvfucov->tipo_cambio, array('id' => 'tipo_cambio', 'size' => 3,'readonly'));echo $moneda; ?></td>
+                        <td><?php echo Form::input('total_viatico', $pvfucov->total_viatico, array('id' => 'total_viatico', 'size' => 8,'readonly'));echo $moneda; ?></span></td>
                         <td><?php echo Form::input('total_pasaje', $pvfucov->total_pasaje, array('id' => 'total_pasaje', 'size' => 8,'class'=>'required'));echo $moneda; ?></td>
                     </tr>
                 </table>
@@ -185,7 +187,9 @@ else{
             </div>
         </div>
             <br />
-    <div id="asignar" style="margin:10px 0; padding: 1px; background-color:#EFF4FA; border: 1px solid #000000; width: 85px;" >+ Asignar Pasaje</div>
+    <!--<div id="asignar" style="margin:10px 0; padding: 1px; background-color:#EFF4FA; border: 1px solid #000000; width: 85px;" >+ Asignar Pasaje</div>-->
+    <button id="asignar"> + Asignar Pasaje</button>
+    <br />
     <div id="pasajes" class="formulario" hidden="true" >
         <form action="/pvpasajes/adicionarpasaje/<?php echo $pvfucov->id; ?>" method="post" id="frmAdicionar" >
             <b>ADICIONAR PASAJES:</b>
@@ -262,14 +266,15 @@ else{
                 </div>
                 <br />
                 <?php endif; ?>
-            
-                <!--<div id="asignados"></div>-->
-                
-   <!--
-<br />
-<br />
-    <input type="submit" value="Autorizar" class="uibutton" name="submit" id="crear" title="Autorizar"/>
+    <!--<input type="submit" value="Autorizar" class="uibutton" name="submit" id="crear" title="Autorizar"/>-->
+    <?php if($pvfucov->etapa_proceso == 1):?>
+    <a href="/pvpasajes/autorizarfucov/<?php echo $pvfucov->id; ?>"  title="Autorizar FUCOV" >Autorizar FUCOV</a>
+    <?php endif;?>
     <?php if($pvfucov->etapa_proceso == 2):?>
         <a href="/hojaruta/derivar/?id_doc=<?php echo $pvfucov->id_memo; ?>" class="link derivar" title="Derivar a partir del documento, si ya esta derivado muestra el seguimiento" >Derivar</a>
     <?php endif;?>
-                -->
+<br />
+<br />
+&nbsp;
+
+                
