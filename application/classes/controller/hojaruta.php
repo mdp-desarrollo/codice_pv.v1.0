@@ -146,7 +146,6 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                             $pvpoas->fecha_creacion = date('Y-m-d H:i:s');
                             $pvpoas->fecha_modificacion = date('Y-m-d H:i:s');
                             $pvpoas->id_fucov = $pvfucov->id;
-                            $pvpoas->etapa_proceso = 0;
                             $pvpoas->estado = 1;
                             $pvpoas->save();
                         }
