@@ -237,7 +237,6 @@ class Controller_documento extends Controller_DefaultTemplate {
         }
         $documento = ORM::factory('documentos')->where('id', '=', $id)->find();
         if ($documento->loaded()) {
-            $estado = 0;
             $ok = true;
             $estado = 0;
             if ($documento->estado == 1) { //si esta derivado entonces el documento solo pueden ver aquellos quienes intevienen en el seguimiento
