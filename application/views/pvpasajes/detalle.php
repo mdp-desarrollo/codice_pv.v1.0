@@ -1,32 +1,54 @@
 <script type="text/javascript">
-function ajaxs(control)
-{   
-    //control = $('#asignados');
-    var id_fucov = $('#id_fucov').val();
-    var origen = $('#origen').val();
-    var destino = $('#destino').val();
-    var fecha_salida = $('#fecha_salida').val();
-    var hora_salida = $('#hora_salida').val();
-    var fecha_arribo = $('#fecha_arribo').val();
-    var hora_arribo = $('#hora_arribo').val();
-    fecha_salida = fecha_salida.substr(4,10)+' '+hora_salida;
-    fecha_arribo = fecha_arribo.substr(4,10)+' '+hora_arribo;
-    var transporte = $('#transporte').val();
-    var nro_boleto = $('#nro_boleto').val();
-    var costo = $('#costo').val();
-    var empresa = $('#empresa').val();
-    $.ajax({
-	    type: "POST",
-	    data: { id_fucov:id_fucov, origen: origen, destino: destino, fecha_salida: fecha_salida, fecha_arribo:fecha_arribo, transporte:transporte, nro_boleto: nro_boleto, costo:costo, empresa:empresa},
-	    url: "/pvajax/adicionpasaje",
-        dataType: "json",
-        success: function(item)
-        {
-            //$(control).html(item);
-            $('#asignados').html(item);
-        },
-    });
+
+function calculo_viaticos(){
+    var porcentaje = $("#porcentaje_viatico").val();
+    var impuesto = $("input[name='impuesto']:checked").val(); //impuesto iva
+    var representacion = $("input[name='representacion']:checked").val(); 
+    var viatico_dia = $('#viatico_dia').val();
+    var nro_dias = $('#nro_dias').val();
+//calculo
+    var monto_parcial = ((parseFloat(porcentaje)*parseFloat(viatico_dia))/100)*parseFloat(nro_dias);
+    var desc_iva=0;
+    if(impuesto == 'Si'){
+        desc_iva = (13*parseFloat(monto_parcial))/100;
+    }
+    var gastos_rep=0;
+            if(representacion == 'Si'){
+                gastos_rep = (25*parseFloat(monto_parcial))/100;
+            }
+            var total_viatico=parseFloat(monto_parcial)+parseFloat(gastos_rep)-parseFloat(desc_iva);
+            $('#gasto_imp').val(desc_iva.toFixed(2));
+            $('#gasto_representacion').val(gastos_rep.toFixed(2));
+            $('#total_viatico').val(total_viatico.toFixed(2));
+            //$("#porcentaje_viatico").val(porcentaje);
+    }
+function calculo_dias(){
+    var fecha_s = $("#fecha_salida").val();
+    var dia_s = fecha_s.substring(0, 3);
+    fecha_s = fecha_s.substring(4, 14);
+    var fecha_a = $("#fecha_arribo").val();
+    var dia_a = fecha_a.substring(0, 3);
+    fecha_a = fecha_a.substring(4, 14);
+    if(fecha_s != '' && fecha_a !='') {
+        var diferencia =  Math.floor(( Date.parse(fecha_a) - Date.parse(fecha_s) ) / 86400000);
+        if(diferencia >= 0){
+            if(diferencia == 0){
+                diferencia = 1;
+            } else {
+                if($("#hora_arribo").val()>'12:00:00'){
+                    diferencia +=1;
+                }
+            }
+            $('#nro_dias').val(diferencia);
+        }
+        else{
+            alert('la fecha de salida no puede ser mayor a la fecha de arribo.');
+            $('#fecha_salida').val($('#fecha_arribo').val());
+            $('#nro_dias').val(1);
+        }
+    }
 }
+
 $(function(){
 $.datepicker.regional['es'] = {
             closeText: 'Cerrar',
@@ -48,17 +70,31 @@ $.datepicker.regional['es'] = {
             yearSuffix: ''};
 $.datepicker.setDefaults($.datepicker.regional['es']);
 
- var pickerOpts = { changeMonth: true, minDate: 0, changeYear: true, yearRange: "-10:+1", dateFormat: 'D yy-mm-dd'};
-    $('#fecha_inicio, #fecha_fin,#fecha_salida,#fecha_arribo').datepicker(pickerOpts,$.datepicker.regional['es']);
-    $('#hora_salida,#hora_arribo').timeEntry({show24Hours: true, showSeconds: true});
+ var pickerOpts = { changeMonth: true, minDate: 0, changeYear: true, yearRange: "-10:+1", dateFormat: 'D yy-mm-dd',onSelect: function(){ calculo_dias();calculo_viaticos();}};
+    $('#fecha_ida, #fecha_llegada,#fecha_salida,#fecha_arribo').datepicker(pickerOpts,$.datepicker.regional['es']);
+    $('#hora_ida,#hora_llegada,#hora_salida,#hora_arribo').timeEntry({show24Hours: true, showSeconds: true});
     
-    $('#adicionar').click(function(){
-        $("#asignados_inicial").hide();
-        ctrl = $('#asignados');
-        ajaxs(ctrl);
-        $('#origen, #destino, #nro_boleto, #costo, #empresa').val('');
+    $("#hora_salida, #hora_arribo").keydown(function(event) {    
+        calculo_dias();    
+        calculo_viaticos();
+    });
+    $('#asignar').click(function(){
+       $('#asignar').hide();
+       $('#pasajes').show();
+       $('#asignados').hide();
     });
     
+    $('#cancelar').click(function(){
+       $('#asignar').show();
+       $('#pasajes').hide();
+       $('#asignados').show();
+       $('#origen,#destino,#nro_boleto,#costo,#empresa').val('');
+       return false;
+    });
+    
+    $('#frmEditarFucov').validate();
+    $('#frmAdicionar').validate();
+    $('#frmAutorizar').validate();
 });
 </script>
 <?php
@@ -86,66 +122,108 @@ function dia_literal($n) {
             break;
     }
 }
+//calcular el numero de dias
+$fecha1 = strtotime($pvfucov->fecha_salida);
+$fecha2 = strtotime($pvfucov->fecha_arribo);
+$diff =  $fecha2 - $fecha1;
+$hora = date('H:i:s', strtotime($pvfucov->fecha_arribo));
+if ($diff==0)
+    $dias = 1;
+else{
+    if($hora >'12:00:00')
+        $dias = intval((($diff) / (60*60*24))+2);
+
+    else
+        $dias = intval((($diff) / (60*60*24))+1);    
+}
+    if($pvfucov->tipo_moneda == '0')
+        $moneda = 'Bs.';
+    else
+        $moneda = 'Us.';
 ?>
 <input type="hidden" id="id_fucov" value="<?php echo $pvfucov->id;?>" />
 <h2 style="text-align: center;"> PASAJES Y VI&Aacute;TICOS</h2>
         <div class="formulario">
-            <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;">
+            <div id="comision" style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;">
+                <form action="/pvpasajes/editarfucov/<?php echo $pvfucov->id; ?>" method="post" id="frmEditarFucov" >
                 INFORMACI&Oacute;N DE LA COMISI&Oacute;N:<br />
                     
-                        <table border="0px">
+                        <table border="1px" width="100%">
                             <tr>
                                 <td>Fecha y Hora de Inicio</td>
-                                <td><?php echo Form::input('fecha_inicio',$diai.' '.$fi,array('id'=>'fecha_inicio','size'=>14,'class' => 'required'))?><?php echo Form::input('hora_salida',$hi,array('id'=>'hora_salida','size'=>12,'class' => 'required'))?><br /></td>
+                                <td><?php echo Form::input('fecha_salida',$diai.' '.$fi,array('id'=>'fecha_salida','size'=>14,'class' => 'required'))?><?php echo Form::input('hora_salida',$hi,array('id'=>'hora_salida','size'=>12,'class' => 'required'))?><br /></td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td>Fecha y Hora de Conclusi&oacute;n:</td>
-                                <td><?php echo Form::input('fecha_fin',$diaf.' '.$ff,array('id'=>'fecha_fin','size'=>14,'class' => 'required'))?><?php echo Form::input('hora_arribo',$hf,array('id'=>'hora_arribo','size'=>12,'class' => 'required'))?><br /></td>
-                                <td><button id="modificar_comision" class="uibutton">Modificar Comision</button></td>                    
+                                <td><?php echo Form::input('fecha_arribo',$diaf.' '.$ff,array('id'=>'fecha_arribo','size'=>14,'class' => 'required'))?><?php echo Form::input('hora_arribo',$hf,array('id'=>'hora_arribo','size'=>12,'class' => 'required'))?><br /></td>
+                                <td><input type="submit" value="Modificar Comision" class="uibutton" name="submit" id="crear" title="Modificar"/></td>                    
                             </tr>
                         </table>
+                <br />
+                <table border="1" width="100%">
+                    <tr>
+                        <td>Nro Dias</td>
+                        <td>Viaticos</td>
+                        <td>Viatico x Dia</td>
+                        <td>IVA 13 %: </td>
+                        <td>Gastos de Representaci&oacute;n:</td>
+                        <td>TOTAL VIATICOS</td>
+                        <td>TOTAL PASAJES</td>
+                    </tr>
+                    <tr>
+                        <td><?php echo Form::input('nro_dias', $dias, array('id' => 'nro_dias', 'size' => 3,'class'=>'required')) ?></td>
+                        <td><?php echo Form::input('porcentaje_viatico', $pvfucov->porcentaje_viatico, array('id' => 'porcentaje_viatico', 'size' => 3,'class'=>'required','readonly')) ?> %</td>
+                        <td><?php echo Form::input('viatico_dia', $pvfucov->viatico_dia, array('id' => 'viatico_dia', 'size' => 5,'class'=>'required'));echo $moneda;?> </td>
+                        <td><?php echo Form::input('gasto_imp', $pvfucov->gasto_imp, array('id' => 'gasto_imp', 'size' => 8,'class'=>'required'));echo $moneda;?></td>
+                        <td><?php echo Form::input('gasto_representacion', $pvfucov->gasto_imp, array('id' => 'gasto_representacion', 'size' => 8,'class'=>'required')); echo $moneda;?></td>
+                        <td><?php echo Form::input('total_viatico', $pvfucov->total_viatico, array('id' => 'total_viatico', 'size' => 8,'class'=>'required'));echo $moneda; ?></span></td>
+                        <td><?php echo Form::input('total_pasaje', $pvfucov->total_pasaje, array('id' => 'total_pasaje', 'size' => 8,'class'=>'required'));echo $moneda; ?></td>
+                    </tr>
+                </table>
+                </form>
             </div>
         </div>
             <br />
-                <!--<button id="asignar" class="uibutton">+Asignar Pasaje</button>-->
-                <div id="pasajes" class="formulario" >
-                <b>ADICIONAR PASAJES:</b>
-                    <?php if($estado == 2):?>
-                        <?php if( $pvfucov->etapa_proceso == 1 || $pvfucov->etapa_proceso == 2):?>
-                            <br />
-                            <table id="x_tableMeta" class="classy" border="1">
-                                <thead>
-                                    <th>ORIGEN</th>
-                                    <th>DESTINO</th>
-                                    <th>FECHA Y HORA<br /> DE SALIDA</th>
-                                    <th>FECHA Y HORA<br /> DE ARRIBO</th>
-                                    <th>TRANSPORTE</th>
-                                    <th>N. BOLETO</th>
-                                    <th>COSTO</th>
-                                    <th>EMPRESA</th>
-                                </thead>
-                                    <tr>
-                                        <td><?php echo Form::input('origen','',array('id'=>'origen','size'=>'12'));?></td>
-                                        <td><?php echo Form::input('destino','',array('id'=>'destino','size'=>'12'));?></td>
-                                        <td><?php echo Form::input('fecha_salida',dia_literal(date("w")).' '.date("Y-m-d"),array('id'=>'fecha_salida','size'=>'15'));?><br /> <?php echo Form::input('hora_salida',date("h:m:s"),array('id'=>'hora_salida','size'=>'10'));?></td>
-                                        <td><?php echo Form::input('fecha_arribo',dia_literal(date("w")).' '.date("Y-m-d"),array('id'=>'fecha_arribo','size'=>'15'));?><br /><?php echo Form::input('hora_arribo',date("h:m:s"),array('id'=>'hora_arribo','size'=>'10'));?></td>
-                                        <td><?php echo Form::select('transporte',array('Aereo'=>'Aereo','Terrestre'=>'Terrestre','Vehiculo Oficial'=>'Vehiculo Oficial'),'',array('id'=>'transporte'));?></td>
-                                        <td><?php echo Form::input('nro_boleto','',array('id'=>'nro_boleto','size'=>'5'));?></td>
-                                        <td><?php echo Form::input('costo','',array('id'=>'costo','size'=>'5'));?></td>
-                                        <td><?php echo Form::input('empresa','',array('id'=>'empresa','size'=>'8'));?></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="8" style="text-align: center;"><button id="adicionar">Adicionar</button><!--<button id="cancelar" class="uibutton">Cancelar</button>--></td>                                        
-                                    </tr>                                    
-                            </table>
-                        <?php endif;?>
+    <div id="asignar" style="margin:10px 0; padding: 1px; background-color:#EFF4FA; border: 1px solid #000000; width: 85px;" >+ Asignar Pasaje</div>
+    <div id="pasajes" class="formulario" hidden="true" >
+        <form action="/pvpasajes/adicionarpasaje/<?php echo $pvfucov->id; ?>" method="post" id="frmAdicionar" >
+            <b>ADICIONAR PASAJES:</b>
+                <?php if($estado == 2):?>
+                    <?php if( $pvfucov->etapa_proceso == 1 || $pvfucov->etapa_proceso == 2):?>
+                        <br />
+                        <table id="x_tableMeta" class="classy" border="1">
+                            <thead>
+                                <th>ORIGEN</th>
+                                <th>DESTINO</th>
+                                <th>FECHA Y HORA<br /> DE SALIDA</th>
+                                <th>FECHA Y HORA<br /> DE ARRIBO</th>
+                                <th>TRANSPORTE</th>
+                                <th>N. BOLETO</th>
+                                <th>COSTO</th>
+                                <th>EMPRESA</th>
+                            </thead>
+                                <tr>
+                                    <td><?php echo Form::input('origen','',array('id'=>'origen','size'=>'12','class'=>'required'));?></td>
+                                    <td><?php echo Form::input('destino','',array('id'=>'destino','size'=>'12','class'=>'required'));?></td>
+                                    <td><?php echo Form::input('fecha_ida',dia_literal(date("w")).' '.date("Y-m-d"),array('id'=>'fecha_ida','size'=>'15','class'=>'required'));?><br /> <?php echo Form::input('hora_ida',date("h:m:s"),array('id'=>'hora_ida','size'=>'10','class'=>'required'));?></td>
+                                    <td><?php echo Form::input('fecha_llegada',dia_literal(date("w")).' '.date("Y-m-d"),array('id'=>'fecha_llegada','size'=>'15','class'=>'required'));?><br /><?php echo Form::input('hora_llegada',date("h:m:s"),array('id'=>'hora_llegada','size'=>'10','class'=>'required'));?></td>
+                                    <td><?php echo Form::select('transporte',array('Aereo'=>'Aereo','Terrestre'=>'Terrestre','Vehiculo Oficial'=>'Vehiculo Oficial'),'',array('id'=>'transporte'));?></td>
+                                    <td><?php echo Form::input('nro_boleto','',array('id'=>'nro_boleto','size'=>'5','class'=>'required'));?></td>
+                                    <td><?php echo Form::input('costo','',array('id'=>'costo','size'=>'5','class'=>'required'));?></td>
+                                    <td><?php echo Form::input('empresa','',array('id'=>'empresa','size'=>'8','class'=>'required'));?></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" style="text-align: center;"><button id="adicionar">Adicionar</button><button id="cancelar" class="uibutton">Cancelar</button></td>
+                                </tr>
+                        </table>
                     <?php endif;?>
-                </div>
-                <br />
-                                 
-                <?php //if(sizeof($pasajes)>0):?> 
-                <div id="asignados_inicial" class="formulario" >
+                <?php endif;?>
+        </form>
+    </div>
+        <br />                   
+        <?php if(sizeof($pasajes)>0):?> 
+            <div id="asignados" class="formulario" >
                 <b>LISTA DE PASAJES ASIGNADOS:</b><br />
                     <table class="classy">
                         <thead>
@@ -178,12 +256,15 @@ function dia_literal($n) {
                 </div>
                 
                 <br />
-                <?php /*else:?>
-                A&Uacute;N NO HA ASIGNADO PASAJES<br />
+                <?php else:?>
+                <div id="msg3" class="info2">
+                <b>!!!NO HAY PASAJES ASIGNADOS.</b>
+                </div>
                 <br />
-                <?php endif;*/ ?>
+                <?php endif; ?>
             
-                <div id="asignados"></div>
+                <!--<div id="asignados"></div>-->
+                
    <!--
 <br />
 <br />
