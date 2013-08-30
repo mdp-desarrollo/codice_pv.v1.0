@@ -57,12 +57,12 @@
     <?php    
     foreach( $autorizados as $aut): ?>
         <tr>
-            <td ><a href="/pyvpresupuesto/detallecertificado/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
+            <td ><a href="/documento/detalle/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
             <td ><?php echo $aut->nur;?></td>
-            <td ><?php echo $aut->fecha_liquidacion;?></td>
+            <td ><?php echo $aut->fecha_creacion;?></td>
             <td ><?php echo $aut->oficina;?></td>
             <td ><?php echo $aut->nombre;?><br /><b><?php echo $aut->cargo;?></b></td>
-            <td><a href="../../pyvpdf/cert_ppto_fcv.php?id=<?php echo $aut->id_memo.'&f='.$aut->id_fucov;?>" class="uibutton" target="_blank" title="Imprimir Certificado" ><img src="/media/images/print.png"/> Imprimir </a></td>
+            <td><a href="../../pdf/certificacionpoa.php?id=<?php echo $aut->id_memo.'&f='.$aut->id_fucov;?>" class="uibutton" target="_blank" title="Imprimir Certificado" ><img src="/media/images/print.png"/> Imprimir </a></td>
         </tr>        
     <?php endforeach; ?>
    </tbody>   

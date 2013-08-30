@@ -6,7 +6,7 @@ class Model_Pvpoas extends ORM{
     
     public function listaautorizados($id_user, $id_entidad){
         $sql = "select memo.id id_memo, memo.codigo, memo.nur, memo.nombre_destinatario nombre, memo.cargo_destinatario cargo,
-                poa.fecha_certificacion, ofi.oficina, fcv.id id_fucov
+                poa.fecha_certificacion, ofi.oficina, fcv.id id_fucov, fcv.id_documento
                 from documentos memo
                 inner join pvfucovs fcv on fcv.id_memo = memo.id
                 inner join pvpoas poa on fcv.id = poa.id_fucov
