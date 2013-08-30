@@ -208,36 +208,72 @@ try {
         $diai = dia_literal(date("w", strtotime($fi)));
         $diaf = dia_literal(date("w", strtotime($ff)));
 
-
+        if ($rs->cancelar == 'Hospedaje y alimentacion' || $rs->cancelar == 'Hospedaje') {
+            $cancelar = "<b>Financiado por:</p>" . $rs->financiador . "<br><br> * " . $rs->cancelar;
+        } else {
+            $cancelar = "* " . $rs->cancelar;
+        }
+        
+        $tipo_moneda="Bs.";
+        if($rs->tipo_moneda==1){
+            $tipo_moneda='$us.';
+        }
 
         $contenido = ' <table border="1">
                             <thead>
-                                <tr>
-                                    <th style="text-align:center;">Origen</th>
-                                    <th style="text-align:center;">Destino</th>
-                                    <th style="text-align:center;">Fecha y Hora <br>Salida</th>
-                                    <th style="text-align:center;">Fecha y Hora <br>Retorno</th>
-                                    <th style="text-align:center;">Transporte</th>
-                                    <th style="text-align:center;">Viaticos</th>
-                                    <th style="text-align:center;">Desc. IVA</th> 
-                                    <th style="text-align:center;">Gastos<br>Repres.</th>
+                                <tr style="text-align:center;background-color: #666666;color: #FFFFFF;">
+                                    <th  width="100">Origen</th>
+                                    <th width="100">Destino</th>
+                                    <th width="90">Fecha y Hora <br>Salida</th>
+                                    <th width="90">Fecha y Hora <br>Retorno</th>
+                                    <th >Transporte</th>
+                                    <th width="120">Viaticos</th>
+                                    <th width="40">Desc. IVA</th> 
+                                    <th width="40">Gastos<br>Repres.</th>
 
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>' . $rs->origen . '</td>
-                                    <td>' . $rs->destino . '</td>
-                                    <td>'.$diai.' ' . $fi . '<br>' . $hi . '</td>
-                                    <td>'.$diaf.' ' . $ff . '<br>' . $hf . '</td>
-                                    <td>' . $rs->transporte . '</td>
-                                    <td>' . $rs->cancelar . '</td>
-                                    <td>' . $rs->impuesto . '</td>
-                                    <td>' . $rs->representacion . '</td>
+                                <tr style="text-align:center;">
+                                    <td width="100">' . $rs->origen . '</td>
+                                    <td width="100">' . $rs->destino . '</td>
+                                    <td width="90">' . $diai . ' ' . $fi . '<br>' . $hi . '</td>
+                                    <td width="90">' . $diaf . ' ' . $ff . '<br>' . $hf . '</td>
+                                    <td >' . $rs->transporte . '</td>
+                                    <td width="120" style="text-align:left;">' . $cancelar . '</td>
+                                    <td width="40" >' . $rs->impuesto . '</td>
+                                    <td width="40">' . $rs->representacion . '</td>
                                 </tr>
                             </tbody>
                         </table>';
 
+        $contenido .= '
+            <br><br>
+<table width="100%">                        
+                        <tr>
+                            <td colspan="2" style="padding-left: 5px;"><b>% Viaticos: </b>' . $rs->porcentaje_viatico . ' %</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding-left: 5px;"><b>Viatico x Dia:</b> ' . $rs->viatico_dia . ' '.$tipo_moneda.'</td>
+                        </tr>     
+                        <tr>
+                            <td colspan="2" style="padding-left: 5px;"><b>Descuento IVA 13 %:</b> ' . $rs->gasto_imp . ' '.$tipo_moneda.'</td>
+                        </tr> 
+                        <tr>
+                            <td colspan="2" style="padding-left: 5px;"><b>Gastos de Representación:</b> ' . $rs->gasto_representacion . ' '.$tipo_moneda.'</td>
+                        </tr> 
+
+                        <tr>    
+                            <td><b>TOTAL VIATICOS:</b> ' . $rs->total_viatico . '  '.$tipo_moneda.'</td>
+                            <td><b>TOTAL PASAJES:</b> ' . $rs->total_pasaje . '  '.$tipo_moneda.'</td>
+                        </tr><br>';
+        if ($rs->justificacion_finsem != '')
+            $contenido .='<tr><td colspan="2" style="padding-left: 5px;"><b>Justificacion Fin de Semana:</b><br>' . $rs->justificacion_finsem . '</td></tr>';
+
+        $contenido .='</table>';
+
+
+        $pdf->SetFont('Helvetica', '', 9);
         $pdf->writeHTML($contenido);
 
 
