@@ -56,8 +56,8 @@
         <tr>
             <td ><?php echo $obj->codigo;?></td>
             <td ><?php echo $obj->objetivo;?></td>
-            <td><a href="/pvplanificacion/editobjgestion/<?php echo $obj->id;?>" class="uibutton" title="Imprimir Certificado" ><img src="/media/images/edit.png"/> </a>
-                <a href="/pvplanificacion/eliminarobjgestion/<?php echo $obj->id;?>" class="uibutton" title="Imprimir Certificado" ><img src="/media/images/delete.png"/> </a>
+            <td><a href="/pvplanificacion/editobjgestion/<?php echo $obj->id;?>" class="uibutton" title="Modificar Objetivo" ><img src="/media/images/edit.png"/> </a>
+                <a href="/pvplanificacion/eliminarobjgestion/<?php echo $obj->id;?>" class="uibutton" title="Eliminar Objetivo" ><img src="/media/images/delete.png"/> </a>
             </td>
         </tr>        
     <?php endforeach; ?>
