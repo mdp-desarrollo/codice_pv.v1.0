@@ -250,7 +250,7 @@ public function action_editarfucov($id = '') {
 public function action_autorizarfucov($id = '') {
         $pvfucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
         if ($pvfucov->loaded()) {
-            if($pvfucov->id_tipoviaje == 1 || $pvfucov->id_tipoviajes == 2){
+            if($pvfucov->id_tipoviaje == 1 || $pvfucov->id_tipoviaje == 2){
                 $partidas = array("22110" => $pvfucov->total_pasaje, "22210" => $pvfucov->total_viatico);
             }
             else{
