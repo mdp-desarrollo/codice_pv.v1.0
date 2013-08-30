@@ -9,7 +9,11 @@ class db extends PDO {
    
     public function __construct(){
         $this->engine = 'mysql';
+<<<<<<< HEAD
         $this->host = 'localhost';
+=======
+        $this->host = '192.168.131.241';
+>>>>>>> c71ba4fd28f16967ee08c288ff31a8bd1663e0b3
         $this->database = 'correspondencia_pv';
         $this->user = 'correspondencia';
         $this->pass = 'c0rr3sp0nd3nc14';

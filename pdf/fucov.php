@@ -65,7 +65,6 @@ INNER JOIN entidades AS c ON b.id_entidad = c.id WHERE a.id = '$id'");
         }
     }
 
-    
 }
 
 // create new PDF document
@@ -122,12 +121,10 @@ $pdf->SetFont('Helvetica', 'B', 18);
 
 // add a page
 $pdf->AddPage();
-$nombre = 'memorandum';
+$nombre = 'fucov';
 try {
     $dbh = New db();
-    $stmtp = $dbh->prepare("SELECT d.* FROM documentos d 
-                               INNER JOIN tipos t ON d.id_tipo=t.id
-                               WHERE d.id='$id'");
+    $stmtp = $dbh->prepare("SELECT * FROM documentos d, pvfucovs p WHERE d.id='$id' AND d.id=p.id_documento");
     // call the stored procedure
     $stmtp->execute();
     //echo "<B>outputting...</B><BR>";
@@ -179,17 +176,70 @@ try {
         $pdf->Write(0, $fecha, '', 0, 'L');
         $pdf->Ln(10);
         $pdf->SetFont('Helvetica', 'B', 10);
-        if ($rs->fucov == 1)
-            $pdf->Cell(15, 5, 'Motivo:');
-        else
-            $pdf->Cell(15, 5, 'Ref:');
+        $pdf->Cell(15, 5, 'Motivo:');
 
         $pdf->SetFont('Helvetica', '', 10);
         $pdf->MultiCell(170, 5, utf8_encode($rs->referencia), 0, 'L');
         $pdf->Ln(10);
-        
-        $pdf->writeHTML(utf8_encode($rs->contenido));
-        
+
+        function dia_literal($n) {
+            switch ($n) {
+                case 1: return 'Lun';
+                    break;
+                case 2: return 'Mar';
+                    break;
+                case 3: return 'Mie';
+                    break;
+                case 4: return 'Jue';
+                    break;
+                case 5: return 'Vie';
+                    break;
+                case 6: return 'Sab';
+                    break;
+                case 0: return 'Dom';
+                    break;
+            }
+        }
+
+        $fi = date('Y-m-d', strtotime($rs->fecha_salida));
+        $ff = date('Y-m-d', strtotime($rs->fecha_arribo));
+        $hi = date('H:i:s', strtotime($rs->fecha_salida));
+        $hf = date('H:i:s', strtotime($rs->fecha_arribo));
+        $diai = dia_literal(date("w", strtotime($fi)));
+        $diaf = dia_literal(date("w", strtotime($ff)));
+
+
+
+        $contenido = ' <table border="1">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center;">Origen</th>
+                                    <th style="text-align:center;">Destino</th>
+                                    <th style="text-align:center;">Fecha y Hora <br>Salida</th>
+                                    <th style="text-align:center;">Fecha y Hora <br>Retorno</th>
+                                    <th style="text-align:center;">Transporte</th>
+                                    <th style="text-align:center;">Viaticos</th>
+                                    <th style="text-align:center;">Desc. IVA</th> 
+                                    <th style="text-align:center;">Gastos<br>Repres.</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>' . $rs->origen . '</td>
+                                    <td>' . $rs->destino . '</td>
+                                    <td>'.$diai.' ' . $fi . '<br>' . $hi . '</td>
+                                    <td>'.$diaf.' ' . $ff . '<br>' . $hf . '</td>
+                                    <td>' . $rs->transporte . '</td>
+                                    <td>' . $rs->cancelar . '</td>
+                                    <td>' . $rs->impuesto . '</td>
+                                    <td>' . $rs->representacion . '</td>
+                                </tr>
+                            </tbody>
+                        </table>';
+
+        $pdf->writeHTML($contenido);
+
 
         $pdf->Ln(10);
         $pdf->SetFont('Helvetica', '', 5);
