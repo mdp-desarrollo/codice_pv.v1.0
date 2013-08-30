@@ -524,13 +524,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                 $fuente[''] = 'Seleccione Una Fuente de Financiamiento';
                 foreach ($fte as $f)
                     $fuente[$f->id] = $f->actividad;
-<<<<<<< HEAD
-                
-                //$ogestion = ORM::factory('pvogestiones')->where('id_oficina','=',$this->user->id_oficina)->find_all();///objetivos de gestion
                 $ogestion = ORM::factory('pvogestiones')->where('id_oficina','=',$oficina->poa_unid_ejecutora)->and_where('estado','=',1)->find_all();///objetivos de gestion
-=======
-                $ogestion = ORM::factory('pvogestiones')->where('id_oficina', '=', $this->user->id_oficina)->find_all(); ///objetivos de gestion
->>>>>>> c71ba4fd28f16967ee08c288ff31a8bd1663e0b3
                 $objespecifico = array();
                 $objgestion = array();
                 $objgestion[''] = 'Seleccione Objetivo de Gestion';
