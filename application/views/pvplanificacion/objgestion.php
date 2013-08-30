@@ -2,7 +2,7 @@
 
     $(function()
     {
-        $("#theTable").tablesorter({sortList:[[3,1]], 
+        $("#theTable").tablesorter({sortList:[[2,1]], 
             widgets: ['zebra'],
             headers: {             
                 5: { sorter:false}//,
@@ -38,30 +38,27 @@
     #file-word{ display: none;  }
     td{padding:5px;}    
 </style>
-<h2 class="subtitulo">Certificaciones POA para Pasajes y Vi&aacute;ticos<br/> <span>Lista de solicitudes autorizadas</span></h2>
-<?php if(sizeof($autorizados)>0):?> 
-<p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" /></p>
+<h2 class="subtitulo">Objetivos de Gesti&oacute;n Para: <?php echo $oficina->oficina;?> <br/> <span>Lista de Objetivos de Gesti&oacute;n</span></h2>
+<?php if(sizeof($objetivos)>0):?> 
+<p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" />
+<div style="float: right;"><a href="/pvplanificacion/addobjgestion/<?php echo $oficina->id;?>" >+ Adicionar</a></div></p>
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>
-            <th>Memor&aacute;ndum</th>
-            <th>Nur</th>
-            <th>Fecha Solicitud</th>
-            <th>Unidad Funcional</th>
-            <th>Nombre Funcionario</th>
+            <th>C&oacute;digo</th>
+            <th>Objetivo</th>
             <th>Acci&oacute;n</th>
         </tr>
     </thead>    
     <tbody>
     <?php    
-    foreach( $autorizados as $aut): ?>
+    foreach( $objetivos as $obj): ?>
         <tr>
-            <td ><a href="/documento/detalle/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
-            <td ><?php echo $aut->nur;?></td>
-            <td ><?php echo $aut->fecha_certificacion;?></td>
-            <td ><?php echo $aut->oficina;?></td>
-            <td ><?php echo $aut->nombre;?><br /><b><?php echo $aut->cargo;?></b></td>
-            <td><a href="../../pyvpdf/cert_ppto_fcv.php?id=<?php echo $aut->id_memo.'&f='.$aut->id_fucov;?>" class="uibutton" target="_blank" title="Imprimir Certificado" ><img src="/media/images/print.png"/> Imprimir </a></td>
+            <td ><?php echo $obj->codigo;?></td>
+            <td ><?php echo $obj->objetivo;?></td>
+            <td><a href="/pvplanificacion/editobjgestion/<?php echo $obj->id;?>" class="uibutton" title="Imprimir Certificado" ><img src="/media/images/edit.png"/> </a>
+                <a href="/pvplanificacion/eliminarobjgestion/<?php echo $obj->id;?>" class="uibutton" title="Imprimir Certificado" ><img src="/media/images/delete.png"/> </a>
+            </td>
         </tr>        
     <?php endforeach; ?>
    </tbody>   
@@ -69,6 +66,6 @@
 <?php else: ?>
 <div style="margin-top: 20px; padding: 10px;" class="info">
     <p><span style="float: left; margin-right: .3em;" class=""></span>    
-     <strong>Info: </strong> <?php echo 'Usted no tiene Solicitudes Certificadas';?></p>    
+     <strong>Info: </strong> <?php echo 'No Hay Objetivos de Gestion Para Esta Oficina.';?></p>    
 </div>
 <?php endif; ?>

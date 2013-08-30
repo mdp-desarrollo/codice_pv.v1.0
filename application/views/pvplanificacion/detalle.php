@@ -35,6 +35,7 @@ $('#obj_gestion').change(function(){
                 error: $(control).html(''),
             });
         }
+$('#frmEditarpoa').validate();
 });
 </script>
 <?php 
@@ -42,7 +43,7 @@ $('#obj_gestion').change(function(){
     <div class="formulario">        
         <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;  ">
             <h2 style="text-align:center;">Certificaci&oacute;n POA </h2><hr/><hr />
-            <form action="/pvpasajes/adicionarpasaje/<?php echo $pvfucov->id; ?>" method="post" id="frmAdicionar" >
+            <form action="/pvplanificacion/editarpoa/<?php echo $pvfucov->id; ?>" method="post" id="frmEditarpoa" >
             <fieldset>
                     <table width="100%" border="1px">
                         <tr>
@@ -70,12 +71,13 @@ $('#obj_gestion').change(function(){
                         </tr>
                     </table>
             </fieldset>
+            <div style="text-align: center;"> <input type="submit" name="documento" value="Modificar documento" class="uibutton" /></div>
             </form>
         </div>
     </div>
-
+    <br />
     <?php if($pvfucov->etapa_proceso == 3):?>
-    <a href="/pvplanificacion/autorizarfucov/<?php echo $pvfucov->id; ?>"  title="Autorizar FUCOV" >Autorizar FUCOV</a>
+    <a href="/pvplanificacion/autorizarfucov/<?php echo $pvfucov->id; ?>" class="link derivar" title="Autorizar FUCOV" >Autorizar FUCOV</a>
     <?php endif;?>
     <?php if($pvfucov->etapa_proceso == 4):?>
         <a href="/hojaruta/derivar/?id_doc=<?php echo $pvfucov->id_memo; ?>" class="link derivar" title="Derivar a partir del documento, si ya esta derivado muestra el seguimiento" >Derivar</a>

@@ -113,6 +113,7 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
         $fucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
         if ($fucov->loaded()) {
             $fucov->etapa_proceso = 2;
+            $fucov->auto_pasaje = 1;            
             $fucov->save();
             $this->request->redirect('documento/detalle/'.$fucov->id_memo);
         }

@@ -2,10 +2,10 @@
 
     $(function()
     {
-        $("#theTable").tablesorter({sortList:[[3,1]], 
+        $("#theTable").tablesorter({sortList:[[1,1]], 
             widgets: ['zebra'],
             headers: {             
-                5: { sorter:false}//,
+                //5: { sorter:false},
                 //6: { sorter:false}
             }
         });
@@ -38,30 +38,22 @@
     #file-word{ display: none;  }
     td{padding:5px;}    
 </style>
-<h2 class="subtitulo">Certificaciones POA para Pasajes y Vi&aacute;ticos<br/> <span>Lista de solicitudes autorizadas</span></h2>
-<?php if(sizeof($autorizados)>0):?> 
+<h2 class="subtitulo">Programa Operativo Anual<br/> <span>Lista de unidades funcionales</span></h2>
+<?php if(sizeof($unidades)>0):?> 
 <p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" /></p>
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>
-            <th>Memor&aacute;ndum</th>
-            <th>Nur</th>
-            <th>Fecha Solicitud</th>
             <th>Unidad Funcional</th>
-            <th>Nombre Funcionario</th>
-            <th>Acci&oacute;n</th>
+            <th>Entidad</th>
         </tr>
     </thead>    
     <tbody>
     <?php    
-    foreach( $autorizados as $aut): ?>
+    foreach( $unidades as $uni): ?>
         <tr>
-            <td ><a href="/documento/detalle/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
-            <td ><?php echo $aut->nur;?></td>
-            <td ><?php echo $aut->fecha_certificacion;?></td>
-            <td ><?php echo $aut->oficina;?></td>
-            <td ><?php echo $aut->nombre;?><br /><b><?php echo $aut->cargo;?></b></td>
-            <td><a href="../../pyvpdf/cert_ppto_fcv.php?id=<?php echo $aut->id_memo.'&f='.$aut->id_fucov;?>" class="uibutton" target="_blank" title="Imprimir Certificado" ><img src="/media/images/print.png"/> Imprimir </a></td>
+            <td ><a href="/pvplanificacion/objetivogestion/<?php echo $uni->id;?>"><?php echo $uni->oficina;?></a></td>
+            <td ><?php echo $uni->entidad;?></td>            
         </tr>        
     <?php endforeach; ?>
    </tbody>   
@@ -69,6 +61,6 @@
 <?php else: ?>
 <div style="margin-top: 20px; padding: 10px;" class="info">
     <p><span style="float: left; margin-right: .3em;" class=""></span>    
-     <strong>Info: </strong> <?php echo 'Usted no tiene Solicitudes Certificadas';?></p>    
+     <strong>Info: </strong> <?php echo 'Usted no tiene Solicitudes autorizadas';?></p>    
 </div>
 <?php endif; ?>
