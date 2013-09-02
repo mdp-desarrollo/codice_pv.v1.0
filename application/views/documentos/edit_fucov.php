@@ -151,7 +151,7 @@
             if(representacion == 'Si'){
                 gastos_rep = (25*parseFloat(monto_parcial))/100;
             }
-            var total_viatico=parseFloat(monto_parcial)+parseFloat(gastos_rep)-parseFloat(desc_iva);
+            var total_viatico=parseFloat(monto_parcial)-parseFloat(desc_iva);
             $('#gasto_imp').val(desc_iva.toFixed(2));
             $('#gasto_representacion').val(gastos_rep.toFixed(2));
             $('#total_viatico').val(total_viatico.toFixed(2));
@@ -588,7 +588,7 @@ function dia_literal($n) {
                         <table class="classy" border="1">
                             <thead>
                                 <tr>
-                                    <th style="text-align:center;">Origen</th>
+                                    <th style="text-align:center;">Origén</th>
                                     <th style="text-align:center;">Destino</th>
                                     <th style="text-align:center;">Fecha y Hora <br>Salida</th>
                                     <th style="text-align:center;">Fecha y Hora <br>Retorno</th>
@@ -623,11 +623,11 @@ function dia_literal($n) {
                         ?>> Vehiculo<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Oficial
                                     </td>
                                     <td>
-                                        <input type="radio" name="cancelar" value="MDPyEP" porcentaje="100" <?php
-                                               if ($pvfucov->cancelar == 'MDPyEP') {
+                                        <input type="radio" name="cancelar" value="<?php  echo $session->get('sigla'); ?>" porcentaje="100" <?php
+                                               if ($pvfucov->cancelar == $session->get('sigla')) {
                                                    echo 'checked';
                                                }
-                        ?>> MDPyEP<br><br>
+                        ?>> <?php  echo $session->get('sigla'); ?><br><br>
                                         Financiado por:
                                         <?php echo Form::input('financiador', $pvfucov->financiador, array('id' => 'financiador', 'size' => 15)) ?><br>
                                         Cubre:<br>
@@ -675,23 +675,20 @@ function dia_literal($n) {
                     </div>
                     <table width="100%">
                         <tr>
-                            <td colspan='2'>Nro Dias: <?php echo Form::input('nro_dias', '', array('id' => 'nro_dias', 'size' => 8,'readonly')) ?> </td>
+                            <td colspan='3'>Nro Dias: <?php echo Form::input('nro_dias', '', array('id' => 'nro_dias', 'size' => 8,'readonly')) ?> </td>
                         </tr> 
                         <tr>
-                            <td colspan='2'>% Viaticos: <?php echo Form::input('porcentaje_viatico', $pvfucov->porcentaje_viatico, array('id' => 'porcentaje_viatico', 'size' => 8,'readonly')) ?> %</td>
+                            <td colspan='3'>% Viaticos: <?php echo Form::input('porcentaje_viatico', $pvfucov->porcentaje_viatico, array('id' => 'porcentaje_viatico', 'size' => 8,'readonly')) ?> %</td>
                         </tr>
                         <tr>
-                            <td colspan='2'>Viatico x Dia: <?php echo Form::input('viatico_dia', $pvfucov->viatico_dia, array('id' => 'viatico_dia', 'size' => 8,'readonly')) ?> <span id="div_momeda1"><?php echo $tipo_moneda;?></span></td>
+                            <td colspan='3'>Viatico x Dia: <?php echo Form::input('viatico_dia', $pvfucov->viatico_dia, array('id' => 'viatico_dia', 'size' => 8,'readonly')) ?> <span id="div_momeda1"><?php echo $tipo_moneda;?></span></td>
                         </tr>     
                         <tr>
-                            <td colspan='2'>Descuento IVA 13 %: <?php echo Form::input('gasto_imp', $pvfucov->gasto_imp, array('id' => 'gasto_imp', 'size' => 8,'readonly')) ?> <span id="div_momeda2"><?php echo $tipo_moneda;?></span></td>
+                            <td colspan='3'>Descuento IVA 13 %: <?php echo Form::input('gasto_imp', $pvfucov->gasto_imp, array('id' => 'gasto_imp', 'size' => 8,'readonly')) ?> <span id="div_momeda2"><?php echo $tipo_moneda;?></span></td>
                         </tr> 
-                        <tr>
-                            <td colspan='2'>Gastos de Representación: <?php echo Form::input('gasto_representacion', $pvfucov->gasto_representacion, array('id' => 'gasto_representacion', 'size' => 8,'readonly')) ?> <span id="div_momeda3"><?php echo $tipo_moneda;?></span></td>
-                        </tr> 
-
                         <tr>    
                             <td>TOTAL VIATICOS: <?php echo Form::input('total_viatico', $pvfucov->total_viatico, array('id' => 'total_viatico', 'size' => 8,'readonly')) ?> <span id="div_momeda4"> <?php echo $tipo_moneda;?></span></td>
+                            <td>GASTOS DE REPRESENTACIÓN: <?php echo Form::input('gasto_representacion', $pvfucov->gasto_representacion, array('id' => 'gasto_representacion', 'size' => 8,'readonly')) ?> <span id="div_momeda3"><?php echo $tipo_moneda;?></span></td>
                             <td>TOTAL PASAJES: <?php echo Form::input('total_pasaje', $pvfucov->total_pasaje, array('id' => 'total_pasaje', 'size' => 8)) ?> <span id="div_momeda5"> <?php echo $tipo_moneda;?></span></td>
                         </tr>
                         <tr>

@@ -251,20 +251,17 @@ try {
             <br><br>
 <table width="100%">                        
                         <tr>
-                            <td colspan="2" style="padding-left: 5px;"><b>% Viaticos: </b>' . $rs->porcentaje_viatico . ' %</td>
+                            <td colspan="3" style="padding-left: 5px;"><b>% Viaticos: </b>' . $rs->porcentaje_viatico . ' %</td>
                         </tr>
                         <tr>
-                            <td colspan="2" style="padding-left: 5px;"><b>Viatico x Dia:</b> ' . $rs->viatico_dia . ' '.$tipo_moneda.'</td>
+                            <td colspan="3" style="padding-left: 5px;"><b>Viatico x Dia:</b> ' . $rs->viatico_dia . ' '.$tipo_moneda.'</td>
                         </tr>     
                         <tr>
-                            <td colspan="2" style="padding-left: 5px;"><b>Descuento IVA 13 %:</b> ' . $rs->gasto_imp . ' '.$tipo_moneda.'</td>
+                            <td colspan="3" style="padding-left: 5px;"><b>Descuento IVA 13 %:</b> ' . $rs->gasto_imp . ' '.$tipo_moneda.'</td>
                         </tr> 
-                        <tr>
-                            <td colspan="2" style="padding-left: 5px;"><b>Gastos de Representación:</b> ' . $rs->gasto_representacion . ' '.$tipo_moneda.'</td>
-                        </tr> 
-
                         <tr>    
                             <td><b>TOTAL VIATICOS:</b> ' . $rs->total_viatico . '  '.$tipo_moneda.'</td>
+                            <td width="250"><b>GASTOS DE REPRESENTACIÓN:</b> ' . $rs->gasto_representacion . '</td>    
                             <td><b>TOTAL PASAJES:</b> ' . $rs->total_pasaje . '  '.$tipo_moneda.'</td>
                         </tr><br>';
         if ($rs->justificacion_finsem != '')

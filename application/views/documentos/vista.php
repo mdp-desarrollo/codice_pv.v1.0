@@ -36,7 +36,7 @@
         <td colspan="2"><?php echo $d->nombre_remitente;?><br/><b><?php echo $d->cargo_remitente;?></b></td>
     </tr>
     <tr> 
-        <td><b>Fecha de Creacion:</b><br/> </td>
+        <td><b>Fecha de Creación:</b><br/> </td>
         <td colspan="2"><?php echo Date::fecha($d->fecha_creacion);?></td>
     </tr>
      <?php

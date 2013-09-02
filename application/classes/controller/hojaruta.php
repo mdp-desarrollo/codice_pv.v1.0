@@ -40,7 +40,7 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                     'current_page' => array('source' => 'query_string', 'key' => 'page'),
                     'items_per_page' => 50,
                     'view' => 'pagination/floating',
-                ));
+        ));
         $oNur = New Model_Hojasruta();
         $result = $oNur->hojasruta($this->user->id, $pagination->offset, $pagination->items_per_page);
         $page_links = $pagination->render();
@@ -67,6 +67,7 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
      */
 
     public function action_responder() {
+        $info = Array();
         if ($_POST['aceptar']) {
             $id_seg = Arr::get($_POST, 'id_seg');
             $nur = Arr::get($_POST, 'nur');
@@ -76,87 +77,115 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
 
             $seguimiento = ORM::factory('seguimiento', $id_seg);
             if ($seguimiento->loaded()) {
-                $tipo = ORM::factory('tipos', $id_tipo);
-                $oOficina = New Model_Oficinas();
-                $correlativo = $oOficina->correlativo($this->user->id_oficina, $tipo->id);
-                $abre = $oOficina->tipo($tipo->id);
-                $sigla = $oOficina->sigla($this->user->id_oficina);
-                if ($abre != '')
-                    $abre = $abre . '/';
-                $codigo = $abre . $sigla . ' Nº ' . $correlativo . '/' . date('Y');
-                //obtenemos el id_proceso del documento original
-                $proceso = ORM::factory('documentos')->where('nur', '=', $nur)->and_where('original', '=', 1)->find();
+                //Freddy Validamos si el memo ya tiene un fucov asignado
+                $pvfucov = ORM::factory('pvfucovs')->where('id_memo', '=', $id_memo)->find();
+                if ($pvfucov->loaded()) {
 
-                //Modificado por freddy
-                $odoc = new Model_Documentos();
-                $odoc->updateEstado($nur);
-                $memo = ORM::factory('documentos',$id_memo);
-                $pvcomision = ORM::factory('pvcomisiones')->where('id_documento','=',$id_memo)->find();
-                /////////////////////////////////////////////
-                //generamos el documento
-                $documento = ORM::factory('documentos');
-                $documento->id_user = $this->user->id;
-                $documento->codigo = $codigo;
-                $documento->cite_original = $codigo;
-                $documento->id_tipo = $id_tipo;
-                $documento->nombre_destinatario = $seguimiento->nombre_emisor;
-                $documento->cargo_destinatario = $seguimiento->cargo_emisor;
-                $documento->nombre_remitente = $this->user->nombre;
-                $documento->cargo_remitente = $this->user->cargo;
-                if($fucov==1){
-                $documento->referencia = $memo->referencia;
-                }
-                $documento->fecha_creacion = date('Y-m-d H:i:s');
-                $documento->nur = $nur;
-                $documento->id_seguimiento = $id_seg;
-                $documento->original = 0; //important !!                
-                $documento->id_proceso = $proceso->id_proceso;
-                $documento->id_oficina = $this->user->id_oficina;
-                $documento->id_entidad = $this->user->id_entidad;
-                $documento->fucov = 0;
-                $documento->save();
-
-                if ($documento->id) {
+                    $info['info'] = '<b>Mensaje!: </b>El siguiente documento ' . $nur . ' ya tiene asignado un fucov';
+                    $oSeg = New Model_Seguimiento();
+                    $entrada = $oSeg->pendiente($this->user->id);
+                    $carpetas = ORM::factory('carpetas')->where('id_oficina', '=', $this->user->id_oficina)->find_all();
+                    $arrCarpetas = array();
+                    foreach ($carpetas as $c) {
+                        $arrCarpetas[$c->id] = $c->carpeta;
+                    }
+                    $oDoc = New Model_Tipos();
+                    $documentos = $oDoc->misTipos($this->user->id);
+                    $options = array();
+                    foreach ($documentos as $d) {
+                        $options[$d->id] = $d->tipo;
+                    }
+                    $this->template->styles = array('media/css/tablas.css' => 'all', 'media/css/modal.css' => 'screen');
+                    $this->template->title .= ' | Pendientes';
+                    $this->template->content = View::factory('bandeja/pendientes')
+                            ->bind('entrada', $entrada)
+                            ->bind('carpetas', $arrCarpetas)
+                            ->bind('info', $info)
+                            ->bind('options', $options);
+                } else {
+                    $tipo = ORM::factory('tipos', $id_tipo);
+                    $oOficina = New Model_Oficinas();
+                    $correlativo = $oOficina->correlativo($this->user->id_oficina, $tipo->id);
+                    $abre = $oOficina->tipo($tipo->id);
+                    $sigla = $oOficina->sigla($this->user->id_oficina);
+                    if ($abre != '')
+                        $abre = $abre . '/';
+                    $codigo = $abre . $sigla . ' Nº ' . $correlativo . '/' . date('Y');
+                    //obtenemos el id_proceso del documento original
+                    $proceso = ORM::factory('documentos')->where('nur', '=', $nur)->and_where('original', '=', 1)->find();
 
                     //Modificado por freddy
+                    $odoc = new Model_Documentos();
+                    $odoc->updateEstado($nur);
+                    $memo = ORM::factory('documentos', $id_memo);
+                    $pvcomision = ORM::factory('pvcomisiones')->where('id_documento', '=', $id_memo)->find();
+                    /////////////////////////////////////////////
+                    //generamos el documento
+                    $documento = ORM::factory('documentos');
+                    $documento->id_user = $this->user->id;
+                    $documento->codigo = $codigo;
+                    $documento->cite_original = $codigo;
+                    $documento->id_tipo = $id_tipo;
+                    $documento->nombre_destinatario = $seguimiento->nombre_emisor;
+                    $documento->cargo_destinatario = $seguimiento->cargo_emisor;
+                    $documento->nombre_remitente = $this->user->nombre;
+                    $documento->cargo_remitente = $this->user->cargo;
                     if ($fucov == 1) {
-                        $pvfucov = ORM::factory('pvfucovs');
-                        $pvfucov->id_documento = $documento->id;
-                        $pvfucov->origen = $pvcomision->origen;
-                        $pvfucov->destino = $pvcomision->destino;
-                        $pvfucov->fecha_salida = $pvcomision->fecha_inicio;
-                        $pvfucov->fecha_arribo = $pvcomision->fecha_fin;
-                        $pvfucov->cancelar = 'MDPyEP';
-                        $pvfucov->transporte = 'Aereo';
-                        $pvfucov->representacion = 'No';
-                        $pvfucov->impuesto = 'No';
-                        $pvfucov->id_tipoviaje = 0;
-                        $pvfucov->id_programatica = 0;
-                        $pvfucov->id_memo = $id_memo;
-                        $pvfucov->etapa_proceso = 0;
-                        $pvfucov->tipo_cambio = 0;
-                        $pvfucov->tipo_moneda = 0;
-                        $pvfucov->fecha_creacion = date('Y-m-d H:i:s');
-                        $pvfucov->fecha_modificacion = date('Y-m-d H:i:s');
-                        $pvfucov->estado = 1;
-                        $pvfucov->save();
-                        
-                        if($pvfucov->id){
-                            $pvpoas = ORM::factory('pvpoas');
-                            $pvpoas->fecha_creacion = date('Y-m-d H:i:s');
-                            $pvpoas->fecha_modificacion = date('Y-m-d H:i:s');
-                            $pvpoas->id_fucov = $pvfucov->id;
-                            $pvpoas->estado = 1;
-                            $pvpoas->save();
-                        }
-                        
+                        $documento->referencia = $memo->referencia;
                     }
-                    /////////end////////////
-                    //cazamos al documento con el nur asignado
-                    $rs = $documento->has('nurs', $nur);
-                    $documento->add('nurs', $nur);
-                    $_POST = array();
-                    $this->request->redirect('documento/editar/' . $documento->id);
+                    $documento->fecha_creacion = date('Y-m-d H:i:s');
+                    $documento->nur = $nur;
+                    $documento->id_seguimiento = $id_seg;
+                    $documento->original = 0; //important !!                
+                    $documento->id_proceso = $proceso->id_proceso;
+                    $documento->id_oficina = $this->user->id_oficina;
+                    $documento->id_entidad = $this->user->id_entidad;
+                    $documento->fucov = 0;
+                    $documento->save();
+
+                    if ($documento->id) {
+
+                        //Modificado por freddy
+                        if ($fucov == 1) {
+                            $entidad = ORM::factory('entidades', $this->user->id_entidad);
+                            
+                            $pvfucov = ORM::factory('pvfucovs');
+                            $pvfucov->id_documento = $documento->id;
+                            $pvfucov->origen = $pvcomision->origen;
+                            $pvfucov->destino = $pvcomision->destino;
+                            $pvfucov->fecha_salida = $pvcomision->fecha_inicio;
+                            $pvfucov->fecha_arribo = $pvcomision->fecha_fin;
+                            $pvfucov->cancelar = $entidad->sigla;
+                            $pvfucov->transporte = 'Aereo';
+                            $pvfucov->representacion = 'No';
+                            $pvfucov->impuesto = 'No';
+                            $pvfucov->id_tipoviaje = 0;
+                            $pvfucov->id_programatica = 0;
+                            $pvfucov->id_memo = $id_memo;
+                            $pvfucov->etapa_proceso = 0;
+                            $pvfucov->tipo_cambio = 0;
+                            $pvfucov->tipo_moneda = 0;
+                            $pvfucov->fecha_creacion = date('Y-m-d H:i:s');
+                            $pvfucov->fecha_modificacion = date('Y-m-d H:i:s');
+                            $pvfucov->estado = 1;
+                            $pvfucov->save();
+
+                            if ($pvfucov->id) {
+                                $pvpoas = ORM::factory('pvpoas');
+                                $pvpoas->fecha_creacion = date('Y-m-d H:i:s');
+                                $pvpoas->fecha_modificacion = date('Y-m-d H:i:s');
+                                $pvpoas->id_fucov = $pvfucov->id;
+                                $pvpoas->estado = 1;
+                                $pvpoas->save();
+                            }
+                        }
+                        /////////end////////////
+                        //cazamos al documento con el nur asignado
+                        $rs = $documento->has('nurs', $nur);
+                        $documento->add('nurs', $nur);
+                        $_POST = array();
+                        $this->request->redirect('documento/editar/' . $documento->id);
+                    }
                 }
             } else {
                 echo 'Error: no se pudo generar el documento';
@@ -283,7 +312,7 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                             'current_page' => array('source' => 'query_string', 'key' => 'page'),
                             'items_per_page' => 40,
                             'view' => 'pagination/floating',
-                        ));
+                ));
                 $result = $oNuri->nuris($auth->get_user(), $pagination->offset, $pagination->items_per_page);
                 $page_links = $pagination->render();
                 $this->template->title = 'Hojas de Seguimiento';

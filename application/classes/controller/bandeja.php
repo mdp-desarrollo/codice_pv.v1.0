@@ -242,7 +242,7 @@ class Controller_Bandeja extends Controller_DefaultTemplate{
     }    
     /*Lista de pendientes*/   
     public function action_pendientes()
-    {
+    {   $info=array();
         if(isset($_GET['id']))
         {
             $user=ORM::factory('users')
@@ -281,7 +281,8 @@ class Controller_Bandeja extends Controller_DefaultTemplate{
             }
         }    
         else
-        {    
+        {
+            
 //            $id_doc =0;
             $oSeg=New Model_Seguimiento();
             $entrada=$oSeg->pendiente($this->user->id);
@@ -309,6 +310,7 @@ class Controller_Bandeja extends Controller_DefaultTemplate{
             $this->template->content=View::factory('bandeja/pendientes')
                                     ->bind('entrada', $entrada)
                                     ->bind('carpetas', $arrCarpetas)
+                                    ->bind('info', $info)
                                     ->bind('options',$options);     
         }
     }

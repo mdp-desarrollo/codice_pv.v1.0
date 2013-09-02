@@ -135,33 +135,34 @@
         });
 
         //modificado por freddy
-        $('#form_respuesta').submit(function() {
-            var id_tipo = $("#documento").val();
-            if(id_tipo==13){
-                var id_documento = $("#id_documento").val();
-                $.ajax({
-                    type: "POST",
-                    data: { id_doc: id_documento},
-                    url: "/ajax/docfucov",
-                    dataType: "json",
-                    success: function(item)
-                    {
-                        if(item)
-                        {
-                            alert('El documento ya fue respondido con un fucov');
-                            return false;
-                        }else{
-                            $('#form_respuesta').submit();
-                        }
-                    }
-                });
-            }else{
-                $('#form_respuesta').submit();
-            }
-
-        });
-
-
+//        $('#form_respuesta').submit(function() {
+//            var id_tipo = $("#documento").val();
+//            if(id_tipo==13){
+//                var id_documento = $("#id_documento").val();
+//                $.ajax({
+//                    type: "POST",
+//                    data: { id_doc: id_documento},
+//                    url: "/ajax/docfucov",
+//                    dataType: "json",
+//                    success: function(item)
+//                    {
+//                        if(item)
+//                        {
+//                            alert('El documento ya fue respondido con un fucov');
+//                            return false;
+//                        }else{
+//                            return false;
+//                        }
+//                    }
+//                });
+//                return false;
+//            }else{
+//                //$('#form_respuesta').submit();
+//                return false;
+//            }
+//
+//        });
+        
         var copia=$('.tipo0').size();
         var oficial=$('.tipo1').size();
         //alert(copia+':'+oficial);
@@ -232,6 +233,13 @@
     </form>
 </div>
 
+<?php if (isset($info['info']) > 0): ?>
+        <div style="margin-top: 20px; padding: .7em;" class="info">
+            <p><span style="float: left; margin-right: .3em;" class="ui-icon-info"></span>
+                <?php echo $info['info']; ?>
+            </p>
+        </div>
+    <?php endif; ?>
 
 <?php if (sizeof($entrada) > 0) { ?>
     <p style="margin: 5px auto;"> <b>Filtrar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="30" />
