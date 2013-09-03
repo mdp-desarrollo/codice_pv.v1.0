@@ -1,6 +1,12 @@
 <script type="text/javascript">
-
-    $(function()
+function verificar(){
+    var answer = confirm("Esta seguro de eliminar el Objetivo de Gestion?.");
+    if (answer)
+        return true;
+    else
+        return false;   
+}
+$(function()
     {
         $("#theTable").tablesorter({sortList:[[2,1]], 
             widgets: ['zebra'],
@@ -30,34 +36,35 @@
         //zebra
         
         $("#FilterTextBox").focus();
-        
-        
+
+    
     });//document.ready
 </script>
 <style>
     #file-word{ display: none;  }
     td{padding:5px;}    
 </style>
-<h2 class="subtitulo">Objetivos de Gesti&oacute;n Para: <?php echo $oficina->oficina;?> <br/> <span>Lista de Objetivos de Gesti&oacute;n</span></h2>
+<h2 class="subtitulo">OBJETIVOS DE GESTION - <?php echo $entidad->entidad?> <br/> <span>Lista de Objetivos de Gesti&oacute;n</span></h2>
 <?php if(sizeof($objetivos)>0):?> 
 <p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" />
-<div style="float: right;"><a href="/pvplanificacion/addobjgestion/<?php echo $oficina->id;?>" >+ Adicionar</a></div></p>
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>
             <th>C&oacute;digo</th>
-            <th>Objetivo</th>
-            <th>Acci&oacute;n</th>
+            <th>Oficina</th>
+            <th>Objetivo de Gesti&oacute;n</th>
+            <th>Opciones</th>
         </tr>
     </thead>    
     <tbody>
     <?php    
     foreach( $objetivos as $obj): ?>
         <tr>
-            <td ><?php echo $obj->codigo;?></td>
+            <td ><a href="/pvplanificacion/objetivoespecifico/<?php echo $obj->id;?>" title="Lista de Objetivos Especificos" ><?php echo $obj->codigo;?></td>
+            <td><?php echo $obj->oficina?></td>
             <td ><?php echo $obj->objetivo;?></td>
             <td><a href="/pvplanificacion/editobjgestion/<?php echo $obj->id;?>" class="uibutton" title="Modificar Objetivo" ><img src="/media/images/edit.png"/> </a>
-                <a href="/pvplanificacion/eliminarobjgestion/<?php echo $obj->id;?>" class="uibutton" title="Eliminar Objetivo" ><img src="/media/images/delete.png"/> </a>
+                <a href="/pvplanificacion/eliminarobjgestion/<?php echo $obj->id;?>" class="uibutton" title="Eliminar Objetivo" onclick="javascript: return verificar();" ><img src="/media/images/delete.png"/> </a>
             </td>
         </tr>        
     <?php endforeach; ?>

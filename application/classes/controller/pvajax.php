@@ -72,7 +72,7 @@ public function action_pptdisponibleuser()
         
         $oDisp = new Model_Pvprogramaticas();
         $disp = $oDisp->saldopresupuesto($id);
-        $result = "<table class=\"classy\" border=\"1px\"><thead><th>C&oacute;digo</th><th>Partida</th><th>Saldo Disponible</th><th>Solicitado</th><th>Nuevo Saldo</th></thead><tbody>";
+        $result = "<table class=\"classy\" border=\"1px\"><thead><th>C&oacute;digo</th><th>Partida</th><th>Saldo Disponible</th><th>Solicitado (Bs.)</th><th>Nuevo Saldo</th></thead><tbody>";
         foreach($disp as $d)
         {
             if( $viaje == 1 || $viaje == 2){

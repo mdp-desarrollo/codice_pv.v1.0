@@ -68,10 +68,10 @@ $(function(){
         <td><?php echo $detalle->org;?></td>
     </tr>
 </table>
-<br />
+<br /><div style="float: right;"><a href="/pvpresupuesto/addsaldoppt/<?php echo $id_programatica;?>" >+ Adicionar Partida</a></div>
 <?php if(sizeof($presupuesto)>0):?>
-<!--<p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" /></p>-->
-<div style="float: right;"><a href="/pvpresupuesto/addsaldoppt/<?php echo $id_programatica;?>" >+ Adicionar</a></div>
+<p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" /></p>
+
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>
@@ -86,13 +86,14 @@ $(function(){
             <th>Saldo Devengado</th>
             <th>Pagado</th>
             <th>Saldo Pagar</th>
+            <th>Opciones</th>
         </tr>
     </thead>    
     <tbody>
     <?php 
     foreach( $presupuesto as $ppt): ?>
         <tr>
-            <td ><a href="/pvpresupuesto/editsaldoppt/<?php echo $ppt['id'];?>"><?php echo $ppt['codigo'];?></a></td>
+            <td ><?php echo $ppt['codigo'];?></a></td>
             <td ><?php echo $ppt['partida'];?></td>
             <td ><?php echo $ppt['inicial'];?></td>
             <td ><?php echo $ppt['modificado'];?></td>
@@ -103,6 +104,7 @@ $(function(){
             <td ><?php echo $ppt['saldo_devengado'];?></td>
             <td ><?php echo $ppt['pagado'];?></td>
             <td ><?php echo $ppt['saldo_pagar'];?></td>
+            <td ><a href="/pvpresupuesto/editsaldoppt/<?php echo $ppt['id'];?>" class="uibutton" title="Modificar" ><img src="/media/images/edit.png"/> </a></td>
         </tr>        
     <?php endforeach; ?>
    </tbody>   

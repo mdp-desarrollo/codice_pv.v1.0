@@ -8,31 +8,37 @@ $(function(){
     #file-word{ display: none;  }
     td{padding:5px;}    
 </style>
-<div style="width: 800px;"><h2 class="subtitulo">Obgetivos de Gesti&oacute;n<br/><span>Llene corresctamente los datos en el formulario</span></h2></div>
+<div style="width: 800px;"><h2 class="subtitulo">Obgetivos de Gesti&oacute;n<br/><span>Llene corresctamente los datos en el formulario</span></h2>
 <table border="0">
     <tr>
-        <td><b>Entidad:</b></td>
+        <td style="width:20%;"><b>Entidad:</b></td>
         <td><?php echo $entidad->entidad;?></td>
     </tr>
     <tr>
         <td><b>Unidad Ejecutora:</b></td>
         <td><?php echo $oficina->oficina;?></td>
     </tr>
+    <tr>
+        <td><b>Ojetivo de Gesti&oacute;n: </b><?php echo $ogestion->codigo?></td>
+        <td><?php echo $ogestion->objetivo?></td>
+    </tr>
 </table>
+
+</div>
 <br />
 <div class="formulario">
 <br />
 <h2>Adicionar Partida de Gasto a la Ejecucion presupuestaria</h2>
-<form action="/pvplanificacion/editobjgestion/<?php echo $objetivo->id;?>" method="post" id="frmCreate">
-<input type="hidden" id="id_oficina" name="id_oficina" value="<?php echo $oficina->id;?>" />
+<form action="/pvplanificacion/editobjespecifico/<?php echo $oespecifico->id;?>" method="post" id="frmCreate">
+
 <table>
     <tr>
         <td><?php echo Form::label('codigo','Codigo')?></td>
-        <td><?php echo Form::input('codigo',$objetivo->codigo,array('name'=>'codigo','id'=>'codigo','class'=>'required')) ?></td>
+        <td><?php echo Form::input('codigo',$oespecifico->codigo,array('name'=>'codigo','id'=>'codigo','class'=>'required')) ?></td>
     </tr>
     <tr>
-        <td><?php echo Form::label('objetivo','Objetivo de Gestion')?></td>
-        <td><textarea id="objetivo" name="objetivo" class="required"><?php echo $objetivo->objetivo;?></textarea></td>
+        <td><?php echo Form::label('objetivo','Objetivo Especifico')?></td>
+        <td><textarea id="objetivo" name="objetivo" class="required"><?php echo $oespecifico->objetivo;?></textarea></td>
     </tr>
 </table>
 

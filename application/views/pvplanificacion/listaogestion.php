@@ -1,11 +1,17 @@
 <script type="text/javascript">
-
-    $(function()
+function verificar(){
+    var answer = confirm("Esta seguro de eliminar el Objetivo de Gestion?.");
+    if (answer)
+        return true;
+    else
+        return false;   
+}
+$(function()
     {
-        $("#theTable").tablesorter({sortList:[[1,1]], 
+        $("#theTable").tablesorter({sortList:[[2,1]], 
             widgets: ['zebra'],
             headers: {             
-                //5: { sorter:false},
+                5: { sorter:false}//,
                 //6: { sorter:false}
             }
         });
@@ -30,30 +36,35 @@
         //zebra
         
         $("#FilterTextBox").focus();
-        
-        
+
+    
     });//document.ready
 </script>
 <style>
     #file-word{ display: none;  }
     td{padding:5px;}    
 </style>
-<h2 class="subtitulo">PROGRAMA OPERATIVO ANUAL<br/> <span>Lista de Unidades Ejecutoras del POA</span></h2>
-<?php if(sizeof($unidades)>0):?> 
+<h2 class="subtitulo">OBJETIVOS DE GESTION - <?php echo $oficina->oficina;?> <br/> <span>Lista de Objetivos de Gesti&oacute;n</span></h2>
+<div style="float: right;"><a href="/pvplanificacion/addobjgestion/<?php echo $oficina->id;?>" >+ Adicionar objetivo Gestion</a></div>
+<?php if(sizeof($objetivos)>0):?> 
 <p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" /></p>
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>
-            <th>Unidad Funcional</th>
-            <th>Entidad</th>
+            <th>C&oacute;digo</th>
+            <th>Objetivo</th>
+            <th>Opciones</th>
         </tr>
     </thead>    
     <tbody>
     <?php    
-    foreach( $unidades as $uni): ?>
+    foreach( $objetivos as $obj): ?>
         <tr>
-            <td ><a href="/pvplanificacion/objetivogestion/<?php echo $uni->id;?>"><?php echo $uni->oficina;?></a></td>
-            <td ><?php echo $uni->entidad;?></td>            
+            <td ><a href="/pvplanificacion/objetivoespecifico/<?php echo $obj->id;?>" title="Lista de Objetivos Especificos" ><?php echo $obj->codigo;?></td>
+            <td ><?php echo $obj->objetivo;?></td>
+            <td><a href="/pvplanificacion/editobjgestion/<?php echo $obj->id;?>" class="uibutton" title="Modificar Objetivo" ><img src="/media/images/edit.png"/> </a>
+                <a href="/pvplanificacion/eliminarobjgestion/<?php echo $obj->id;?>" class="uibutton" title="Eliminar Objetivo" onclick="javascript: return verificar();" ><img src="/media/images/delete.png"/> </a>
+            </td>
         </tr>        
     <?php endforeach; ?>
    </tbody>   
@@ -61,6 +72,6 @@
 <?php else: ?>
 <div style="margin-top: 20px; padding: 10px;" class="info">
     <p><span style="float: left; margin-right: .3em;" class=""></span>    
-     <strong>Info: </strong> <?php echo 'Usted no tiene Solicitudes autorizadas';?></p>    
+     <strong>Info: </strong> <?php echo 'No Hay Objetivos de Gestion Para Esta Oficina.';?></p>    
 </div>
 <?php endif; ?>

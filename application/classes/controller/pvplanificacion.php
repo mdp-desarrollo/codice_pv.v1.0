@@ -46,7 +46,7 @@ class Controller_Pvplanificacion extends Controller_DefaultTemplate {
                                         ;    
     }
     
-    public function action_poa(){
+    public function action_unidades(){
         $oUnid = new Model_oficinas();
         $unidades = $oUnid->listaunidades($this->user->id_entidad);
         $this->template->styles = array('media/css/tablas.css' => 'all');
@@ -97,23 +97,25 @@ class Controller_Pvplanificacion extends Controller_DefaultTemplate {
         $objetivos = ORM::factory('pvogestiones')->where('id_oficina','=',$id)->and_where('estado','=',1)->find_all();
         $this->template->styles = array('media/css/tablas.css' => 'all');
         $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
-        $this->template->content = View::factory('pvplanificacion/objgestion')
+        $this->template->content = View::factory('pvplanificacion/listaogestion')
                                         ->bind('objetivos', $objetivos)
                                         ->bind('oficina', $oficina)
                                         ;
     }
     
     public function action_addobjgestion($id = ''){
+        $mensajes=array();
         $oficina = ORM::factory('oficinas')->where('id','=',$id)->find();
         $entidad = ORM::factory('entidades')->where('id','=',$oficina->id_entidad)->find();
         if (isset($_POST['submit'])) {
             $objetivo = ORM::factory('pvogestiones');
-            $objetivo->codigo = $_POST['codigo'];
-            $objetivo->objetivo = utf8_encode($_POST['objetivo']);
+            $objetivo->codigo = trim($_POST['codigo']);
+            $objetivo->objetivo = trim($_POST['objetivo']);
             $objetivo->id_oficina = $id;
             $objetivo->estado = 1;
             $objetivo->save();
-            $this->request->redirect('pvplanificacion/objetivogestion/'.$id);
+            //$this->request->redirect('pvplanificacion/objetivogestion/'.$id);
+            $mensajes['Modificado!'] = 'El Objetivo se adiciono correctamente.';
         }
         //$objetivos = ORM::factory('pvogestiones')->where('id_oficina','=',$id)->find_all();
         $this->template->styles = array('media/css/tablas.css' => 'all');
@@ -122,19 +124,19 @@ class Controller_Pvplanificacion extends Controller_DefaultTemplate {
                                         //->bind('objetivos', $objetivos)
                                         ->bind('oficina', $oficina)
                                         ->bind('entidad', $entidad)
+                                        ->bind('mensajes', $mensajes)
                                         ;
     }
     
     public function action_editobjgestion($id = ''){
         $objetivo = ORM::factory('pvogestiones')->where('id','=',$id)->find();
         if (isset($_POST['submit'])) {
-            $objetivo->codigo = $_POST['codigo'];
-            $objetivo->objetivo = utf8_encode($_POST['objetivo']);
-            $objetivo->id_oficina = $_POST['id_oficina'];
+            $objetivo->codigo = trim($_POST['codigo']);
+            $objetivo->objetivo = trim($_POST['objetivo']);
+            //$objetivo->id_oficina = $_POST['id_oficina'];
             $objetivo->save();
             $this->request->redirect('pvplanificacion/objetivogestion/'.$_POST['id_oficina']);
         }
-        //$objetivo = ORM::factory('pvogestiones')->where('id','=',$id)->find();
         $oficina = ORM::factory('oficinas')->where('id','=',$objetivo->id_oficina)->find();
         $entidad = ORM::factory('entidades')->where('id','=',$oficina->id_entidad)->find();
         $this->template->styles = array('media/css/tablas.css' => 'all');
@@ -142,6 +144,113 @@ class Controller_Pvplanificacion extends Controller_DefaultTemplate {
         $this->template->content = View::factory('pvplanificacion/editobjgestion')
                                         ->bind('objetivo', $objetivo)
                                         ->bind('oficina', $oficina)
+                                        ->bind('entidad', $entidad)
+                                        ;
+    }
+    
+    public function action_eliminarobjgestion($id = ''){
+        $objetivo = ORM::factory('pvogestiones')->where('id','=',$id)->find();
+        if ($objetivo->loaded()) {
+            $objetivo->estado = 0;
+            $objetivo->save();
+            $this->request->redirect('pvplanificacion/objetivogestion/'.$objetivo->id_oficina);
+        }
+        else{
+            $this->template->content = 'El Objetivo No Existe.';
+        }
+    }
+    
+    public function action_objetivoespecifico($id = ''){
+        $ogestion = ORM::factory('pvogestiones')->where('id','=',$id)->find();
+        $especificos = ORM::factory('pvoespecificos')->where('id_obj_gestion','=',$id)->and_where('estado','=',1)->find_all();
+        $oficina = ORM::factory('oficinas')->where('id','=',$ogestion->id_oficina)->find();
+        $this->template->styles = array('media/css/tablas.css' => 'all');
+        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
+        $this->template->content = View::factory('pvplanificacion/listaoespecificos')
+                                        ->bind('objetivos', $especificos)
+                                        ->bind('ogestion', $ogestion)
+                                        ->bind('oficina', $oficina)
+                                        ;
+    }
+    
+    public function action_addobjespecifico($id = ''){
+        $mensajes=array();
+        if (isset($_POST['submit'])) {
+            $objetivo = ORM::factory('pvoespecificos');
+            $objetivo->codigo = trim($_POST['codigo']);
+            $objetivo->objetivo = trim($_POST['objetivo']);
+            $objetivo->id_obj_gestion = $id;
+            $objetivo->estado = 1;
+            $objetivo->save();
+            $mensajes['Adidionado!'] = 'El Objetivo se adiciono correctamente.';
+        }
+        $ogestion = ORM::factory('pvogestiones')->where('id','=',$id)->find();
+        $oficina = ORM::factory('oficinas')->where('id','=',$ogestion->id_oficina)->find();
+        $entidad = ORM::factory('entidades')->where('id','=',$oficina->id_entidad)->find();
+        $this->template->styles = array('media/css/tablas.css' => 'all');
+        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
+        $this->template->content = View::factory('pvplanificacion/addobjespecifico')
+                                        ->bind('ogestion', $ogestion)
+                                        ->bind('oficina', $oficina)
+                                        ->bind('entidad', $entidad)
+                                        ->bind('mensajes', $mensajes)
+                                        ;
+    }
+    
+    public function action_editobjespecifico($id = ''){
+        $oespecifico = ORM::factory('pvoespecificos')->where('id','=',$id)->find();
+        if (isset($_POST['submit'])) {
+            $oespecifico->codigo = trim($_POST['codigo']);
+            $oespecifico->objetivo = trim($_POST['objetivo']);
+            $oespecifico->save();
+            $this->request->redirect('pvplanificacion/objetivoespecifico/'.$oespecifico->id_obj_gestion);
+        }
+        $ogestion = ORM::factory('pvogestiones')->where('id','=',$oespecifico->id_obj_gestion)->find();
+        $oficina = ORM::factory('oficinas')->where('id','=',$ogestion->id_oficina)->find();
+        $entidad = ORM::factory('entidades')->where('id','=',$oficina->id_entidad)->find();
+        $this->template->styles = array('media/css/tablas.css' => 'all');
+        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
+        $this->template->content = View::factory('pvplanificacion/editobjespecifico')
+                                        ->bind('ogestion', $ogestion)
+                                        ->bind('oespecifico', $oespecifico)
+                                        ->bind('oficina', $oficina)
+                                        ->bind('entidad', $entidad)
+                                        ;
+    }    
+    
+    public function action_eliminarobjesp($id = ''){
+        $objetivo = ORM::factory('pvoespecificos')->where('id','=',$id)->find();
+        if ($objetivo->loaded()) {
+            $objetivo->estado = 0;
+            $objetivo->save();
+            $this->request->redirect('pvplanificacion/objetivoespecifico/'.$objetivo->id_obj_gestion);
+        }
+        else{
+            $this->template->content = 'El Objetivo No Existe.';
+        }
+    }
+    
+    public function action_gestion(){
+        //$oficina = ORM::factory('oficinas')->where('id','=',$id)->find();
+        $entidad = ORM::factory('entidades')->where('id','=',$this->user->id_entidad)->find();
+        $oGestion = new Model_Pvogestiones();        
+        $ogestion = $oGestion->objetivosgestion($this->user->id_entidad);
+        $this->template->styles = array('media/css/tablas.css' => 'all');
+        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
+        $this->template->content = View::factory('pvplanificacion/objetivosgestion')
+                                        ->bind('objetivos', $ogestion)
+                                        ->bind('entidad', $entidad)
+                                        ;
+    }
+    
+    public function action_especificos(){
+        $entidad = ORM::factory('entidades')->where('id','=',$this->user->id_entidad)->find();
+        $oEspecifico = new Model_Pvoespecificos();
+        $oespecifico = $oEspecifico->objetivosespecificos($this->user->id_entidad);
+        $this->template->styles = array('media/css/tablas.css' => 'all');
+        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
+        $this->template->content = View::factory('pvplanificacion/objetivosespecificos')
+                                        ->bind('objetivos', $oespecifico)
                                         ->bind('entidad', $entidad)
                                         ;
     }

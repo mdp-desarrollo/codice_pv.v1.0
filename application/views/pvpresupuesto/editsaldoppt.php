@@ -20,6 +20,7 @@ $(function(){
     #file-word{ display: none;  }
     td{padding:5px;}    
 </style>
+<?php /*?>
 <h2 class="subtitulo">Estado de la Ejecuci&oacute;n Presupuestaria<br/><?php echo $detalle->unidad_funcional;?> <span>Lista de Partidas de Gastos</span></h2>
 <table>
     <tr>
@@ -52,7 +53,7 @@ $(function(){
         <td><?php echo $detalle->codigo_org;?></td>
         <td><?php echo $detalle->org;?></td>
     </tr>
-</table>
+</table><?php */?>
 <br />
 <h2>Adicionar Partida de Gasto a la Ejecucion presupuestaria</h2>
 <form action="/pvpresupuesto/addsaldoppt/<?php echo $id_programatica;?>" method="post" id="frmCreate">
@@ -63,39 +64,39 @@ $(function(){
     </tr>
     <tr>
         <td><?php echo Form::label('inicial','Presupuesto Inicial')?></td>
-        <td><?php echo Form::input('inicial','0',array('name'=>'inicial','id'=>'inicial','class'=>'required')) ?></td>
+        <td><?php echo Form::input('inicial',$ejecucion->inicial,array('name'=>'inicial','id'=>'inicial','class'=>'required','readonly')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('modificado','Modificado')?></td>
-        <td><?php echo Form::input('modificado','0',array('name'=>'modificado','id'=>'modificado','class'=>'required')) ?></td>
+        <td><?php echo Form::input('modificado',$ejecucion->modificado,array('name'=>'modificado','id'=>'modificado','class'=>'required','readonly')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('vigente','Vigente')?></td>
-        <td><?php echo Form::input('vigente','0',array('name'=>'vigente','id'=>'vigente','class'=>'required')) ?></td>
+        <td><?php echo Form::input('vigente',$ejecucion->vigente,array('name'=>'vigente','id'=>'vigente','class'=>'required')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('preventivo','Preventivo')?></td>
-        <td><?php echo Form::input('preventivo','0',array('name'=>'preventivo','id'=>'preventivo','class'=>'required')) ?></td>
+        <td><?php echo Form::input('preventivo',$ejecucion->preventivo,array('name'=>'preventivo','id'=>'preventivo','class'=>'required','readonly')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('comprometido','Comprometido')?></td>
-        <td><?php echo Form::input('comprometido','0',array('name'=>'comprometido','id'=>'comprometido','class'=>'required')) ?></td>
+        <td><?php echo Form::input('comprometido',$ejecucion->comprometido,array('name'=>'comprometido','id'=>'comprometido','class'=>'required','readonly')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('devengado','Devengado')?></td>
-        <td><?php echo Form::input('devengado','0',array('name'=>'devengado','id'=>'devengado','class'=>'required')) ?></td>
+        <td><?php echo Form::input('devengado',$ejecucion->devengado,array('name'=>'devengado','id'=>'devengado','class'=>'required','readonly')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('saldoDevengado','Saldo Devengado')?></td>
-        <td><?php echo Form::input('saldoDevengado','0',array('name'=>'saldoDevengado','id'=>'saldoDevengado','class'=>'required')) ?></td>
+        <td><?php echo Form::input('saldoDevengado',$ejecucion->saldo_devengado,array('name'=>'saldoDevengado','id'=>'saldoDevengado','class'=>'required','readonly')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('pagado','Pagado')?></td>
-        <td><?php echo Form::input('pagado','0',array('name'=>'pagado','id'=>'pagado','class'=>'required')) ?></td>
+        <td><?php echo Form::input('pagado',$ejecucion->pagado,array('name'=>'pagado','id'=>'pagado','class'=>'required','readonly')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('saldoPagar','Saldo Pagar')?></td>
-        <td><?php echo Form::input('saldoPagar','0',array('name'=>'saldoPagar','id'=>'saldoPagar','class'=>'required')) ?></td>
+        <td><?php echo Form::input('saldoPagar',$ejecucion->saldo_pagar,array('name'=>'saldoPagar','id'=>'saldoPagar','class'=>'required','readonly')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('gestion','Gesti&oacute;n')?></td>

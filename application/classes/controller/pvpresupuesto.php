@@ -38,7 +38,7 @@ class Controller_Pvpresupuesto extends Controller_DefaultTemplate {
 
     public function action_index($id = '') {
         $oAut = new Model_Pvliquidaciones();
-        $aut = $oAut->pptautorizados();
+        $aut = $oAut->pptautorizados($this->user->id_entidad);
         $this->template->styles = array('media/css/tablas.css' => 'all');
         $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
         $this->template->content = View::factory('pvpresupuesto/index')
@@ -49,7 +49,7 @@ class Controller_Pvpresupuesto extends Controller_DefaultTemplate {
     
 public function action_ejecucion($id = ''){
     $oPpt = new Model_Pvprogramaticas();
-    $ppt = $oPpt->ejecucionppt();
+    $ppt = $oPpt->ejecucionppt($this->user->id_entidad);
     $this->template->styles = array('media/css/tablas.css' => 'all');
     $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
     $this->template->content = View::factory('pvpresupuesto/ejecucion')
@@ -187,8 +187,9 @@ public function action_addejecucionppt(){
 
 public function action_editsaldoppt($id = ''){
     $mensajes = array();
-    $programatica = ORM::factory('pvprogramaticas')->where('id', '=', $id)->and_where('estado', '=', 1)->find();
-    if ($programatica->loaded()) {
+    //$programatica = ORM::factory('pvprogramaticas')->where('id', '=', $id)->and_where('estado', '=', 1)->find();
+    $ejecucion = ORM::factory('pvejecuciones')->where('id','=',$id)->find();
+    if ($ejecucion->loaded()) {
         if (isset($_POST['submit'])) {
             $ejecucion = ORM::factory('pvejecuciones');
             $ejecucion->inicial = $_POST['inicial'];
@@ -221,7 +222,7 @@ public function action_editsaldoppt($id = ''){
                                         ->bind('presupuesto', $ppt)
                                         ->bind('detalle', $detalle)
                                         ->bind('id_programatica', $id)
-        //                                ->bind('partidas', $partidas);
+                                        ->bind('ejecucion', $ejecucion);
                                         ;
     }
     else {

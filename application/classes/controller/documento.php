@@ -542,8 +542,11 @@ class Controller_documento extends Controller_DefaultTemplate {
                         if ($oe->id == $pvpoas->id_obj_esp)
                             $detalleesp = $oe->objetivo;
                     }
+                    //$tipo_cambio = ORM::factory('pvtipocambios', array('MAX("id")'))->find();
+                    //$tipo_cambio = DB::select('cambio_venta', array('MAX("id")'))->from('pvtipocambios');
+                    $tipo_cambio = ORM::factory('pvtipocambios')->select(array(DB::expr('MAX(id)'), 'cambio_venta'))->find();
                     $oPart = New Model_Pvprogramaticas();
-                    $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica, $pvfucov->total_pasaje, $pvfucov->total_viatico, $pvfucov->id_tipoviaje, $pvfucov->gasto_representacion);
+                    $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica, $pvfucov->total_pasaje, $pvfucov->total_viatico, $pvfucov->id_tipoviaje, $pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
                 }
                 /// fin 260813
 
@@ -568,6 +571,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                         ->bind('fuente', $fuente)//lista de fuentes de financiamiento por oficina
                         ->bind('pvpoas', $pvpoas)
                         ->bind('partidasgasto', $partidasgasto)
+                        ->bind('tipo_cambio', $tipo_cambio)
                 ;
                 ///POA
             } else {

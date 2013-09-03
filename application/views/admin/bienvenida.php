@@ -17,10 +17,8 @@ echo $usuario->username;
 <br/>
 <br/>
 <br/>
-asdaskldjklasjdklas
 <br/>
 <br/>
-asdasdjklaskldjklasjld
 <br/>
 <br/>
 <br/>

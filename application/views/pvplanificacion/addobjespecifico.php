@@ -8,15 +8,19 @@ $(function(){
     #file-word{ display: none;  }
     td{padding:5px;}    
 </style>
-<div style="width: 800px;"><h2 class="subtitulo">ADICIONAR OBJETIVO DE GESTION<br/><span>Llene correctamente los datos en el formulario</span></h2>
+<div style="width: 800px;"><h2 class="subtitulo">ADICIONAR OBJETIVO ESPECIFICO<br/><span>Llene corresctamente los datos en el formulario</span></h2>
 <table border="0">
     <tr>
-        <td><b>Entidad:</b></td>
+        <td style="width: 20%;"><b>Entidad:</b></td>
         <td><?php echo $entidad->entidad;?></td>
     </tr>
     <tr>
         <td><b>Unidad Ejecutora:</b></td>
         <td><?php echo $oficina->oficina;?></td>
+    </tr>
+    <tr>
+        <td><b>Objetivo de Gestion : </b><?PHP echo $ogestion->codigo?></td>
+        <td><?php echo $ogestion->objetivo;?></td>
     </tr>
 </table>
                 <?php if (sizeof($mensajes) > 0): ?>
@@ -30,8 +34,7 @@ $(function(){
 </div>
 <br />
 <div class="formulario">
-
-<form action="/pvplanificacion/addobjgestion/<?php echo $oficina->id;?>" method="post" id="frmCreate">
+<form action="/pvplanificacion/addobjespecifico/<?php echo $ogestion->id;?>" method="post" id="frmCreate">
 
 <table>
     <tr>
@@ -39,15 +42,12 @@ $(function(){
         <td><?php echo Form::input('codigo',NULL,array('name'=>'codigo','id'=>'codigo','class'=>'required')) ?></td>
     </tr>
     <tr>
-        <td><?php echo Form::label('objetivo','Objetivo de Gestion')?></td>
+        <td><?php echo Form::label('objetivo','Objetivo Especifico')?></td>
         <td><textarea id="objetivo" name="objetivo" class="required"></textarea></td>
     </tr>
 </table>
 
-<input type="submit" value="Adicionar" class="uibutton" name="submit" id="crear" title="Adicionar Objetivo de Gestion."  />
+<input type="submit" value="Adicionar" class="uibutton" name="submit" id="crear" title="Adicionar Objetivo Especific."  />
 </form>
-<div class="info" style="text-align:center;margin-top: 20px;">
-    <p><span style="float: left; margin-right: .3em;" class=""></span>    
-      &larr;<a href="/pvplanificacion/objetivogestion/<?php echo $oficina->id;?>" class="uibutton" title="Regresar" >Regresar</a></p>    
-</div>
+
 </div>

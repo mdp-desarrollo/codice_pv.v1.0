@@ -303,6 +303,14 @@
                 var viatico = $('#total_viatico').val();
                 var viaje = $('#id_tipoviaje').val();
                 var gasto = $('#gasto_representacion').val();
+                
+                if(viaje > 2){
+                    var cambio = $('#tipo_cambio').val();
+                    viatico = (viatico * cambio).toFixed(2);
+                    pasaje = (pasaje * cambio).toFixed(2);
+                    gasto = (gasto * cambio).toFixed(2);
+                    } 
+                
                 $.ajax({
                     type: "POST",
                     data: { id: id, pasaje:pasaje, viatico:viatico, viaje:viaje, gasto:gasto},
@@ -467,7 +475,7 @@ function dia_literal($n) {
                 echo Form::hidden('id_tipo', $documento->id_tipo);
                 echo Form::hidden('id_categoria', $user->id_categoria, array('id' => 'id_categoria'));
                 echo Form::hidden('titulo', '');
-                echo Form::hidden('tipo_cambio', '6.96');
+                echo Form::hidden('tipo_cambio', $tipo_cambio->cambio_venta,array('id'=>'tipo_cambio'));
                 echo Form::hidden('tipo_moneda', $pvfucov->tipo_moneda,array('id' => 'tipo_moneda'));
                 if($pvfucov->tipo_moneda==0)
                     $tipo_moneda="Bs.";
