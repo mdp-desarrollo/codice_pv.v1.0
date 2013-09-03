@@ -2,8 +2,8 @@
 
 function calculo_viaticos(){
     var porcentaje = $("#porcentaje_viatico").val();
-    var impuesto = $("input[name='impuesto']:checked").val(); //impuesto iva
-    var representacion = $("input[name='representacion']:checked").val(); 
+    var impuesto = $("#impuesto").val(); //impuesto iva
+    var representacion = $("#representacion").val(); 
     var viatico_dia = $('#viatico_dia').val();
     var nro_dias = $('#nro_dias').val();
 //calculo
@@ -29,6 +29,7 @@ function calculo_dias(){
     var fecha_a = $("#fecha_arribo").val();
     var dia_a = fecha_a.substring(0, 3);
     fecha_a = fecha_a.substring(4, 14);
+    //calculo de viaticos
     if(fecha_s != '' && fecha_a !='') {
         var diferencia =  Math.floor(( Date.parse(fecha_a) - Date.parse(fecha_s) ) / 86400000);
         if(diferencia >= 0){
@@ -139,7 +140,7 @@ else{
     if($pvfucov->tipo_moneda == '0')
         $moneda = 'Bs.';
     else
-        $moneda = 'Us.';
+        $moneda = '$us.';
 ?>
 <input type="hidden" id="id_fucov" value="<?php echo $pvfucov->id;?>" />
 <h2 style="text-align: center;"> PASAJES Y VI&Aacute;TICOS</h2>
@@ -147,7 +148,8 @@ else{
             <div id="comision" style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;">
                 <form action="/pvpasajes/editarfucov/<?php echo $pvfucov->id; ?>" method="post" id="frmEditarFucov" >
                 INFORMACI&Oacute;N DE LA COMISI&Oacute;N:<br />
-                    
+                <?php echo Form::hidden('representacion',$pvfucov->representacion,array('id'=>'representacion','name'=>'representacion'));?>
+                <?php echo Form::hidden('impuesto',$pvfucov->impuesto,array('id'=>'impuesto','name'=>'impuesto'));?>
                         <table border="1px" width="100%">
                             <tr>
                                 <td>Fecha y Hora de Inicio</td>
@@ -166,20 +168,20 @@ else{
                         <td>Nro Dias</td>
                         <td>Viaticos</td>
                         <td>Viatico x Dia</td>
+                        <td>Total Vi&aacute;ticos</td>
                         <td>IVA 13 %: </td>
                         <td>Gastos Representaci&oacute;n:</td>
                         <td>Cambio</td>
-                        <td>Total Vi&aacute;ticos</td>
                         <td>Total Pasajes</td>
                     </tr>
                     <tr>
                         <td><?php echo Form::input('nro_dias', $dias, array('id' => 'nro_dias', 'size' => 3,'readonly')) ?></td>
                         <td><?php echo Form::input('porcentaje_viatico', $pvfucov->porcentaje_viatico, array('id' => 'porcentaje_viatico', 'size' => 3,'readonly')) ?> %</td>
                         <td><?php echo Form::input('viatico_dia', $pvfucov->viatico_dia, array('id' => 'viatico_dia', 'size' => 5,'readonly'));echo $moneda;?> </td>
+                        <td><?php echo Form::input('total_viatico', $pvfucov->total_viatico, array('id' => 'total_viatico', 'size' => 8,'readonly'));echo $moneda; ?></span></td>
                         <td><?php echo Form::input('gasto_imp', $pvfucov->gasto_imp, array('id' => 'gasto_imp', 'size' => 8,'readonly'));echo $moneda;?></td>
                         <td><?php echo Form::input('gasto_representacion', $pvfucov->gasto_representacion, array('id' => 'gasto_representacion', 'size' => 8,'readonly')); echo $moneda;?></td>
-                        <td><?php echo Form::input('tipo_cambio', $pvfucov->tipo_cambio, array('id' => 'tipo_cambio', 'size' => 3,'readonly'));echo $moneda; ?></td>
-                        <td><?php echo Form::input('total_viatico', $pvfucov->total_viatico, array('id' => 'total_viatico', 'size' => 8,'readonly'));echo $moneda; ?></span></td>
+                        <td><?php echo Form::input('tipo_cambio', $tipo_cambio->cambio_venta, array('id' => 'tipo_cambio', 'size' => 3,'readonly'));echo $moneda; ?></td>
                         <td><?php echo Form::input('total_pasaje', $pvfucov->total_pasaje, array('id' => 'total_pasaje', 'size' => 8,'class'=>'required'));echo $moneda; ?></td>
                     </tr>
                 </table>

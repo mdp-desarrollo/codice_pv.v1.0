@@ -641,15 +641,17 @@ class Controller_documento extends Controller_DefaultTemplate {
             $pvfucov = ORM::factory('pvfucovs')->where('id_memo', '=', $id)->find();
             $memo = ORM::factory('documentos')->where('id', '=', $pvfucov->id_memo)->find();
             $oficina = ORM::factory('oficinas')->where('id', '=', $memo->id_oficina)->find();
+            $tipo_cambio = ORM::factory('pvtipocambios')->select(array(DB::expr('MAX(id)'), 'cambio_venta'))->find();
             if ($pvfucov->loaded()) {
                 $nivel = $this->user->nivel;
                 switch ($nivel) {
-                    case 6:
+                    case 6://pasajes y viaticos
                         $pasajes = ORM::factory('pvpasajes')->where('id_fucov', '=', $pvfucov->id)->order_by('id', 'asc')->find_all();
                         $detallepv = View::factory('pvpasajes/detalle')
                                 ->bind('pvfucov', $pvfucov)
                                 ->bind('estado', $estado)
                                 ->bind('pasajes', $pasajes)
+                                ->bind('tipo_cambio', $tipo_cambio)
                         ;
                         break;
                     case 7:
@@ -659,9 +661,8 @@ class Controller_documento extends Controller_DefaultTemplate {
                         $fuente[''] = 'Seleccione Una Fuente de Financiamiento';
                         foreach ($fte as $f)
                             $fuente[$f->id] = $f->actividad;
-
                         $oPart = New Model_Pvprogramaticas();
-                        $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica, $pvfucov->total_pasaje, $pvfucov->total_viatico, $pvfucov->id_tipoviaje, $pvfucov->gasto_representacion);
+                        $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica, $pvfucov->total_pasaje, $pvfucov->total_viatico, $pvfucov->id_tipoviaje, $pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
 
                         $detallepv = View::factory('pvpresupuesto/detalle')
                                 ->bind('pvfucov', $pvfucov)
