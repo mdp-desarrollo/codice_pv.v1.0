@@ -16,12 +16,15 @@ function calculo_viaticos(){
             if(representacion == 'Si'){
                 gastos_rep = (25*parseFloat(monto_parcial))/100;
             }
-            var total_viatico=parseFloat(monto_parcial)+parseFloat(gastos_rep)-parseFloat(desc_iva);
+            var total_viatico=parseFloat(monto_parcial)-parseFloat(desc_iva);
             $('#gasto_imp').val(desc_iva.toFixed(2));
             $('#gasto_representacion').val(gastos_rep.toFixed(2));
             $('#total_viatico').val(total_viatico.toFixed(2));
             //$("#porcentaje_viatico").val(porcentaje);
     }
+    
+    
+    
 function calculo_dias(){
     var fecha_s = $("#fecha_salida").val();
     var dia_s = fecha_s.substring(0, 3);

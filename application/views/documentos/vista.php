@@ -63,5 +63,13 @@
             </div></td>
     </tr>
     <?php } ?>
+    
+    <?php if ($pvfucov->loaded()) { ?>
+    <tr> <td><b>Cancelar</b> </td>
+        <td colspan="2">            
+        <?php echo $pvfucov->cancelar;?>
+            </td>
+    </tr>
+    <?php } ?>
 </table>
 <?php echo Form::hidden('id',$d->id,array('id'=>'id'));?>
