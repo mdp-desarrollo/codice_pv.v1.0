@@ -124,7 +124,7 @@ $pdf->AddPage();
 $nombre = 'fucov';
 try {
     $dbh = New db();
-    $stmtp = $dbh->prepare("SELECT * FROM documentos d, pvfucovs p WHERE d.id='$id' AND d.id=p.id_documento");
+    $stmtp = $dbh->prepare("SELECT *,t.tipo,t.via FROM documentos d, pvfucovs p, tipos t WHERE d.id='$id' AND d.id=p.id_documento AND d.id_tipo=t.id");
     // call the stored procedure
     $stmtp->execute();
     //echo "<B>outputting...</B><BR>";
