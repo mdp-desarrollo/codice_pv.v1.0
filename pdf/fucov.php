@@ -140,11 +140,11 @@ try {
         $pdf->Write(0, strtoupper($rs->nur), '', 0, 'C');
         $pdf->Ln(10);
         $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Cell(15, 5, 'A:');
+        $pdf->Cell(50, 5, 'Autoriza el Viaje:');
         $pdf->SetFont('Helvetica', '', 10);
         $pdf->Write(0, utf8_encode($rs->nombre_destinatario), '', 0, 'L');
         $pdf->Ln();
-        $pdf->Cell(15, 5, '');
+        $pdf->Cell(50, 5, '');
         $pdf->SetFont('Helvetica', 'B', 10);
         $pdf->Write(0, utf8_encode($rs->cargo_destinatario), '', 0, 'L');
         $pdf->Ln(10);
@@ -160,15 +160,15 @@ try {
             $pdf->Ln(10);
         }
         $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Cell(15, 5, 'De:');
+        $pdf->Cell(50, 5, 'Funcionario en Comisión:');
         $pdf->SetFont('Helvetica', '', 10);
         $pdf->Write(0, utf8_encode($rs->nombre_remitente), '', 0, 'L');
         $pdf->Ln();
-        $pdf->Cell(15, 5, '');
+        $pdf->Cell(50, 5, '');
         $pdf->SetFont('Helvetica', 'B', 10);
         $pdf->Write(0, utf8_encode($rs->cargo_remitente), '', 0, 'L');
         $pdf->Ln(10);
-        $pdf->Cell(15, 5, 'Fecha:');
+        $pdf->Cell(50, 5, 'Fecha Creación:');
         $pdf->SetFont('Helvetica', '', 10);
         $mes = (int) date('m', strtotime($rs->fecha_creacion));
         $meses = array(1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre');
@@ -176,7 +176,7 @@ try {
         $pdf->Write(0, $fecha, '', 0, 'L');
         $pdf->Ln(10);
         $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Cell(15, 5, 'Motivo:');
+        $pdf->Cell(50, 5, 'Motivo:');
 
         $pdf->SetFont('Helvetica', '', 10);
         $pdf->MultiCell(170, 5, utf8_encode($rs->referencia), 0, 'L');
@@ -209,7 +209,7 @@ try {
         $diaf = dia_literal(date("w", strtotime($ff)));
 
         if ($rs->cancelar == 'Hospedaje y alimentacion' || $rs->cancelar == 'Hospedaje') {
-            $cancelar = "<b>Financiado por:</p>" . $rs->financiador . "<br><br> * " . $rs->cancelar;
+            $cancelar = "<b>Financiado por:</b>" . $rs->financiador . "<br><br> * " . $rs->cancelar;
         } else {
             $cancelar = "* " . $rs->cancelar;
         }
@@ -261,7 +261,7 @@ try {
                         </tr> 
                         <tr>    
                             <td><b>TOTAL VIATICOS:</b> ' . $rs->total_viatico . '  '.$tipo_moneda.'</td>
-                            <td width="250"><b>GASTOS DE REPRESENTACIÓN:</b> ' . $rs->gasto_representacion . '</td>    
+                            <td width="250"><b>GASTOS DE REPRESENTACIÓN:</b> ' . $rs->gasto_representacion . ' '.$tipo_moneda.'</td>    
                             <td><b>TOTAL PASAJES:</b> ' . $rs->total_pasaje . '  '.$tipo_moneda.'</td>
                         </tr><br>';
         if ($rs->justificacion_finsem != '')

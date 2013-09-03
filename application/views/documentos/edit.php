@@ -355,7 +355,7 @@ function dia_literal($n) {
                                     echo Form::input('cargo_des', $documento->cargo_destinatario, array('id' => 'cargo_des', 'size' => 45, 'class' => 'required'));
                                     ?>
                                 </p> 
-                                <?php if ($documento->id_tipo == 5): ?>
+                                <?php if ($tipo->via == 0): ?>
                                     <p>
                                         <label>Institución Destinatario</label>
                                         <input type="text" size="40" value="<?php echo $documento->institucion_destinatario; ?>" name="institucion_des" />    

@@ -130,6 +130,7 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                     $documento->cargo_destinatario = $seguimiento->cargo_emisor;
                     $documento->nombre_remitente = $this->user->nombre;
                     $documento->cargo_remitente = $this->user->cargo;
+                    $documento->mosca_remitente = $this->user->mosca;
                     if ($fucov == 1) {
                         $documento->referencia = $memo->referencia;
                     }
