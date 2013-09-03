@@ -532,6 +532,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                     $objgestion[$og->id] = $og->codigo;
 
                 $pvpoas = ORM::factory('pvpoas')->where('id_fucov', '=', $pvfucov->id)->find();
+                $tipo_cambio = ORM::factory('pvtipocambios')->select(array(DB::expr('MAX(id)'), 'cambio_venta'))->find();
                 if ($pvpoas->id_obj_gestion <> 0) {
                     $det = ORM::factory('pvogestiones')->where('id', '=', $pvpoas->id_obj_gestion)->find(); ///Detalle Objetivo de Gestion
                     $detalleges = $det->objetivo;
@@ -542,9 +543,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                         if ($oe->id == $pvpoas->id_obj_esp)
                             $detalleesp = $oe->objetivo;
                     }
-                    //$tipo_cambio = ORM::factory('pvtipocambios', array('MAX("id")'))->find();
-                    //$tipo_cambio = DB::select('cambio_venta', array('MAX("id")'))->from('pvtipocambios');
-                    $tipo_cambio = ORM::factory('pvtipocambios')->select(array(DB::expr('MAX(id)'), 'cambio_venta'))->find();
+                    
                     $oPart = New Model_Pvprogramaticas();
                     $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica, $pvfucov->total_pasaje, $pvfucov->total_viatico, $pvfucov->id_tipoviaje, $pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
                 }
@@ -681,8 +680,10 @@ class Controller_documento extends Controller_DefaultTemplate {
                             }
                         }
                         $oesp = ORM::factory('pvoespecificos')->where('id_obj_gestion', '=', $pvpoas->id_obj_gestion)->and_where('estado', '=', 1)->find_all();
+                        $det_obj_esp = 'no ingresa: ';
                         foreach ($oesp as $e) {
                             $oespecifico[$e->id] = $e->codigo;
+                            $det_obj_esp .= ' '.$e->id;
                             if ($e->id == $pvpoas->id_obj_esp) {
                                 $det_obj_esp = $e->objetivo;
                             }

@@ -271,7 +271,10 @@ else{
                 </div>
                 <br />
                 <?php endif; ?>
-    <!--<input type="submit" value="Autorizar" class="uibutton" name="submit" id="crear" title="Autorizar"/>-->
+    <a href="/pdf/fucov.php?id=<?php echo $pvfucov->id_documento; ?>" class="link pdf" target="_blank" title="Imprimir PDF" >PDF</a>
+    <?php if($pvfucov->etapa_proceso == 0):?>
+         <div id="msg4" class="info2"><b>!!!EL FUCOV NO FUE LLENADO POR EL FUNCIONARIO EN COMISION.</b></div>
+    <?php endif;?>
     <?php if($pvfucov->etapa_proceso == 1):?>
     <a href="/pvpasajes/autorizarfucov/<?php echo $pvfucov->id; ?>"  title="Autorizar FUCOV" >Autorizar FUCOV</a>
     <?php endif;?>

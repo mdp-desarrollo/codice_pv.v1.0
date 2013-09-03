@@ -63,7 +63,7 @@ $('#frmEditarpoa').validate();
                         </tr>
                         <tr>
                             <td><?php echo Form::label('obj_esp', 'C&oacute;digo Objetivo Espec&iacute;fico:', array('class' => 'form')); ?></td>
-                            <td><?php echo Form::select('obj_esp', $obj_esp,null/* $pvpoas->id_obj_esp*/, array('class' => 'form', 'class' => 'required', 'id' => 'obj_esp', 'name' => 'obj_esp')); ?></td>
+                            <td><?php echo Form::select('obj_esp', $obj_esp, $pvpoas->id_obj_esp, array('class' => 'form', 'class' => 'required', 'id' => 'obj_esp', 'name' => 'obj_esp')); ?></td>
                         </tr>
                         <tr>
                             <td><?php echo Form::label('det_obj_esp', 'Detalle Objetivo Espec&iacutefico:', array('class' => 'form')); ?></td>
@@ -74,6 +74,10 @@ $('#frmEditarpoa').validate();
             <div style="text-align: center;"> <input type="submit" name="documento" value="Modificar documento" class="uibutton" /></div>
             </form>
         </div>
+    <a href="/pdf/certificacionpoa.php?id=<?php echo $pvfucov->id_documento;?>&f=<?php echo $pvfucov->id?>" class="link pdf" target="_blank" title="Imprimir PDF" >imprimir Certificado</a>
+    <?php if($pvfucov->etapa_proceso == 2):?>
+         <div id="msg4" class="info2"><b>!!!EL FUCOV NO FUE AUTORIZADO POR PRESUPUESTO.</b></div>
+    <?php endif;?>
             <?php if($pvfucov->etapa_proceso == 3):?>
     <a href="/pvplanificacion/autorizarfucov/<?php echo $pvfucov->id; ?>" class="link derivar" title="Autorizar FUCOV" >Autorizar FUCOV</a>
     <?php endif;?>

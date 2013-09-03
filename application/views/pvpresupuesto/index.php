@@ -62,7 +62,7 @@
             <td ><?php echo $aut->fecha_creacion;?></td>
             <td ><?php echo $aut->oficina;?></td>
             <td ><?php echo $aut->nombre;?><br /><b><?php echo $aut->cargo;?></b></td>
-            <td><a href="../../pdf/certificacionpoa.php?id=<?php echo $aut->id_memo.'&f='.$aut->id_fucov;?>" class="uibutton" target="_blank" title="Imprimir Certificado" ><img src="/media/images/print.png"/> Imprimir </a></td>
+            <td><a href="../../pdf/certificacionppt.php?id=<?php echo $aut->id_memo.'&f='.$aut->id_fucov;?>" class="uibutton" target="_blank" title="Imprimir Certificado" ><img src="/media/images/print.png"/> Imprimir </a></td>
         </tr>        
     <?php endforeach; ?>
    </tbody>   

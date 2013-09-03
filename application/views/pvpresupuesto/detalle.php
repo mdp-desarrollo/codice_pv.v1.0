@@ -59,7 +59,10 @@ GASTO REP: <?php echo Form::input('gasto_representacion', $pvfucov->gasto_repres
     </form>
     <div id="saldoppt"><?php echo $partidasgasto; ?></div>
         </div>
-    
+    <a href="/pdf/certificacionppt.php?id=<?php echo $pvfucov->id_documento;?>&f=<?php echo $pvfucov->id?>" class="link pdf" target="_blank" title="Imprimir PDF" >PDF</a>
+    <?php if($pvfucov->etapa_proceso == 1):?>
+         <div id="msg4" class="info2"><b>!!!EL FUCOV NO FUE AUTORIZADO POR PASAJES Y VIATICOS.</b></div>
+    <?php endif;?>
     <?php if($pvfucov->etapa_proceso == 2):?>
     <a href="/pvpresupuesto/autorizarfucov/<?php echo $pvfucov->id; ?>" class="link derivar" title="Autorizar FUCOV" >Autorizar FUCOV</a>
     <?php endif;?>

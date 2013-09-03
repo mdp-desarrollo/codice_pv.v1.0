@@ -65,7 +65,7 @@ INNER JOIN entidades AS c ON b.id_entidad = c.id WHERE a.id = '$id'");
 }
 
 // create new PDF document
-$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, 'LETTER', true, 'UTF-8', false);
+$pdf = new MYPDF('L', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
@@ -106,127 +106,157 @@ $pdf->AddPage();
 $nombre = 'cert_ppto';
 try {
     $dbh = New db();
-    $stmt = $dbh->prepare("SELECT * FROM documentos d 
-                               INNER JOIN tipos t ON d.id_tipo=t.id
-                               WHERE d.id='$id'");
-    // call the stored procedure
+    //FUCOV
+    $stmt = $dbh->prepare("select * from pvfucovs where id = '$id_fucov'");
+    $stmt->execute();    
+    $fucov = $stmt->fetch(PDO::FETCH_OBJ) ;
+    
+    $stmt = $dbh->prepare("SELECT * FROM documentos WHERE id='$fucov->id_documento'");
     $stmt->execute();
-    //echo "<B>outputting...</B><BR>";
-    //$pdf->Ln(7);
-    //while ($rs = $stmt->fetch(PDO::FETCH_OBJ)) {
-    $rs = $stmt->fetch(PDO::FETCH_OBJ);
-        $pdf->SetFont('Helvetica', 'B', 15);
-        $pdf->Write(0, strtoupper($rs->tipo), '', 0, 'C');
-        $pdf->Ln();
-        $pdf->SetFont('Helvetica', '', 11);
-        $pdf->Write(0, strtoupper($rs->codigo), '', 0, 'C');
-        $pdf->Ln();
-        $pdf->SetFont('Helvetica', 'B', 13);
-        $pdf->Write(0, strtoupper($rs->nur), '', 0, 'C');
-        $pdf->Ln(10);
-        $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Cell(15, 5, 'A:');
-        $pdf->SetFont('Helvetica', '', 10);
-        $pdf->Write(0, utf8_encode($rs->nombre_destinatario), '', 0, 'L');
-        $pdf->Ln();
-        $pdf->Cell(15, 5, '');
-        $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Write(0, utf8_encode($rs->cargo_destinatario), '', 0, 'L');
-        $pdf->Ln(10);
-        if (($rs->via != 0) && (trim($rs->nombre_via) != '')) {
-            $pdf->SetFont('Helvetica', 'B', 10);
-            $pdf->Cell(15, 5, 'Via:');
-            $pdf->SetFont('Helvetica', '', 10);
-            $pdf->Write(0, utf8_encode($rs->nombre_via), '', 0, 'L');
-            $pdf->Ln();
-            $pdf->Cell(15, 5, '');
-            $pdf->SetFont('Helvetica', 'B', 10);
-            $pdf->Write(0, utf8_encode($rs->cargo_via), '', 0, 'L');
-            $pdf->Ln(10);
-        }
-        $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Cell(15, 5, 'De:');
-        $pdf->SetFont('Helvetica', '', 10);
-        $pdf->Write(0, utf8_encode($rs->nombre_remitente), '', 0, 'L');
-        $pdf->Ln();
-        $pdf->Cell(15, 5, '');
-        $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Write(0, utf8_encode($rs->cargo_remitente), '', 0, 'L');
-        $pdf->Ln(10);
-        $pdf->Cell(15, 5, 'Fecha:');
-        $pdf->SetFont('Helvetica', '', 10);
-        $mes = (int) date('m', strtotime($rs->fecha_creacion));
-        $meses = array(1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre');
-        $fecha = date('d', strtotime($rs->fecha_creacion)) . ' de ' . $meses[$mes] . ' de ' . date('Y', strtotime($rs->fecha_creacion));
-        $pdf->Write(0, $fecha, '', 0, 'L');
-        $pdf->Ln(10);
-        $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Cell(15, 5, 'Ref:');
-        $pdf->SetFont('Helvetica', '', 10);
-        $pdf->MultiCell(170, 5, utf8_encode($rs->referencia), 0, 'L');
-        $pdf->Ln(10);
-        $pdf->writeHTML($rs->contenido);
+    $doc = $stmt->fetch(PDO::FETCH_OBJ);
 
-        //$pdf->writeHTML();
-        /*   $pdf->SetY(-5);
-          // Set font
-          $pdf->SetFont('helvetica', 'I', 7);
-          $pdf->Write(0, $fecha,'',0,'L');
-         * */
-
-//        $nombre.='_' . substr($rs->cite_original, -10, 6);
-    //}
-    $pdf->Ln(0);
-    $pdf->SetFont('Helvetica', 'B', 13);
-    $pdf->write(0,'CERTIFICACION POA','',0,'C');
-    $pdf->Ln(5);
-    $pdf->SetFont('Helvetica', 'B', 15);
-    $pdf->write(0,'__________________________________________________________','',0,'C');
-    //$dbh = New db();
-    $stmt = $dbh->prepare("select p.fecha_certificacion, og.codigo cod_gestion, og.objetivo obj_gestion, oe.codigo cod_especifico, oe.objetivo obj_especifico
-from pvpoas p inner join pvogestiones og on p.id_obj_gestion = og.id inner join pvoespecificos oe on p.id_obj_esp = oe.id where id_fucov ='$id_fucov'");
+    $stmt = $dbh->prepare("select ofi.oficina, ofi.sigla sigla_oficina, ofi.ppt_unid_ejecutora ue, ofi.ppt_da da, ent.entidad, ent.sigla sigla_entidad
+from oficinas ofi inner join entidades ent on ofi.id_entidad = ent.id
+where ofi.id = '$doc->id_oficina'");
     $stmt->execute();
-    $rsi = $stmt->fetch(PDO::FETCH_OBJ);
-    $pdf->SetFont('Helvetica', '', 11);
-    //$pdf->Write(0, 'Objetivo Gestion: '.$rsi->obj_gestion, '', 0, 'L');
-    //$pdf->Ln();
+    $ofi = $stmt->fetch(PDO::FETCH_OBJ);
+    
+    $stmt = $dbh->prepare("select oficina, ppt_cod_da from oficinas where ppt_da = '$ofi->da'");//Direccion administrativa
+    $stmt->execute();
+    $da = $stmt->fetch(PDO::FETCH_OBJ) ;
+     
+    $stmt = $dbh->prepare("select oficina, ppt_cod_ue from oficinas where ppt_unid_ejecutora = '$ofi->ue'");//unidad ejecutora Presupuesto
+    $stmt->execute();    
+    $ue = $stmt->fetch(PDO::FETCH_OBJ) ;
+    
+        
+        //$pdf->SetFont('Helvetica', 'B', 15);
+        //$pdf->Write(0, strtoupper($rs->tipo), '', 0, 'C');
+        //$pdf->Ln();
+        $pdf->SetFont('Helvetica', 'U', 12);
+        $pdf->Write(0, 'CERTIFICACION PRESUPUESTARIA', '', 0, 'C');
+        $pdf->Ln();
+        $pdf->Write(0, 'GESTION '.date("Y", strtotime($doc->fecha_creacion)), '', 0, 'C');
+        $pdf->Ln(10);
+        
+        $pdf->Write(0, 'ANTECEDENTES: ' ,'', 0, 'L');
+        $pdf->Ln(10);
+
+        $pdf->SetFont('Helvetica', '', 10);
+        $antecedentes = "Mediante Hoja de Seguimiento $doc->nur, se remite el FUCOV $doc->codigo, del Sr(a). $doc->nombre_remitente,  $doc->cargo_remitente, solicitando viaticos por viaje a realizar a la ciudad de (localidad), con el objeto de: $doc->referencia.";
+        $pdf->write(0, $antecedentes, '', 0, 'L');
+        $pdf->Ln(10);
+        
+        $pdf->SetFont('Helvetica', 'U', 13);
+        $pdf->write(0, 'ANALISIS Y/O VERIFICACION:', '', 0, 'L');
+        $pdf->Ln(10);
+        
+        $pdf->SetFont('Helvetica', '', 10);
+        $antecedentes = "Analizada la Presente Solicitud se CERTIFICA que existe el requirimiento de inscripcion en el Presupuesto de la Gestion ".date("Y", strtotime($doc->fecha_creacion))." para llevar adelante esta actividad, con cargo a:";
+        $pdf->write(0, $antecedentes, '', 0, 'L');
+        $pdf->Ln(10);
+        
+        $pdf->SetFont('Helvetica', 'U', 11);
+        $pdf->write(0, 'ESTRUCTURA PROGRAMATICA', '', 0, 'L');
+        $pdf->Ln(10);
+        //obtener el id para la estructura programatica, donde se guarda la informacion presupuetaria
+        /*$stmt = $dbh->prepare("select * from entidadespyvliquidacion where id_fucov = '$fucov->id'");
+        $stmt->execute();    
+        $entidad = $stmt->fetch(PDO::FETCH_OBJ) ;*/
+        
+
+        
+        $stmt = $dbh->prepare("select prog.codigo cod_programa, prog.programa programa, proy.codigo cod_proyecto, proy.proyecto proyecto, act.codigo cod_actividad, act.actividad actividad, fte.codigo cod_fuente, 
+fte.denominacion fuente, org.codigo cod_organismo, org.denominacion organismo
+from pvprogramaticas p 
+inner join pvprogramas prog on p.id_programa = prog.id
+inner join pvproyectos proy on p.id_proyecto = proy.id
+inner join pvpptactividades act on p.id_actividadppt = act.id
+inner join pvorganismos org on p.id_organismo = org.id
+inner join pvfuentes fte on p.id_fuente = fte.id
+where p.id = $fucov->id_programatica");
+    $stmt->execute();
+    $ppt = $stmt->fetch(PDO::FETCH_OBJ) ;
+    ///se imprime proyecto o actividad pero no ambos
+    if($ppt->cod_proyecto != '0000')
+        $proyact = "
+            <tr>
+                <td>ACTIVIDAD</td>
+                <td>:$ppt->cod_proyecto</td>
+                <td>$ppt->proyecto</td>
+            </tr>";
+    else
+        $proyact = "<tr>
+                <td>ACTIVIDAD</td>
+                <td>:$ppt->cod_actividad</td>
+                <td>$ppt->actividad</td>
+            </tr>";
+    $pdf->SetFont('Helvetica', '', 10);
     $html = "
         <table style=\" width: 100%;\"  border=\"0px\">
             <tr>
-                <td style = \" width: 30%;\">OBJETIVO GESTION</td>
-                <td style = \" width: 10%;\">:$rsi->cod_gestion</td>
-                <td style = \" width: 65%;\">$rsi->obj_gestion</td>
+                <td style = \" width: 30%;\">ENTIDAD</td>
+                <td style = \" width: 5%;\">:$ofi->sigla_entidad</td>
+                <td style = \" width: 65%;\">$ofi->entidad</td>
             </tr>
             <tr>
-            <td colspan=\"3\"></td>
+                <td>DIRECCION ADMINISTRATIVA</td>
+                <td>:$da->ppt_cod_da</td>
+                <td>$da->oficina</td>
             </tr>
             <tr>
-                <td>OBJETIVO ESPECIFICO</td>
-                <td>:$rsi->cod_especifico</td>
-                <td>$rsi->obj_especifico</td>
+                <td>UNIDAD EJECUTORA</td>
+                <td>:$ue->ppt_cod_ue</td>
+                <td>$ue->oficina</td>
             </tr>
             <tr>
-                <td colspan=\"3\"></td>
+                <td>PROGRAMA</td>
+                <td>:$ppt->cod_programa</td>
+                <td>$ppt->programa</td>
+            </tr>".$proyact."
+            <tr>
+                <td>FUENTE DE FINANCIAMIENTO</td>
+                <td>:$ppt->cod_fuente</td>
+                <td>$ppt->fuente</td>
             </tr>
             <tr>
-                <td>FECHA CERTIFICACION</td>
-                <td></td>
-                <td>:$rsi->fecha_certificacion</td>
-            </tr>
-            <tr>
-                <td colspan=\"3\"></td>
+                <td>ORGANISMO FINANCIADOR</td>
+                <td>:$ppt->cod_organismo</td>
+                <td>$ppt->organismo</td>
             </tr>
         </table>";
-        $pdf->Ln(20);
         $pdf->writeHTML($html, false, false, false);
-        
+        $stmt = $dbh->prepare("select * from pvliquidaciones where id_fucov = $fucov->id");
+        $stmt->execute();
+        $html = "<table border=\"1px\">
+                    <tr>
+                        <td style = \" width: 10%;\">Partida</td>
+                        <td style = \" width: 40%;\">Descripci&oacute;n</td>
+                        <td style = \" width: 20%;\">Saldo Disponible</td>
+                        <td style = \" width: 20%;\">Importe Certificado</td>
+                        <td style = \" width: 10%;\">Saldo Actual</td>
+                    </tr>";
+        while ($ppt = $stmt->fetch(PDO::FETCH_OBJ)) {
+                $total = $ppt->cs_saldo_devengado - $ppt->importe_certificado;
+                $html = $html."<tr><td>$ppt->cod_partida</td><td>$ppt->partida</td><td>$ppt->cs_saldo_devengado</td>
+                        <td>$ppt->importe_certificado</td><td>$total</td>
+                        </tr>";
+        }
+        $html = $html."</table>";
+        //$pdf->Ln(10);
+        $pdf->writeHTML($html, false, false, false);
+        //$pdf->Ln(10);
+        $pdf->SetFont('Helvetica', 'U', 12);        
+        $pdf->Write(0, 'CONCLUSION:', '', 0, 'L');
+        $pdf->SetFont('Helvetica', '', 9);
+        $html = "&Eacute;ste certificado solo refrenda y verifica la existencia de saldos presupuestarios. En este sentido, se hace notar que la verificaci&oacute;
+        de dicha actividad est&eacute; incorporada en el Programa Operativo Anual Gesti&oacute;n".date("Y", strtotime($doc->fecha_creacion)).", es de plena responsabilidad de la 
+        Unidad Solicitante, as&iacute; como la tramitaci&oacute;n de la cuota de devengamiento correspondiente.
+        <br />Es Cuanto se certifica para fines consiguientes.
+        <br />La Paz, ".date("d-m-Y").".";
         $pdf->Ln(10);
-        $pdf->SetFont('Helvetica', '', 5);
-        $pdf->writeHTML('cc. ' . strtoupper($rs->copias));
-        $pdf->writeHTML('Adj. ' . strtoupper($rs->adjuntos));
-        $pdf->writeHTML(strtoupper($rs->mosca_remitente));
-        $nombre.='_' . substr($rs->cite_original, -10, 6);
-        
+        $pdf->writeHTML($html, false, false, false);
+    
 } catch (PDOException $e) {
     print "Error!: " . $e->getMessage() . "<br/>";
     die();
