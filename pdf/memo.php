@@ -125,7 +125,7 @@ $pdf->AddPage();
 $nombre = 'memorandum';
 try {
     $dbh = New db();
-    $stmtp = $dbh->prepare("SELECT d.* FROM documentos d 
+    $stmtp = $dbh->prepare("SELECT d.*,t.tipo, t.via FROM documentos d 
                                INNER JOIN tipos t ON d.id_tipo=t.id
                                WHERE d.id='$id'");
     // call the stored procedure
