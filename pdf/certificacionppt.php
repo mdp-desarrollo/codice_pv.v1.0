@@ -143,7 +143,7 @@ where ofi.id = '$doc->id_oficina'");
         $pdf->Ln(10);
 
         $pdf->SetFont('Helvetica', '', 10);
-        $antecedentes = "Mediante Hoja de Seguimiento $doc->nur, se remite el FUCOV $doc->codigo, del Sr(a). $doc->nombre_remitente,  $doc->cargo_remitente, solicitando viaticos por viaje a realizar a la ciudad de (localidad), con el objeto de: $doc->referencia.";
+        $antecedentes = "Mediante Hoja de Seguimiento $doc->nur, se remite el FUCOV $doc->codigo, del Sr(a). $doc->nombre_remitente,  $doc->cargo_remitente, solicitando viaticos por viaje a realizar a la ciudad de $fucov->destino, con el objeto de: $doc->referencia.";
         $pdf->write(0, $antecedentes, '', 0, 'L');
         $pdf->Ln(10);
         
@@ -249,11 +249,14 @@ where p.id = $fucov->id_programatica");
         $pdf->SetFont('Helvetica', 'U', 12);        
         $pdf->Write(0, 'CONCLUSION:', '', 0, 'L');
         $pdf->SetFont('Helvetica', '', 9);
+        $mes = (int) date('m', strtotime(date("d-m-Y")));
+        $meses = array(1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre');
+        $fecha_certificacion = date('d', strtotime(date("d-m-Y"))) . ' de ' . $meses[$mes] . ' de ' . date('Y', strtotime(date("d-m-Y")));
         $html = "&Eacute;ste certificado solo refrenda y verifica la existencia de saldos presupuestarios. En este sentido, se hace notar que la verificaci&oacute;
-        de dicha actividad est&eacute; incorporada en el Programa Operativo Anual Gesti&oacute;n".date("Y", strtotime($doc->fecha_creacion)).", es de plena responsabilidad de la 
+        de dicha actividad est&eacute; incorporada en el Programa Operativo Anual Gesti&oacute;n ".date("Y", strtotime($doc->fecha_creacion)).", es de plena responsabilidad de la 
         Unidad Solicitante, as&iacute; como la tramitaci&oacute;n de la cuota de devengamiento correspondiente.
         <br />Es Cuanto se certifica para fines consiguientes.
-        <br />La Paz, ".date("d-m-Y").".";
+        <br />La Paz, ".$fecha_certificacion.".";
         $pdf->Ln(10);
         $pdf->writeHTML($html, false, false, false);
     

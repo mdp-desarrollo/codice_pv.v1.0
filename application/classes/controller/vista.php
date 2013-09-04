@@ -71,11 +71,28 @@ class Controller_Vista extends Controller_MinimoTemplate {
                 $archivo = ORM::factory('archivos')->where('id_documento', '=', $documento->id)->find();
 
                 $pvfucov = ORM::factory('pvfucovs')->where('id_documento', '=', $documento->id)->find();
-
+                
+                ///rodrigo-POA
+                $pvpoas = ORM::factory('pvpoas')->where('id_fucov','=',$pvfucov->id)->find();
+                $pvgestion = ORM::factory('pvogestiones')->where('id','=',$pvpoas->id_obj_gestion)->find();
+                $pvespecifico = ORM::factory('pvoespecificos')->where('id','=',$pvpoas->id_obj_esp)->find();
+                ///rodrigo-PPT
+                $pvliquidacion = ORM::factory('pvliquidaciones')->where('id_fucov','=',$pvfucov->id)->find();
+                if(!$pvliquidacion->loaded()){//liquidaciones tiene todos los montos
+                    $oPart = New Model_Pvprogramaticas();
+                    $pvliquidacion = $oPart->saldopresupuesto($pvfucov->id_programatica)->find();
+                }
                 $this->template->content = View::factory('documentos/vista')
                         ->bind('d', $documento)
                         ->bind('pvfucov', $pvfucov)
-                        ->bind('archivo', $archivo);
+                        ->bind('archivo', $archivo)
+                        ///rodrigo POA
+                        ->bind('pvpoas', $pvpoas)
+                        ->bind('pvgestion', $pvgestion)
+                        ->bind('pvespecifico', $pvespecifico)
+                        ///PPT
+                        ->bind('pvliquidacion', $pvliquidacion)
+                        ;
             } else {
                 $this->template->content = View::factory('no_access');
             }

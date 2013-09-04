@@ -114,6 +114,7 @@ try {
     //echo "<B>outputting...</B><BR>";
     //$pdf->Ln(7);
     //while ($rs = $stmt->fetch(PDO::FETCH_OBJ)) {
+        $esp = '                                 ';
     $rs = $stmt->fetch(PDO::FETCH_OBJ);
         $pdf->SetFont('Helvetica', 'B', 15);
         $pdf->Write(0, strtoupper($rs->tipo), '', 0, 'C');
@@ -125,13 +126,13 @@ try {
         $pdf->Write(0, strtoupper($rs->nur), '', 0, 'C');
         $pdf->Ln(10);
         $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Cell(15, 5, 'A:');
+        $pdf->Cell(15, 5, 'Funcionario en comision:');
         $pdf->SetFont('Helvetica', '', 10);
-        $pdf->Write(0, utf8_encode($rs->nombre_destinatario), '', 0, 'L');
+        $pdf->Write(0, $esp.($rs->nombre_destinatario), '', 0, 'L');
         $pdf->Ln();
         $pdf->Cell(15, 5, '');
         $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Write(0, utf8_encode($rs->cargo_destinatario), '', 0, 'L');
+        $pdf->Write(0,$esp.($rs->cargo_destinatario), '', 0, 'L');
         $pdf->Ln(10);
         if (($rs->via != 0) && (trim($rs->nombre_via) != '')) {
             $pdf->SetFont('Helvetica', 'B', 10);
@@ -145,25 +146,25 @@ try {
             $pdf->Ln(10);
         }
         $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Cell(15, 5, 'De:');
+        $pdf->Cell(15, 5, 'Autoriza el viaje:');
         $pdf->SetFont('Helvetica', '', 10);
-        $pdf->Write(0, utf8_encode($rs->nombre_remitente), '', 0, 'L');
+        $pdf->Write(0, $esp.utf8_encode($rs->nombre_remitente), '', 0, 'L');
         $pdf->Ln();
         $pdf->Cell(15, 5, '');
         $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Write(0, utf8_encode($rs->cargo_remitente), '', 0, 'L');
+        $pdf->Write(0, $esp.utf8_encode($rs->cargo_remitente), '', 0, 'L');
         $pdf->Ln(10);
         $pdf->Cell(15, 5, 'Fecha:');
         $pdf->SetFont('Helvetica', '', 10);
         $mes = (int) date('m', strtotime($rs->fecha_creacion));
         $meses = array(1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre');
-        $fecha = date('d', strtotime($rs->fecha_creacion)) . ' de ' . $meses[$mes] . ' de ' . date('Y', strtotime($rs->fecha_creacion));
+        $fecha = $esp.date('d', strtotime($rs->fecha_creacion)) . ' de ' . $meses[$mes] . ' de ' . date('Y', strtotime($rs->fecha_creacion));
         $pdf->Write(0, $fecha, '', 0, 'L');
         $pdf->Ln(10);
         $pdf->SetFont('Helvetica', 'B', 10);
         $pdf->Cell(15, 5, 'Ref:');
         $pdf->SetFont('Helvetica', '', 10);
-        $pdf->MultiCell(170, 5, utf8_encode($rs->referencia), 0, 'L');
+        $pdf->MultiCell(170, 5, $esp.utf8_encode($rs->referencia), 0, 'L');
         $pdf->Ln(10);
         $pdf->writeHTML($rs->contenido);
 
@@ -190,10 +191,11 @@ from pvpoas p inner join pvogestiones og on p.id_obj_gestion = og.id inner join 
     $pdf->SetFont('Helvetica', '', 11);
     //$pdf->Write(0, 'Objetivo Gestion: '.$rsi->obj_gestion, '', 0, 'L');
     //$pdf->Ln();
+    $fecha_certificacion = date('d', strtotime($rsi->fecha_certificacion)) . ' de ' . $meses[$mes] . ' de ' . date('Y', strtotime($rsi->fecha_certificacion));
     $html = "
         <table style=\" width: 100%;\"  border=\"0px\">
             <tr>
-                <td style = \" width: 30%;\">OBJETIVO GESTION</td>
+                <td style = \" width: 30%;\"><b>OBJETIVO GESTION</b></td>
                 <td style = \" width: 10%;\">:$rsi->cod_gestion</td>
                 <td style = \" width: 65%;\">$rsi->obj_gestion</td>
             </tr>
@@ -201,7 +203,7 @@ from pvpoas p inner join pvogestiones og on p.id_obj_gestion = og.id inner join 
             <td colspan=\"3\"></td>
             </tr>
             <tr>
-                <td>OBJETIVO ESPECIFICO</td>
+                <td><b>OBJETIVO ESPECIFICO</b></td>
                 <td>:$rsi->cod_especifico</td>
                 <td>$rsi->obj_especifico</td>
             </tr>
@@ -209,9 +211,9 @@ from pvpoas p inner join pvogestiones og on p.id_obj_gestion = og.id inner join 
                 <td colspan=\"3\"></td>
             </tr>
             <tr>
-                <td>FECHA CERTIFICACION</td>
+                <td><b>FECHA CERTIFICACION</b></td>
                 <td></td>
-                <td>:$rsi->fecha_certificacion</td>
+                <td>$fecha_certificacion</td>
             </tr>
             <tr>
                 <td colspan=\"3\"></td>

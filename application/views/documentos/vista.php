@@ -31,7 +31,7 @@ if($d->id_tipo==13){
 <h2 style="text-align: center; color: #23599B;"><?php echo $d->cite_original;?></h2>
 <h2 style="text-align: center;"><?php echo $d->nur;?></h2>
 <hr/>
-<table>
+<table border="0">
     <tr>
         <td><b><?php echo $label_destinatario ?>:</b></td>
         <td colspan="2"><?php echo $d->nombre_destinatario;?><br/><b><?php echo $d->cargo_destinatario;?></b></td>
@@ -171,6 +171,40 @@ if($d->id_tipo==13){
         </tr>
         <?php } ?>
         <tr><td colspan="3"><hr/></td></tr>
+        <tr>
+            <td colspan="3">
+                <p style="text-align: center;"><b>POA</b></p>
+                <table width="100%" border="1">
+                    <!--<tr>
+                        <td style="width: 25%;"><?php //echo Form::label('unidad_ejecutora', 'Unidad Ejecutora:', array('class' => 'form')); ?></td>
+                        <td style="width: 15px"><?php //echo $ue_poa ?>
+                            <?php // echo Form::input('unidadEjecutora',$ue_poa,array('size'=>'75','id'=>'unidadEjecutora','name'=>'unidadEjecutora')) ?>
+                        </td>
+                    </tr>-->
+                    <tr>
+                        <td style="width: 50;"><b>Objetivo de Gesti&oacute;n:</b>&nbsp;&nbsp;&nbsp;<?php echo $pvgestion->codigo?></td>
+                    </tr>
+                    <tr>                        
+                        <td><?php echo $pvgestion->objetivo?></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td><b>Objetivo Espec&iacute;fico:</b>&nbsp;&nbsp;&nbsp;<?php echo $pvespecifico->codigo?></td>
+                    </tr>
+                    <tr>                        
+                        <td><?php echo $pvespecifico->objetivo?></td>
+                    </tr>
+                    </table>
+            </td>
+        </tr>
+        <tr><td colspan="3"><hr/></td></tr>
+        <tr>
+            <td colspan="3">
+                <p style="text-align: center;"><b>PRESUPUESTO</b></p>
 
+            </td>
+        </tr>
     </table>
     <?php echo Form::hidden('id',$d->id,array('id'=>'id'));?>

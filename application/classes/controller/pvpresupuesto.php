@@ -185,35 +185,31 @@ public function action_addejecucionppt(){
     }
 }
 
-public function action_editsaldoppt($id = ''){
+public function action_editsaldoppt($id = ''){///saldo partidas
     $mensajes = array();
     //$programatica = ORM::factory('pvprogramaticas')->where('id', '=', $id)->and_where('estado', '=', 1)->find();
     $ejecucion = ORM::factory('pvejecuciones')->where('id','=',$id)->find();
     if ($ejecucion->loaded()) {
         if (isset($_POST['submit'])) {
             $ejecucion = ORM::factory('pvejecuciones');
-            $ejecucion->inicial = $_POST['inicial'];
+            //$ejecucion->inicial = $_POST['inicial'];
             $ejecucion->vigente = $_POST['vigente'];
-            $ejecucion->preventivo = $_POST['preventivo'];
-            $ejecucion->comprometido = $_POST['comprometido'];
-            $ejecucion->devengado = $_POST['devengado'];
+            //$ejecucion->preventivo = $_POST['preventivo'];
+            //$ejecucion->comprometido = $_POST['comprometido'];
+            //$ejecucion->devengado = $_POST['devengado'];
             $ejecucion->saldo_devengado = $_POST['saldoDevengado'];
-            $ejecucion->pagado = $_POST['pagado'];
+            //$ejecucion->pagado = $_POST['pagado'];
             $ejecucion->saldo_pagar = $_POST['saldoPagar'];
-            $ejecucion->estado = 1;
-            $ejecucion->gestion = $_POST['gestion'];
-            $ejecucion->id_programatica = $id;
-            $ejecucion->id_partida = $_POST['partidas'];
-            $ejecucion->save();
-            $this->request->redirect('pvpresupuesto/saldopresupuesto/'.$id);
+            //$ejecucion->estado = 1;
+            //$ejecucion->gestion = $_POST['gestion'];
+            //$ejecucion->id_programatica = $id;
+            //$ejecucion->id_partida = $_POST['partidas'];
+            //$ejecucion->save();
+            $mensajes['Modificado'] = 'El saldo Presupuestario fue Modificado.';
         }
-        //$oPart = new Model_Pvpartidas();
-        //$partida = $oPart->partidas_no_asignadas($id);
-        //foreach($partida as $p)
-        //    $partidas[$p['id']] = $p['codigo'].' &nbsp;&nbsp;-&nbsp;&nbsp; '.$p['partida'];
         $oPpt = new Model_Pvprogramaticas();
         $ppt = $oPpt->saldopresupuesto($id);
-        $det = $oPpt->detallesaldopresupuesto($id);
+        $det = $oPpt->detallesaldopresupuesto($ejecucion->id_programatica);
         foreach ($det as $d)
             $detalle = $d;
         $this->template->styles = array('media/css/tablas.css' => 'all');
@@ -222,7 +218,8 @@ public function action_editsaldoppt($id = ''){
                                         ->bind('presupuesto', $ppt)
                                         ->bind('detalle', $detalle)
                                         ->bind('id_programatica', $id)
-                                        ->bind('ejecucion', $ejecucion);
+                                        ->bind('ejecucion', $ejecucion)
+                                        ->bind('mensajes', $mensajes)
                                         ;
     }
     else {

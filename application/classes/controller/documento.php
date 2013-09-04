@@ -653,7 +653,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                                 ->bind('tipo_cambio', $tipo_cambio)
                         ;
                         break;
-                    case 7:
+                    case 7:///presupuesto
                         $oFuente = New Model_Pvprogramaticas();
                         $fte = $oFuente->listafuentesppt($oficina->ppt_unid_ejecutora); ///fuente por oficina + dgaa 
                         $fuente = array();
