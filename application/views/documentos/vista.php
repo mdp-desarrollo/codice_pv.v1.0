@@ -169,10 +169,11 @@ if($d->id_tipo==13){
                 </table>
             </td>
         </tr>
-        <?php } ?>
+        
         <tr><td colspan="3"><hr/></td></tr>
         <tr>
             <td colspan="3">
+            <div style="width: 650px;">
                 <p style="text-align: center;"><b>POA</b></p>
                 <table width="100%" border="1">
                     <!--<tr>
@@ -182,7 +183,7 @@ if($d->id_tipo==13){
                         </td>
                     </tr>-->
                     <tr>
-                        <td style="width: 50;"><b>Objetivo de Gesti&oacute;n:</b>&nbsp;&nbsp;&nbsp;<?php echo $pvgestion->codigo?></td>
+                        <td><b>Objetivo de Gesti&oacute;n:</b>&nbsp;&nbsp;&nbsp;<?php echo $pvgestion->codigo?></td>
                     </tr>
                     <tr>                        
                         <td><?php echo $pvgestion->objetivo?></td>
@@ -196,15 +197,17 @@ if($d->id_tipo==13){
                     <tr>                        
                         <td><?php echo $pvespecifico->objetivo?></td>
                     </tr>
-                    </table>
+                </table>
+            </div>
             </td>
         </tr>
         <tr><td colspan="3"><hr/></td></tr>
         <tr>
             <td colspan="3">
                 <p style="text-align: center;"><b>PRESUPUESTO</b></p>
-
+                <?php echo $pvliquidacion;?>
             </td>
         </tr>
+    <?php } ?>
     </table>
     <?php echo Form::hidden('id',$d->id,array('id'=>'id'));?>

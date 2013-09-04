@@ -260,6 +260,7 @@ public function action_autorizarfucov($id = '') {
                 $liquidacion = ORM::factory('pvliquidaciones');
                 $liquidacion->fecha_creacion = date("Y-m-d H:i:s");
                 $liquidacion->importe_certificado = $value;
+                $liquidacion->cs_vigente = $ejecucion->vigente;
                 $liquidacion->cs_preventivo = $ejecucion->preventivo;
                 $liquidacion->cs_comprometido = $ejecucion->comprometido;
                 $liquidacion->cs_devengado = $ejecucion->devengado;
