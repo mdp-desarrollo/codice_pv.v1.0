@@ -470,7 +470,7 @@ function dia_literal($n) {
                     ?>        
                     <fieldset> 
                         <legend>Viaje: <?php
-                echo Form::select('id_tipoviaje', $opt_tv, $pvfucov->id_tipoviaje, array('id' => 'id_tipoviaje'));
+                echo Form::select('id_tipoviaje', $opt_tv, $pvfucov->id_tipoviaje, array('id' => 'id_tipoviaje','class'=>'required'));
                 echo Form::hidden('proceso', 1);
                 echo Form::hidden('id_tipo', $documento->id_tipo);
                 echo Form::hidden('id_categoria', $user->id_categoria, array('id' => 'id_categoria'));

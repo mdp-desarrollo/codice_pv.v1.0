@@ -18,8 +18,8 @@ class Controller_documento extends Controller_DefaultTemplate {
             $this->menus = $oNivel->menus($this->user->nivel);
             parent::before();
             $this->template->title = 'Documentos';
-        } else {
-            $url = substr($_SERVER['REQUEST_URI'], 1);
+        } else 
+{            $url = substr($_SERVER['REQUEST_URI'], 1);
             $this->request->redirect('/login?url=' . $url);
         }
     }
@@ -72,11 +72,12 @@ class Controller_documento extends Controller_DefaultTemplate {
                     $contenido = "<p>Por medio del presente Memorándum se ordena a su persona trasladarse desde:</p>
                         <p>la ciudad " . $_POST['origen'] . " hasta la ciudad " . $_POST['destino'] . " con el objetivo de asistir a " . $_POST['detalle_comision'] . " .</p>
                         <p>Desde el " . $_POST['fecha_inicio'] . " a Hrs. " . $_POST['hora_inicio'] . " hasta el " . $_POST['fecha_fin'] . " a Hrs. " . $_POST['hora_fin'] . ".</p>    
-                        <p>Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural. Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para los cual su persona deberá coordinar la elaboración del FUCOV. </p>    
+                        <p>Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural. Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para los cual su persona deberá coordinar la elaboración del FUCOV. </p>
+                        <p>Saludo a usted atentamente. </p>    
                         ";
-                    if ($_POST['observacion']) {
-                        $contenido.= $_POST['observacion'];
-                    }
+                    // if ($_POST['observacion']) {
+                    //     $contenido.= $_POST['observacion'];
+                    // }
                 }
                 
                 $oOficina = New Model_Oficinas();
@@ -358,10 +359,11 @@ class Controller_documento extends Controller_DefaultTemplate {
                         <p>la ciudad " . $_POST['origen'] . " hasta la ciudad " . $_POST['destino'] . " con el objetivo de asistir a " . $_POST['detalle_comision'] . " .</p>
                         <p>Desde el " . $_POST['fecha_inicio'] . " a Hrs. " . $_POST['hora_inicio'] . " hasta el " . $_POST['fecha_fin'] . " a Hrs. " . $_POST['hora_fin'] . ".</p>    
                         <p>Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural. Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para los cual su persona deberá coordinar la elaboración del FUCOV. </p>    
+                        <p>Saludo a usted atentamente. </p>
                         ";
-                    if ($_POST['observacion']) {
-                        $contenido.= $_POST['observacion'];
-                    }
+                    // if ($_POST['observacion']) {
+                    //     $contenido.= $_POST['observacion'];
+                    // }
                 }
 
                 $documento->nombre_destinatario = $_POST['destinatario'];
@@ -509,6 +511,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                 $pvfucov = ORM::factory('pvfucovs')->where('id_documento', '=', $documento->id)->find();
                 $pvtipoviaje = ORM::factory('pvtipoviajes')->where('estado', '=', '1')->find_all();
                 $opt_tv = array();
+                $opt_tv[''] = "(Seleccionar)";
                 foreach ($pvtipoviaje as $tv) {
                     $opt_tv[$tv->id] = $tv->tipoviaje;
                 }

@@ -160,7 +160,7 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                             $pvfucov->transporte = 'Aereo';
                             $pvfucov->representacion = 'No';
                             $pvfucov->impuesto = 'No';
-                            $pvfucov->id_tipoviaje = 0;
+                            $pvfucov->id_tipoviaje = 2;
                             $pvfucov->id_programatica = 0;
                             $pvfucov->id_memo = $id_memo;
                             $pvfucov->etapa_proceso = 0;
@@ -336,6 +336,17 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                 ->where('id', '=', $id)
                 //->and_where('original','=',1)
                 ->find();
+
+        // Modificado por Freddy
+                // Obtenemos el id del via o destinatario
+                if($documento->nombre_via!=''){
+                    $user_id = ORM::factory('users')->where('nombre','=',$documento->nombre_via)->find();
+                }else{
+                    $user_id = ORM::factory('users')->where('nombre','=',$documento->nombre_destinatario)->find();
+                }
+
+
+
         $nur = $documento->nur;
         if ($documento->loaded()) {
             $session = Session::instance();
@@ -362,7 +373,8 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                         ->bind('hijo', $hijo)
                         ->bind('proceso', $proceso)
                         ->bind('errors', $errors)
-                        ->bind('user', $user);
+                        ->bind('user', $user)
+                        ->bind('user_id', $user_id);
             } else {
                 //verificamos que la hora de ruta esta en sus pendientes
                 $pendiente = ORM::factory('seguimiento')
@@ -390,6 +402,7 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                             ->bind('hijo', $hijo)
                             ->bind('proceso', $proceso)
                             ->bind('user', $user)
+                            ->bind('user_id', $user_id)
                             ->bind('errors', $errors);
                 } else {
                     $this->request->redirect('seguimiento/?nur=' . $nur);

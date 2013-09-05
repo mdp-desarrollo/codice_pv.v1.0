@@ -241,7 +241,7 @@ $('#eliminar').click(function(){
          <tr>
              <td colspan="2">
                 <?php echo Form::label('derivar', 'Derivar a :');?>             
-                <?php echo Form::select('destino', $destinatarios, Arr::get($_POST,'destino',NULL), array('id'=>'destino','class'=>'required','style'=>'width:560px;'));?>
+                <?php echo Form::select('destino', $destinatarios, $user_id->id, array('id'=>'destino','class'=>'required','style'=>'width:560px;'));?>
                 <input type="checkbox" value="1" id="urgente" /> Urgente
                 
              </td>                        

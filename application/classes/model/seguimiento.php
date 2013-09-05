@@ -57,7 +57,8 @@ class Model_Seguimiento extends ORM{
               INNER JOIN procesos p ON p.id=d.id_proceso
               WHERE s.estado='$id_estado'
               AND s.derivado_a='$id_user'
-              AND d.original='1'"; // important
+              AND d.original='1'
+              ORDER BY s.fecha_emision DESC"; // important
         return $this->_db->query(Database::SELECT, $sql,TRUE);        
     }
     //estados mejorado en velocidad
@@ -71,7 +72,7 @@ class Model_Seguimiento extends ORM{
               WHERE s.estado=2
               AND s.derivado_a='$id_user'
               AND d.original='1'
-              ORDER BY s.fecha_recepcion"; // important
+              ORDER BY s.fecha_recepcion DESC"; // important
         return $this->_db->query(Database::SELECT, $sql,TRUE);        
     }
     //estados mejorado en velocidad
@@ -85,7 +86,7 @@ class Model_Seguimiento extends ORM{
               WHERE s.estado=1
               AND s.derivado_por='$id_user'
               AND d.original=1 
-              ORDER BY s.fecha_emision ASC"; // important
+              ORDER BY s.fecha_emision DESC"; // important
         return $this->_db->query(Database::SELECT, $sql,TRUE);        
     }
     public function seguimientox($id){
@@ -119,7 +120,8 @@ s.adjuntos, s.archivos, c.accion,e.id as id_estado,e.estado,s.oficial,s.hijo,s.p
 	    INNER JOIN	procesos p ON p.id=h.id_proceso												
             WHERE s.estado='$e'
             and s.derivado_a='$id_user'
-            and h.id_seguimiento='-1'";                              
+            and h.id_seguimiento='-1'
+            ORDER BY s.fecha_emision DESC"; 
         return $this->_db->query(Database::SELECT, $sql,TRUE);        
     }
     public function carpetas($id_user){        
