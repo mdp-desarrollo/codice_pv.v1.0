@@ -19,7 +19,16 @@ $(function(){
  //zebra
  $('#theTable tbody tr:odd').addClass('odd');
  $('input').focus();
+
+// $("#delete_id").click(function(){
+//     alert('hoal');
+//        // return confirm("Esta seguro de eliminar el registro");
+// });
+
 });
+
+
+
 </script>
 <h2 class="subtitulo">Carpetas<br/><span>LISTA GENERAL DE CARPETAS</span></h2>
 <p style="margin: 5px auto; font-size: 10px; font-weight: normal; "> FILTRAR/BUSCAR: <input type="text" id="FilterTextBox" name="FilterTextBox" size="40" />
@@ -51,7 +60,7 @@ $(function(){
                 <a href="/admin/carpetas/form/<?php echo $o['id'];?>"><img src="/media/images/16x16/Write.png" /></a>
             </td>
             <td>
-                <a href="/admin/carpetas/delete/<?php echo $o['id'];?>"><img src="/media/images/16x16/Cancel.png" /></a>
+                <a href="/admin/carpetas/delete/<?php echo $o['id'];?>" onclick="return confirm('Esta seguro de eliminar el registro')"><img src="/media/images/16x16/Cancel.png" /></a>
             </td>
         </tr>
     <?php endforeach;?>        

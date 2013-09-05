@@ -236,7 +236,7 @@ class Controller_documento extends Controller_DefaultTemplate {
             //si pasa la validacion guardamamos 
             if ($post->check()) {
                 $filename = upload::save($_FILES ['archivo']);
-                $archivo = ORM::factory('archivos')->where('id_documento', '=', $id_documento)->find(); //intanciamos el modelo proveedor							
+                $archivo = ORM::factory('archivos')->where('id_documento', '=', $id_documento)->find(); //intanciamos el modelo proveedor                           
                 $archivo->nombre_archivo = basename($filename);
                 $archivo->extension = $_FILES ['archivo'] ['type'];
                 $archivo->tamanio = $_FILES ['archivo'] ['size'];
@@ -458,7 +458,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                 }
                 $filename = upload::save($_FILES ['archivo'], NULL, $path);
                 if ($_FILES ['archivo']['name'] != '') {
-                    $archivo = ORM::factory('archivos'); //intanciamos el modelo proveedor							                
+                    $archivo = ORM::factory('archivos'); //intanciamos el modelo proveedor                                          
                     $archivo->nombre_archivo = basename($filename);
                     $archivo->extension = $_FILES ['archivo'] ['type'];
                     $archivo->tamanio = $_FILES ['archivo'] ['size'];
@@ -550,7 +550,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                     $oPart = New Model_Pvprogramaticas();
                     $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica, $pvfucov->total_pasaje, $pvfucov->total_viatico, $pvfucov->id_tipoviaje, $pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
                 }
-                /// fin 260813
+                /// fin 260813/
 
                 $this->template->content = View::factory('documentos/edit_fucov')
                         ->bind('documento', $documento)
@@ -580,7 +580,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                 $pvcomision = ORM::factory('pvcomisiones')->where('id_documento', '=', $documento->id)->find();
                 $this->template->content = View::factory('documentos/edit')
                         ->bind('documento', $documento)
-                        ->bind('archivos', $archivos)
+                        ->Bind('archivos', $archivos)
                         ->bind('tipo', $tipo)
                         ->bind('superior', $superior)
                         ->bind('vias', $vias)
@@ -610,7 +610,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                 echo $_FILES ['archivo']['name'][$i];
             }
             var_dump($_FILES);
-            /* $filename = upload::save ( $_FILES ['archivo'],NULL,'archivo/'.date('Y_m') );												
+            /* $filename = upload::save ( $_FILES ['archivo'],NULL,'archivo/'.date('Y_m') );                                                
               $archivo = ORM::factory ( 'archivos' ); //intanciamos el modelo proveedor
               $archivo->nombre_archivo = basename($filename);
               $archivo->extension = $_FILES ['archivo'] ['type'];

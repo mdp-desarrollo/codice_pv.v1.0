@@ -9,5 +9,11 @@ class Model_Pvpartidas extends ORM{
         return DB::query(1, $sql)->execute();
         //  return $this->_db->query(Database::SELECT, $sql, TRUE);    
     }
+
+    public function lista()
+    {
+        $sql="SELECT * FROM pvpartidas where estado=1";
+        return db::query(Database::SELECT, $sql)->execute();
+    }
 }
 ?>

@@ -198,8 +198,7 @@ try {
         $pdf->writeHTML(strtoupper($rs->mosca_remitente));
         //$pdf->writeHTML();
         /*   $pdf->SetY(-5);
-          // Set font
-          $pdf->SetFont('helvetica', 'I', 7);
+          
           $pdf->Write(0, $fecha,'',0,'L');
          * */
 
