@@ -88,6 +88,7 @@ $("#inc").click(function(){
 </table><?php ?>
 <br />
 <h2>Modificar Partida de Gasto a la Ejecucion presupuestaria</h2>
+<div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 800px;  ">
 <?php if (sizeof($mensajes) > 0): ?>
                     <div class="info">
                         <p><span style="float: left; margin-right: .3em;" class="ui-icon-info"></span>
@@ -96,7 +97,6 @@ $("#inc").click(function(){
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?> 
-<div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 800px;  ">
 <form action="/pvpresupuesto/editsaldoppt/<?php echo $ejecucion->id;?>" method="post" id="frmCreate">
 <table class="classy" border="1">
     <tr>

@@ -99,6 +99,20 @@ $.datepicker.setDefaults($.datepicker.regional['es']);
     $('#frmEditarFucov').validate();
     $('#frmAdicionar').validate();
     $('#frmAutorizar').validate();
+    
+    $('.autorizar').live('click', function() {
+        var answer = confirm("Esta seguro de Autorizar el FUCOV? ")
+        if (answer)
+            return true;
+        return false;
+});
+    $('.eliminar').live('click', function() {
+        var answer = confirm("Esta seguro de Eliminar el Pasaje? ")
+        if (answer)
+            return true;
+        return false;
+    });
+    
 });
 </script>
 <?php
@@ -107,6 +121,7 @@ $.datepicker.setDefaults($.datepicker.regional['es']);
     $hi = date('H:i:s', strtotime($pvfucov->fecha_salida));
     $hf = date('H:i:s', strtotime($pvfucov->fecha_arribo));
     $diai = dia_literal(date("w", strtotime($fi)));
+    echo 'dia i ::'.$pvfucov->fecha_salida.'dia f ::'.$pvfucov->fecha_arribo ;
     $diaf = dia_literal(date("w", strtotime($ff)));
 function dia_literal($n) {
     switch ($n) {
@@ -245,6 +260,7 @@ else{
                             <th>N. BOLETO</th>
                             <th>COSTO</th>
                             <th>EMPRESA</th>
+                            <th>OPCIONES</th>
                         </thead>
                         <tbody>
                         <?php $c=1; foreach($pasajes as $p):?>
@@ -258,6 +274,7 @@ else{
                             <td><?php echo $p->nro_boleto;?></td>
                             <td><?php echo $p->costo;?></td>
                             <td><?php echo $p->empresa;?></td>
+                            <td><a href="/pvpasajes/eliminarpasaje/<?php echo $p->id?>" class="eliminar">Eliminar</a></td>
                         </tr>
                         <?php endforeach;?>
                         </tbody>
@@ -276,7 +293,7 @@ else{
          <div id="msg4" class="info2"><b>!!!EL FUCOV NO FUE LLENADO POR EL FUNCIONARIO EN COMISION.</b></div>
     <?php endif;?>
     <?php if($pvfucov->etapa_proceso == 1):?>
-    <a href="/pvpasajes/autorizarfucov/<?php echo $pvfucov->id; ?>"  title="Autorizar FUCOV" >Autorizar FUCOV</a>
+    <a href="/pvpasajes/autorizarfucov/<?php echo $pvfucov->id; ?>" class="autorizar"  title="Autorizar FUCOV" >Autorizar FUCOV</a>
     <?php endif;?>
     <?php if($pvfucov->etapa_proceso == 2):?>
         <a href="/hojaruta/derivar/?id_doc=<?php echo $pvfucov->id_memo; ?>" class="link derivar" title="Derivar a partir del documento, si ya esta derivado muestra el seguimiento" >Derivar</a>

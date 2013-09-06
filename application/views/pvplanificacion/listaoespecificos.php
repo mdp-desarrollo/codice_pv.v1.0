@@ -46,9 +46,9 @@ $(function()
 </style>
 <h2 class="subtitulo">OBJETIVOS ESPECIFICOS - <?php echo $oficina->oficina;?> <br/> <span>Lista de Objetivos Espec&iacute;ficos</span></h2>
 <div style="width: 800px;"><b>OBJETIVO DE GESTION :</b> <?php echo $ogestion->codigo ?> <br /><?php echo $ogestion->objetivo;?></div>
+<div style="float: right;"><a href="/pvplanificacion/addobjespecifico/<?php echo $ogestion->id;?>" >+ Adicionar Objetivo Espec&iacute;fico</a></div>
 <?php if(sizeof($objetivos)>0):?> 
-<p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" />
-<div style="float: right;"><a href="/pvplanificacion/addobjespecifico/<?php echo $ogestion->id;?>" >+ Adicionar Objetivo Espec&iacute;fico</a></div></p>
+<p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" /></p>
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>

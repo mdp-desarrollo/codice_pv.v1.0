@@ -69,22 +69,11 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
     }
     
     public function action_eliminarpasaje($id = '') {
-        $fucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
-        if ($fucov->loaded()) {
-            $pasajes = ORM::factory('pvpasajes');
-            $pasajes->id_fucov = $id;
-            $pasajes->transporte = $_POST['transporte'];
-            $pasajes->empresa = $_POST['empresa'];
-            $pasajes->nro_boleto = $_POST['nro_boleto'];
-            $fs = date('Y-m-d', strtotime(substr($_POST['fecha_salida'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_salida']));
-            $fa = date('Y-m-d', strtotime(substr($_POST['fecha_arribo'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_arribo']));
-            $pasajes->fecha_salida = $fs;
-            $pasajes->fecha_arribo = $fa;
-            $pasajes->costo = $_POST['costo'];
-            $pasajes->origen = $_POST['origen'];
-            $pasajes->destino = $_POST['destino'];
-            //$pasajes->save();
-            $this->request->redirect('documento/detalle/'.$fucov->id_memo);
+        $pasaje = ORM::factory('pvpasajes')->where('id','=',$id)->find();
+        if ($pasaje->loaded()) {            
+            $pvfucov = ORM::factory('pvfucovs')->where('id','=',$pasaje->id_fucov)->find();
+            $pasaje->delete();
+            $this->request->redirect('documento/detalle/'.$pvfucov->id_memo);
         }
         else
             $this->template->content = 'El FUCOV no existe';
@@ -93,7 +82,8 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
     public function action_editarfucov($id = '') {
         $fucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
         if ($fucov->loaded()) {
-            $fs = date('Y-m-d', strtotime(substr($_POST['fecha_salida'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_salida']));
+            if ($fucov->etapa_proceso <= 1){
+                $fs = date('Y-m-d', strtotime(substr($_POST['fecha_salida'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_salida']));
             $fa = date('Y-m-d', strtotime(substr($_POST['fecha_arribo'], 4, 10))) . ' ' . date('H:i:s', strtotime($_POST['hora_arribo']));
             $fucov->fecha_salida = $fs;
             $fucov->fecha_arribo = $fa;
@@ -104,6 +94,12 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
             $fucov->fecha_modificacion = date('Y-m-d H:i:s');
             $fucov->save();
             $this->request->redirect('documento/detalle/'.$fucov->id_memo);
+            }
+            else
+                $this->template->content = '<b>EL DOCUMENTO YA FUE AUTORIZADO Y NO SE PUEDE MODIFICAR.</b><div class="info" style="text-align:center;margin-top: 50px; width:800px">
+                                        <p><span style="float: left; margin-right: .3em;" class=""></span>    
+                                        &larr;<a onclick="javascript:history.back(); return false;" href="#" style="font-weight: bold; text-decoration: underline;  " > Regresar<a/></p></div>';    
+            
         }
         else
             $this->template->content = 'El FUCOV no existe';
@@ -118,46 +114,5 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
             $this->request->redirect('documento/detalle/'.$fucov->id_memo);
         }
     }
-/*    
-    public function action_autorizados(){
-        
-    }
-
-    public function action_detalleautorizados($id){
-        //id = id_memo
-        $memo = ORM::factory('documentos')->where('id', '=', $id)->find();
-            if ($memo->loaded()) {
-            $fucov = ORM::factory('pyvfucov')->where('id_memo', '=', $id)->find();
-            $documento = ORM::factory('documentos')->where('id','=', $fucov->id_documento)->find();
-                if($fucov->loaded()){
-                //$pasaje = ORM::factory('pyvpasajes')->where('id_fucov','=',$fucov->id);
-                $oPsj = new Model_Pyvpasajes();
-                $pas = $oPsj->pasaje_asignado($fucov->id);
-                foreach ($pas as $p) $pasaje = $p; 
-        //$this->template->scripts = array('media/js/jquery-ui-1.8.16.custom.min.js','media/js/jquery.timeentry.js');            
-                            $this->template->content = View::factory('pyv/pasajes/detalleautorizados')
-                                    ->bind('memo', $memo)
-                                    ->bind('d', $documento)
-                                    //->bind('tipo', $tipo)
-                                    //->bind('archivo', $archivo)
-                                    //->bind('errors', $errors)
-                                    //->bind('mensajes', $mensajes)
-                                    ->bind('f',$fucov)
-                                    ->bind('pasaje',$pasaje)
-                                    //->bind('estado_seguimiento',$estado)
-                                    //->bind('nivel',$nivel)
-                                    //->bind('user',$this->user)
-                                    ;
-                }
-                else
-                    $this->template->content = 'No hay FUCOV asignado';
-            }
-            else
-            {
-                $this->template->content = 'El Memor&aacute;ndum no existe';
-            }
-    }*/
-
 }
-
 ?>

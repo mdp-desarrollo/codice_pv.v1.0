@@ -29,6 +29,12 @@ $(function(){
     }
     
     $('#frmEditarFucov').validate();
+    $('.autorizar').live('click', function() {
+        var answer = confirm("Esta seguro de Autorizar el FUCOV? ")
+        if (answer)
+            return true;
+        return false;
+});
 });
 </script>
 <?php 
@@ -60,13 +66,13 @@ GASTO REP: <?php echo Form::input('gasto_representacion', $pvfucov->gasto_repres
     <div id="saldoppt"><?php echo $partidasgasto; ?></div>
         </div>
     <a href="/pdf/certificacionppt.php?id=<?php echo $pvfucov->id_documento;?>&f=<?php echo $pvfucov->id?>" class="link pdf" target="_blank" title="Imprimir PDF" >PDF</a>
-    <?php if($pvfucov->etapa_proceso == 1):?>
-         <div id="msg4" class="info2"><b>!!!EL FUCOV NO FUE AUTORIZADO POR PASAJES Y VIATICOS.</b></div>
-    <?php endif;?>
     <?php if($pvfucov->etapa_proceso == 2):?>
-    <a href="/pvpresupuesto/autorizarfucov/<?php echo $pvfucov->id; ?>" class="link derivar" title="Autorizar FUCOV" >Autorizar FUCOV</a>
+         <div id="msg4" class="info2"><b>!!!EL FUCOV NO FUE AUTORIZADO POR PLANIFICACION.</b></div>
     <?php endif;?>
     <?php if($pvfucov->etapa_proceso == 3):?>
+    <a href="/pvpresupuesto/autorizarfucov/<?php echo $pvfucov->id; ?>" class="autorizar" title="Autorizar FUCOV" >Autorizar FUCOV</a>
+    <?php endif;?>
+    <?php if($pvfucov->etapa_proceso == 4):?>
         <a href="/hojaruta/derivar/?id_doc=<?php echo $pvfucov->id_memo; ?>" class="link derivar" title="Derivar a partir del documento, si ya esta derivado muestra el seguimiento" >Derivar</a>
     <?php endif;?>
 <br />
