@@ -191,9 +191,10 @@ public function action_editsaldoppt($id = ''){///saldo partidas
     $ejecucion = ORM::factory('pvejecuciones')->where('id','=',$id)->find();
     if ($ejecucion->loaded()) {
         if (isset($_POST['submit'])) {
-            $ejecucion = ORM::factory('pvejecuciones');
+            //$ejecucion = ORM::factory('pvejecuciones');
             //$ejecucion->inicial = $_POST['inicial'];
             $ejecucion->vigente = $_POST['vigente'];
+            $ejecucion->modificado = $_POST['modificado'];
             //$ejecucion->preventivo = $_POST['preventivo'];
             //$ejecucion->comprometido = $_POST['comprometido'];
             //$ejecucion->devengado = $_POST['devengado'];
@@ -204,7 +205,7 @@ public function action_editsaldoppt($id = ''){///saldo partidas
             //$ejecucion->gestion = $_POST['gestion'];
             //$ejecucion->id_programatica = $id;
             //$ejecucion->id_partida = $_POST['partidas'];
-            //$ejecucion->save();
+            $ejecucion->save();
             $mensajes['Modificado'] = 'El saldo Presupuestario fue Modificado.';
         }
         $oPpt = new Model_Pvprogramaticas();
@@ -230,7 +231,7 @@ public function action_editsaldoppt($id = ''){///saldo partidas
 public function action_editarfucov($id = '') {
         $fucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
         if ($fucov->loaded()) {
-            if ($fucov->etapa_proceso == 2){
+            if ($fucov->etapa_proceso <= 3){
             $fucov->id_programatica = $_POST['fuente'];
             $fucov->save();
             $this->request->redirect('documento/detalle/'.$fucov->id_memo);
@@ -238,8 +239,7 @@ public function action_editarfucov($id = '') {
             else
             $this->template->content = '<b>EL DOCUMENTO YA FUE AUTORIZADO Y NO SE PUEDE MODIFICAR.</b><div class="info" style="text-align:center;margin-top: 50px; width:800px">
                                         <p><span style="float: left; margin-right: .3em;" class=""></span>    
-                                        &larr;<a onclick="javascript:history.back(); return false;" href="#" style="font-weight: bold; text-decoration: underline;  " > Regresar<a/></p>    
-</div>';    
+                                        &larr;<a onclick="javascript:history.back(); return false;" href="#" style="font-weight: bold; text-decoration: underline;  " > Regresar<a/></p></div>';    
         }
         else
             $this->template->content = 'El FUCOV no existe';
@@ -277,7 +277,7 @@ public function action_autorizarfucov($id = '') {
                 $ejecucion->saldo_devengado = $ejecucion->saldo_devengado - $value;
                 $ejecucion->save();
             }
-            $pvfucov->etapa_proceso = 3;
+            $pvfucov->etapa_proceso = 4;
             $pvfucov->save();
             $this->request->redirect('documento/detalle/'.$pvfucov->id_memo);
     }
@@ -324,44 +324,6 @@ public function action_detallecertificado($id){
         {
             $this->template->content = 'El Memor&aacute;ndum no existe';
         }
-}
-
-public function action_autorizappt($id = '') {
-        $fucov = ORM::factory('pyvfucov')->where('id','=',$id)->find();
-        $liquidacion = ORM::factory('pyvliquidacion')->where('id_fucov','=',$id)->find();        
-        if ($liquidacion->loaded() && $fucov->loaded()) {
-            if( ($fucov->etapa_proceso == 2  || $fucov->etapa_proceso == 3 ) ){
-            $liquidacion->etapa_proceso = 1;
-            $liquidacion->fecha_liquidacion = date('Y-m-d H:i:s');
-            //$liquidacion->cod_cat_programatica = $_POST['fuente'];
-            //ides: unidad_funcional,  direccion_administrativa, unidad_ejecutora, id_organismo, id_fuente, id_categoria_programatica            
-            $fuente = $_POST['fuente'];
-            $ides = explode("-", $fuente);
-                $id_unidad_funcional = $ides[0];
-                $id_dir_admin = $ides[1];
-                $id_unidad_ejec = $ides[2];
-                $id_organismo = $ides[3];
-                $id_fuente = $ides[4];
-                $id_cat_programatica = $ides[5];
-            $liquidacion->id_unidad_funcional = $id_unidad_funcional;
-            $liquidacion->id_da = $id_dir_admin;
-            $liquidacion->id_ue = $id_unidad_ejec;
-            $liquidacion->id_organismo = $id_organismo;
-            $liquidacion->id_fuente = $id_fuente;
-            $liquidacion->id_cat_prog = $id_cat_programatica;
-            
-            $liquidacion->save();
-            
-            $fucov->etapa_proceso = 3;
-            $fucov->save();
-            $this->request->redirect('pyv/detalle/'.$_POST['idMemo']);
-            
-        }
-        else
-            $this->template->content = 'El documento no se puede modificar';    
-    }
-    else
-        $this->template->content = 'El documento no existe';
 }
 */
 }

@@ -58,26 +58,28 @@ class Controller_Pvplanificacion extends Controller_DefaultTemplate {
     
     public function action_editarpoa($id = '') {
         $pvfucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
-        if($pvfucov->etapa_proceso == 3){
-        $pvpoas = ORM::factory('pvpoas')->where('id_fucov','=',$id)->find();
-            if ($pvpoas->loaded()) {
+        if ($pvfucov->loaded()) {
+            if($pvfucov->etapa_proceso <= 2){
+                $pvpoas = ORM::factory('pvpoas')->where('id_fucov','=',$id)->find();
                 $pvpoas->id_obj_gestion = $_POST['obj_gestion'];
                 $pvpoas->id_obj_esp = $_POST['obj_esp'];
                 $pvpoas->fecha_modificacion = date('Y-m-d H:i:s');
                 $pvpoas->save();
                 $this->request->redirect('documento/detalle/'.$pvfucov->id_memo);
-            }
+                }
             else
-                $this->template->content = 'El FUCOV no existe';
+                $this->template->content = '<b>EL DOCUMENTO YA FUE AUTORIZADO Y NO SE PUEDE MODIFICAR.</b><div class="info" style="text-align:center;margin-top: 50px; width:800px">
+                                        <p><span style="float: left; margin-right: .3em;" class=""></span>    
+                                        &larr;<a onclick="javascript:history.back(); return false;" href="#" style="font-weight: bold; text-decoration: underline;  " > Regresar<a/></p></div>';
         }
         else
-            $this->template->content = 'El FUCOV no se puede Modificar';
+                $this->template->content = 'El FUCOV no existe';
     }
     
     public function action_autorizarfucov($id = '') {
         $pvfucov = ORM::factory('pvfucovs')->where('id','=',$id)->find();
         if ($pvfucov->loaded()) {
-            $pvfucov->etapa_proceso = 4;
+            $pvfucov->etapa_proceso = 3;
             $pvfucov->save();
             $pvpoas = ORM::factory('pvpoas')->where('id_fucov','=',$id)->find();
             if($pvpoas->loaded()){

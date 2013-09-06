@@ -8,7 +8,7 @@ $(function(){
     #file-word{ display: none;  }
     td{padding:5px;}    
 </style>
-<div style="width: 800px;"><h2 class="subtitulo">ADICIONAR OBJETIVO ESPECIFICO<br/><span>Llene corresctamente los datos en el formulario</span></h2>
+<div style="width: 800px;"><h2 class="subtitulo">ADICIONAR OBJETIVO ESPECIFICO<br/><span>Llene correctamente los datos en el formulario</span></h2>
 <table border="0">
     <tr>
         <td style="width: 20%;"><b>Entidad:</b></td>
