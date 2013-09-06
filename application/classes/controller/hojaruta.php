@@ -160,7 +160,7 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                             $pvfucov->transporte = 'Aereo';
                             $pvfucov->representacion = 'No';
                             $pvfucov->impuesto = 'No';
-                            $pvfucov->id_tipoviaje = 2;
+                            $pvfucov->id_tipoviaje = 0;
                             $pvfucov->id_programatica = 0;
                             $pvfucov->id_memo = $id_memo;
                             $pvfucov->etapa_proceso = 0;
