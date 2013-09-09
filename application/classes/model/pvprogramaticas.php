@@ -121,7 +121,7 @@ class Model_Pvprogramaticas extends ORM{
         $result = "<table class=\"classy\" border=\"1px\"><thead><th>C&oacute;digo</th><th>Partida</th><th>Saldo Disponible</th><th>Solicitado (Bs)</th><th>Nuevo Saldo</th></thead><tbody>";
         foreach($liquidacion as $d)
         {
-            $result .= "<tr><td>".$d['cod_partida']."</td><td>".$d['partida']."</td><td>".$d['cs_vigente']."</td><td>".$d['importe_certificado']."</td><td>".($d['cs_vigente'] - $d['importe_certificado'])."</td></tr>";
+            $result .= "<tr><td>".$d->cod_partida."</td><td>".$d->partida."</td><td>".$d->cs_vigente."</td><td>".$d->importe_certificado."</td><td>".($d->cs_vigente - $d->importe_certificado)."</td></tr>";
         }
         $result .= "</tbody></table>";
         return $result;

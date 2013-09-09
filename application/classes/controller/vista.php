@@ -85,7 +85,7 @@ class Controller_Vista extends Controller_MinimoTemplate {
                 }
                 else{
                     $oPart = New Model_Pvprogramaticas();
-                    $pvliquidacion = $oPart->pptliquidado($pvfucov->id_programatica,$pvfucov->total_pasaje,$pvfucov->total_viatico,$pvfucov->id_tipoviaje,$pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
+                    $pvliquidacion = $oPart->pptliquidado($pvfucov->id,$pvfucov->total_pasaje,$pvfucov->total_viatico,$pvfucov->id_tipoviaje,$pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
                 }
                 $this->template->content = View::factory('documentos/vista')
                         ->bind('d', $documento)
