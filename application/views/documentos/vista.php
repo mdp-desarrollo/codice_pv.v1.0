@@ -174,6 +174,7 @@ if($d->id_tipo==13){
         <tr>
             <td colspan="3">
             <div style="width: 650px;">
+                <br>
                 <p style="text-align: center;"><b>POA</b></p>
                 <table width="100%" border="1">
                     <!--<tr>
@@ -201,9 +202,11 @@ if($d->id_tipo==13){
             </div>
             </td>
         </tr>
+
         <tr><td colspan="3"><hr/></td></tr>
         <tr>
             <td colspan="3">
+                <br>
                 <p style="text-align: center;"><b>PRESUPUESTO</b></p>
                 <?php echo $pvliquidacion;?>
             </td>
