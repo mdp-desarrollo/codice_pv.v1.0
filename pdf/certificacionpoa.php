@@ -109,125 +109,221 @@ try {
     $stmt = $dbh->prepare("SELECT * FROM documentos d 
                                INNER JOIN tipos t ON d.id_tipo=t.id
                                WHERE d.id='$id'");
-    // call the stored procedure
     $stmt->execute();
-    //echo "<B>outputting...</B><BR>";
-    //$pdf->Ln(7);
-    //while ($rs = $stmt->fetch(PDO::FETCH_OBJ)) {
-        $esp = '                                 ';
     $rs = $stmt->fetch(PDO::FETCH_OBJ);
-        $pdf->SetFont('Helvetica', 'B', 15);
-        $pdf->Write(0, strtoupper($rs->tipo), '', 0, 'C');
-        $pdf->Ln();
-        $pdf->SetFont('Helvetica', '', 11);
-        $pdf->Write(0, strtoupper($rs->codigo), '', 0, 'C');
-        $pdf->Ln();
-        $pdf->SetFont('Helvetica', 'B', 13);
-        $pdf->Write(0, strtoupper($rs->nur), '', 0, 'C');
-        $pdf->Ln(10);
-        $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Cell(15, 5, 'Funcionario en comision:');
-        $pdf->SetFont('Helvetica', '', 10);
-        $pdf->Write(0, $esp.($rs->nombre_destinatario), '', 0, 'L');
-        $pdf->Ln();
-        $pdf->Cell(15, 5, '');
-        $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Write(0,$esp.($rs->cargo_destinatario), '', 0, 'L');
-        $pdf->Ln(10);
-        if (($rs->via != 0) && (trim($rs->nombre_via) != '')) {
-            $pdf->SetFont('Helvetica', 'B', 10);
-            $pdf->Cell(15, 5, 'Via:');
-            $pdf->SetFont('Helvetica', '', 10);
-            $pdf->Write(0, utf8_encode($rs->nombre_via), '', 0, 'L');
-            $pdf->Ln();
-            $pdf->Cell(15, 5, '');
-            $pdf->SetFont('Helvetica', 'B', 10);
-            $pdf->Write(0, utf8_encode($rs->cargo_via), '', 0, 'L');
-            $pdf->Ln(10);
-        }
-        $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Cell(15, 5, 'Autoriza el viaje:');
-        $pdf->SetFont('Helvetica', '', 10);
-        $pdf->Write(0, $esp.utf8_encode($rs->nombre_remitente), '', 0, 'L');
-        $pdf->Ln();
-        $pdf->Cell(15, 5, '');
-        $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Write(0, $esp.utf8_encode($rs->cargo_remitente), '', 0, 'L');
-        $pdf->Ln(10);
-        $pdf->Cell(15, 5, 'Fecha:');
-        $pdf->SetFont('Helvetica', '', 10);
-        $mes = (int) date('m', strtotime($rs->fecha_creacion));
-        $meses = array(1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre');
-        $fecha = $esp.date('d', strtotime($rs->fecha_creacion)) . ' de ' . $meses[$mes] . ' de ' . date('Y', strtotime($rs->fecha_creacion));
-        $pdf->Write(0, $fecha, '', 0, 'L');
-        $pdf->Ln(10);
-        $pdf->SetFont('Helvetica', 'B', 10);
-        $pdf->Cell(15, 5, 'Ref:');
-        $pdf->SetFont('Helvetica', '', 10);
-        $pdf->MultiCell(170, 5, $esp.utf8_encode($rs->referencia), 0, 'L');
-        $pdf->Ln(10);
-        $pdf->writeHTML($rs->contenido);
-
-        //$pdf->writeHTML();
-        /*   $pdf->SetY(-5);
-          // Set font
-          $pdf->SetFont('helvetica', 'I', 7);
-          $pdf->Write(0, $fecha,'',0,'L');
-         * */
-
-//        $nombre.='_' . substr($rs->cite_original, -10, 6);
-    //}
-    $pdf->Ln(0);
-    $pdf->SetFont('Helvetica', 'B', 13);
-    $pdf->write(0,'CERTIFICACION POA','',0,'C');
-    $pdf->Ln(5);
-    $pdf->SetFont('Helvetica', 'B', 15);
-    $pdf->write(0,'__________________________________________________________','',0,'C');
-    //$dbh = New db();
-    $stmt = $dbh->prepare("select p.fecha_certificacion, og.codigo cod_gestion, og.objetivo obj_gestion, oe.codigo cod_especifico, oe.objetivo obj_especifico
-from pvpoas p inner join pvogestiones og on p.id_obj_gestion = og.id inner join pvoespecificos oe on p.id_obj_esp = oe.id where id_fucov ='$id_fucov'");
+    $mes = (int) date('m', strtotime($rs->fecha_creacion));
+    $meses = array(1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre');
+    //$fecha = $esp.date('d', strtotime($rs->fecha_creacion)) . ' de ' . $meses[$mes] . ' de ' . date('Y', strtotime($rs->fecha_creacion));
+    ///documento para el fucov
+    $stmt = $dbh->prepare("SELECT * FROM documentos WHERE id=$id");
     $stmt->execute();
-    $rsi = $stmt->fetch(PDO::FETCH_OBJ);
-    $pdf->SetFont('Helvetica', '', 11);
-    //$pdf->Write(0, 'Objetivo Gestion: '.$rsi->obj_gestion, '', 0, 'L');
-    //$pdf->Ln();
-    $fecha_certificacion = date('d', strtotime($rsi->fecha_certificacion)) . ' de ' . $meses[$mes] . ' de ' . date('Y', strtotime($rsi->fecha_certificacion));
-    $html = "
-        <table style=\" width: 100%;\"  border=\"0px\">
+    $documento = $stmt->fetch(PDO::FETCH_OBJ);
+    
+    ///oficina solicitante
+    $stmt = $dbh->prepare("SELECT * FROM oficinas WHERE id=$documento->id_oficina");
+    $stmt->execute();
+    $oficina = $stmt->fetch(PDO::FETCH_OBJ);
+    
+    ///oficina de la que depende
+    $stmt = $dbh->prepare("SELECT * FROM oficinas WHERE id=$oficina->poa_unid_ejecutora");
+    $stmt->execute();
+    $oficina2 = $stmt->fetch(PDO::FETCH_OBJ);
+    
+    ///FUCOV
+    $stmt = $dbh->prepare("SELECT * FROM pvfucovs WHERE id=$id_fucov");
+    $stmt->execute();
+    $pvfucov = $stmt->fetch(PDO::FETCH_OBJ);
+    
+    ///POA
+    $stmt = $dbh->prepare("select * from pvpoas where id_fucov = $pvfucov->id");
+    $stmt->execute();
+    $pvpoa = $stmt->fetch(PDO::FETCH_OBJ);
+    
+    ///objetivos
+    $stmt = $dbh->prepare("select og.codigo cod_gest, oe.codigo cod_esp from pvogestiones og inner join pvoespecificos oe on og.id = oe.id_obj_gestion 
+                           where og.id_oficina = $oficina2->id  and og.id = $pvpoa->id_obj_gestion  and oe.id = $pvpoa->id_obj_esp");
+    $stmt->execute();
+    $pvobjetivos = $stmt->fetch(PDO::FETCH_OBJ);
+    
+    $pdf->Ln(0);
+    $pdf->SetFont('Helvetica', 'B', 9);
+    $pdf->write(0,'CERTIFICACION POA','',0,'C');
+    $color = "#CBCBCB";
+    $tabla1 = "
+        <table style=\" width: 600px;\"  border=\"0px\">
             <tr>
-                <td style = \" width: 30%;\"><b>OBJETIVO GESTION</b></td>
-                <td style = \" width: 10%;\">:$rsi->cod_gestion</td>
-                <td style = \" width: 65%;\">$rsi->obj_gestion</td>
+                <td style = \" width: 100%;\"><b>I. SOLICITUD</b></td>
             </tr>
             <tr>
-            <td colspan=\"3\"></td>
+                <td style = \" width: 100%;\">&nbsp;</td>
             </tr>
             <tr>
-                <td><b>OBJETIVO ESPECIFICO</b></td>
-                <td>:$rsi->cod_especifico</td>
-                <td>$rsi->obj_especifico</td>
+                <td>
+                    <table border = \"1px\" STYLE=\" WIDTH:580px;\">
+                        <tr>
+                            <td style=\"width: 150px;\" bgcolor=\"$color\">UNIDAD SOLICITANTE:</td>
+                            <td style=\"width: 300px;\">$oficina->oficina</td>
+                            <td style=\"width: 130px;\">Dependiencia: $oficina2->sigla</td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
             <tr>
-                <td colspan=\"3\"></td>
+                <td style = \" width: 100%;\">&nbsp;</td>
             </tr>
             <tr>
-                <td><b>FECHA CERTIFICACION</b></td>
-                <td></td>
-                <td>$fecha_certificacion</td>
+                <td>
+                    <table border = \"1px\" STYLE=\" WIDTH:580px;\">
+                        <tr bgcolor=\"$color\">
+                            <td style=\"width: 120px; text align:center\">POA</td>
+                            <td style=\"width: 60px;\">CODIGO</td>
+                            <td style=\"width: 40px;\" ></td>
+                            <td style=\"width: 60px;\" >CODIGO:</td>
+                            <td style=\"width: 300px;\" >ACTIVIDAD - DESCRIPCION SEGUN POA</td>
+                        </tr>
+                        <tr>
+                            <td>Objetivo de Gestion</td>
+                            <td>$pvobjetivos->cod_gest</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Objetivo Especifico</td>
+                            <td>$pvobjetivos->cod_esp</td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
             <tr>
-                <td colspan=\"3\"></td>
+                <td style = \" width: 100%;\">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    <table border = \"1px\" style=\" width:180px;\">
+                        <tr bgcolor=\"$color\">
+                            <td colspan=\"2\" >TIPO DE ACTIVIDAD</td>
+                        </tr>
+                        <tr>
+                            <td style=\"width: 120px;\">INVERSION</td>
+                            <td style=\"width: 60px;\"></td>
+                        </tr>
+                        <tr>
+                            <td>FUNCIONAMIENTO</td>
+                            <td><b>X</b></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style = \" width: 100%;\">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>
+                    <table border = \"1px\" style=\" width:300px;\">
+                        <tr bgcolor=\"$color\">
+                            <td colspan=\"2\" >TIPO DE CONTRATACION</td>
+                        </tr>
+                        <tr>
+                            <td style=\"width: 250px;\">Consultoria Individual de linea</td>
+                            <td style=\"width: 50px;\"></td>
+                        </tr>
+                        <tr>
+                            <td>Consultoria Individual por producto</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Servicios de Empresa consultora(estidios)</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Adquisicion de Bienes</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Contratacion de obras</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Otros</td>
+                            <td><b>X</b></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style = \" width: 100%;\">&nbsp;</td>
+            </tr>
+            <!--<tr>
+                <td>
+                    <table border = \"1px\" style=\" width:580px;\">
+                        <tr bgcolor=\"$color\">
+                            <td style=\"width: 400px;\">PROCESO DE CONTRATACION / ADQUISICION:</td>
+                            <td style=\"width: 60px;\">Cantidad</td>
+                            <td style=\"width: 60px;\">Monto Total(Bs)</td>
+                            <td style=\"width: 60px;\">Plazo de ejecucion</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>-->
+            <tr>
+                <td style = \" width: 100%;\">&nbsp;</td>
             </tr>
         </table>";
-        $pdf->Ln(20);
-        $pdf->writeHTML($html, false, false, false);
-        
-        $pdf->Ln(10);
-        $pdf->SetFont('Helvetica', '', 5);
-        $pdf->writeHTML('cc. ' . strtoupper($rs->copias));
-        $pdf->writeHTML('Adj. ' . strtoupper($rs->adjuntos));
-        $pdf->writeHTML(strtoupper($rs->mosca_remitente));
-        $nombre.='_' . substr($rs->cite_original, -10, 6);
+    $pdf->Ln(20);
+    $pdf->writeHTML($tabla1, false, false, false);
+    $fecha = date("d / m / Y");
+    $tabla2 = "
+    <table style=\"width: 600px;\"  border=\"0px\" >
+            <tr bgcolor = \"$color\">
+                <td style = \" width: 100%;\"><b>II. CERTIFICACION (llenado por la DGP)</b></td>
+            </tr>
+            <tr>
+                <td style = \" width: 100%;\">
+                    <p><center>
+                    <table border = \"1px\" style=\" width:580px;\" >
+                        <tr>
+                            <td>En cumplimiento de los reglamentos Especificos del Sistema de Programacion de Operaciones y del Sistema de 
+                            Administracion de Bienes y servicios del MDPyEP, la Direccion General de Planificacion <b>Certifica</b> que la actividad solicitada
+                            se encuentra inscrita en el POA 2013 del MDPyEP.</td>
+                        </tr>
+                    </table>
+                    </center>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td style = \" width: 100%;\" bgcolor = \"$color\"><b>Responsable de la certificacion</b></td>
+            </tr>
+            <tr>
+                <td><p>
+                    <table border = \"1px\" style=\" width:580px;\" >
+                        <tr>
+                            <td style=\"width: 80px;\" bgcolor = \"$color\">Responsable Verificacion POA</td>
+                            <td style=\"width: 210px;\"><span style=\"color:#DADADA; text-align:center;\"><br /><br />FIRMA</span></td>
+                            <td style=\"width: 210px;\"><span style=\"color:#DADADA; text-align:center;\"><br /><br />SELLO</span></td>
+                            <td style=\"width: 80px;\">FECHA</td>
+                        </tr>
+                        <tr>
+                            <td bgcolor = \"$color\">Direccion General de Planificacion</td>
+                            <td><span style=\"color:#DADADA; text-align:center;\"><br /><br />FIRMA</span></td>
+                            <td><span style=\"color:#DADADA; text-align:center;\"><br /><br />SELLO</span></td>
+                            <td><span style=\"text-align:center;\"><br />$fecha</span></td>
+                        </tr>
+                    </table>                
+                    </p>
+                </td>
+            </tr>
+    </table>
+    ";
+    $pdf->Ln(10);
+    $pdf->writeHTML($tabla2, false, false, false);
         
 } catch (PDOException $e) {
     print "Error!: " . $e->getMessage() . "<br/>";

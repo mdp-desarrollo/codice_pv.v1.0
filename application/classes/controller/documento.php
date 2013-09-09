@@ -642,7 +642,7 @@ class Controller_documento extends Controller_DefaultTemplate {
         if ($estado == 2) {
             $pvfucov = ORM::factory('pvfucovs')->where('id_memo', '=', $id)->find();
             $memo = ORM::factory('documentos')->where('id', '=', $pvfucov->id_memo)->find();
-            $oficina = ORM::factory('oficinas')->where('id', '=', $memo->id_oficina)->find();
+            $oficina = ORM::factory('oficinas')->where('id', '=', $memo->id_oficina)->find();///oficina del usuario solicintante
             $tipo_cambio = ORM::factory('pvtipocambios')->select(array(DB::expr('MAX(id)'), 'cambio_venta'))->find();
             if ($pvfucov->loaded()) {
                 $nivel = $this->user->nivel;
@@ -658,7 +658,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                         break;
                     case 7:///presupuesto
                         $oFuente = New Model_Pvprogramaticas();
-                        $fte = $oFuente->listafuentesppt($oficina->ppt_unid_ejecutora); ///fuente por oficina + dgaa 
+                        $fte = $oFuente->listafuentesppt($oficina->ppt_unid_ejecutora, $this->user->id_entidad); ///fuente por oficina + dgga en caso del MDP
                         $fuente = array();
                         $fuente[''] = 'Seleccione Una Fuente de Financiamiento';
                         foreach ($fte as $f)
@@ -673,7 +673,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                                 ->bind('partidasgasto', $partidasgasto)
                         ;
                         break;
-                    case 8:
+                    case 8:///Planificacion
                         $pvpoas = ORM::factory('pvpoas')->where('id_fucov', '=', $pvfucov->id)->find();
                         $obj_gest = ORM::factory('pvogestiones')->where('id_oficina', '=', $oficina->poa_unid_ejecutora)->and_where('estado', '=', 1)->find_all();
                         foreach ($obj_gest as $g) {

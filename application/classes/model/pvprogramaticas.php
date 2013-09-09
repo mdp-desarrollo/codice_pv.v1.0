@@ -67,7 +67,7 @@ class Model_Pvprogramaticas extends ORM{
         return $this->_db->query(Database::SELECT, $sql, TRUE);
     }
     
-    public function listafuentesppt($id){
+    public function listafuentesppt($id, $id_entidad){
         $sql = "select p.id, concat(p.codigo_entidad,'-',da.ppt_cod_da,'-',ue.ppt_cod_ue,'-' , prog.codigo,'-', proy.codigo,'-', act.codigo,'-',fte.codigo,'-', org.codigo,' : ', act.actividad) actividad
                 from pvprogramaticas p 
                 inner join oficinas da on p.id_da = da.id
@@ -77,8 +77,10 @@ class Model_Pvprogramaticas extends ORM{
                 inner join pvorganismos org on p.id_organismo = org.id
                 inner join pvprogramas prog on p.id_programa = prog.id
                 inner join pvproyectos proy on p.id_proyecto = proy.id
-                where p.id_oficina = $id
-                or act.actividad = 'GESTION ADMINISTRATIVA FINANCIERA'";
+                where p.id_oficina = $id ";
+        if($id_entidad == 1){//en caso del MDPyEP se adiciona la fuente del DGAA
+                $sql .= " or act.actividad = 'GESTION ADMINISTRATIVA FINANCIERA'";
+        }
         return $this->_db->query(Database::SELECT, $sql, TRUE);
     }
     

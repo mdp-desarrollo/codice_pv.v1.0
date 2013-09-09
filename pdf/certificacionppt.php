@@ -121,11 +121,11 @@ where ofi.id = '$doc->id_oficina'");
     $stmt->execute();
     $ofi = $stmt->fetch(PDO::FETCH_OBJ);
     
-    $stmt = $dbh->prepare("select oficina, ppt_cod_da from oficinas where ppt_da = '$ofi->da'");//Direccion administrativa
+    $stmt = $dbh->prepare("select oficina, ppt_cod_da from oficinas where id = '$ofi->da'");//Direccion administrativa
     $stmt->execute();
     $da = $stmt->fetch(PDO::FETCH_OBJ) ;
      
-    $stmt = $dbh->prepare("select oficina, ppt_cod_ue from oficinas where ppt_unid_ejecutora = '$ofi->ue'");//unidad ejecutora Presupuesto
+    $stmt = $dbh->prepare("select oficina, ppt_cod_ue from oficinas where id = '$ofi->ue'");//unidad ejecutora Presupuesto
     $stmt->execute();    
     $ue = $stmt->fetch(PDO::FETCH_OBJ) ;
     
@@ -236,17 +236,26 @@ where p.id = $fucov->id_programatica");
                         <td style = \" width: 20%;\">Importe Certificado</td>
                         <td style = \" width: 10%;\">Saldo Actual</td>
                     </tr>";
+        $c = 0;
         while ($ppt = $stmt->fetch(PDO::FETCH_OBJ)) {
                 $total = $ppt->cs_saldo_devengado - $ppt->importe_certificado;
                 $html = $html."<tr><td>$ppt->cod_partida</td><td>$ppt->partida</td><td>$ppt->cs_saldo_devengado</td>
                         <td>$ppt->importe_certificado</td><td>$total</td>
                         </tr>";
+                $c++;
         }
         $html = $html."</table>";
         //$pdf->Ln(10);
         $pdf->writeHTML($html, false, false, false);
         //$pdf->Ln(10);
-        $pdf->SetFont('Helvetica', 'U', 12);        
+        if ($c == 0){
+            $pdf->Ln(3);
+            $pdf->SetFont('Helvetica', 'B', 12);        
+            $pdf->Write(0, 'El Presupuesto No Fue Autorizado', '', 0, 'C');
+            $pdf->Ln(10);
+        }
+        
+        $pdf->SetFont('Helvetica', 'U', 12);
         $pdf->Write(0, 'CONCLUSION:', '', 0, 'L');
         $pdf->SetFont('Helvetica', '', 9);
         $mes = (int) date('m', strtotime(date("d-m-Y")));
