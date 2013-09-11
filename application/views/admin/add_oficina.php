@@ -29,7 +29,7 @@
 <form action="" method="post" id="frmOficina">
     <table width="100%" >
         <tr>
-            <td>Entidad:</td>
+            <td width="100px">Entidad:</td>
             <td width="600" ><?php echo $entidad->entidad; ?></td>
         </tr>
         <tr>

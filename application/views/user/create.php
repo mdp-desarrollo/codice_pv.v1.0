@@ -152,6 +152,14 @@ $(function(){
 </tr>
 <tr>
     <td>
+    <?php echo Form::label('categoria', 'Categoria: ');?>    
+    </td>
+    <td>
+    <?php echo Form::select('id_categoria', $pvcategoria,HTML::chars(Arr::get($_POST, 'categoria|')),array('id'=>'categoria'));?>              
+    </td>
+</tr>
+<tr>
+    <td>
     <?php echo Form::label('superior', 'Superior: ');?>    
     </td>
     <td>
