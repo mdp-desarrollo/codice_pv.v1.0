@@ -471,7 +471,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                         $_POST = array();
                 }
             }
-            $oficina = ORM::factory('oficinas', $this->user->id_oficina);
+            //$oficina = ORM::factory('oficinas', $this->user->id_oficina);
 
             $oVias = new Model_data();
             $vias = $oVias->vias($this->user->id);
@@ -522,7 +522,8 @@ class Controller_documento extends Controller_DefaultTemplate {
                 foreach ($uejecutora as $ue)
                     $ue_poa = $ue['oficina'];
                 $oFuente = New Model_Pvprogramaticas(); ///fuentes de financiamiento
-                $fte = $oFuente->listafuentesuser($this->user->id_oficina);
+                $oficina=ORM::factory('oficinas')->where('id','=',$this->user->id_oficina)->find();
+                $fte = $oFuente->listafuentesuser($oficina->ppt_unid_ejecutora);
                 $fuente = array();
                 $fuente[''] = 'Seleccione Una Fuente de Financiamiento';
                 foreach ($fte as $f)
@@ -546,7 +547,6 @@ class Controller_documento extends Controller_DefaultTemplate {
                         if ($oe->id == $pvpoas->id_obj_esp)
                             $detalleesp = $oe->objetivo;
                     }
-                    
                     $oPart = New Model_Pvprogramaticas();
                     $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica, $pvfucov->total_pasaje, $pvfucov->total_viatico, $pvfucov->id_tipoviaje, $pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
                 }
@@ -666,11 +666,16 @@ class Controller_documento extends Controller_DefaultTemplate {
                         $oPart = New Model_Pvprogramaticas();
                         $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica, $pvfucov->total_pasaje, $pvfucov->total_viatico, $pvfucov->id_tipoviaje, $pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
 
+                        ///detalle de la fuente presupuestaria
+                        $det = $oFuente->detallesaldopresupuesto($pvfucov->id_programatica);
+                        foreach ($det as $d)
+                            $detallefuente = $d;
                         $detallepv = View::factory('pvpresupuesto/detalle')
                                 ->bind('pvfucov', $pvfucov)
                                 ->bind('estado', $estado)
                                 ->bind('fuente', $fuente)
                                 ->bind('partidasgasto', $partidasgasto)
+                                ->bind('detallefuente', $detallefuente)
                         ;
                         break;
                     case 8:///Planificacion
