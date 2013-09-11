@@ -82,18 +82,36 @@ class Model_Oficinas extends ORM{
     }
     
     ///rodrigo - Unidad ejecutora 260813
-    public function uejecutorapoa($id)
+    public function uejecutorapoa($id)///lista de unidades ejecutoras del POA
     {
         $sql="select * from oficinas where id = (select poa_unid_ejecutora from oficinas where id= $id)";
         return db::query(Database::SELECT, $sql)->execute();
-    }
-    
-    public function listaunidades($id){
+    }    
+    public function listaunidades($id){///
         $sql = "select ofi.id, ofi.oficina, ent.entidad 
                 from oficinas ofi inner join entidades ent on ofi.id_entidad = ent.id
                 where ent.id = $id
                 and ofi.id = ofi.poa_unid_ejecutora";
         //return DB::query(1, $sql)->execute();
+        return $this->_db->query(Database::SELECT, $sql, TRUE);    
+    }    
+    public function dappt($id)//direccion administrativa presupuesto
+    {
+        $sql="select * from oficinas where id = (select ppt_da from oficinas where id= $id)";
+        //return db::query(Database::SELECT, $sql)->execute();
+        return $this->_db->query(Database::SELECT, $sql, TRUE);    
+    }    
+    public function ueppt($id)///unidad ejecutora presupuesto
+    {
+        $sql="select * from oficinas where id = (select ppt_unid_ejecutora from oficinas where id= $id)";
+        //return db::query(Database::SELECT, $sql)->execute();
+        return $this->_db->query(Database::SELECT, $sql, TRUE);    
+    }    
+    public function listaunidadesppt($id){///lista de unidades ejecutoras de presupuesto
+        $sql = "select ofi.id, ofi.oficina, ent.entidad 
+                from oficinas ofi inner join entidades ent on ofi.id_entidad = ent.id
+                where ent.id = $id
+                and ofi.id = ofi.ppt_unid_ejecutora";
         return $this->_db->query(Database::SELECT, $sql, TRUE);    
     }
     ///260813

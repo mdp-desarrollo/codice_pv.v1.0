@@ -139,23 +139,26 @@ public function action_addejecucionppt(){
         //Entidad
         $ent = ORM::factory('entidades')->where('id','=',$this->user->id_entidad)->find();
         $entidad = $ent->entidad;
-        //Oficinas
-        $ofi = ORM::factory('oficinas')->where('id_entidad','=',$this->user->id_entidad)->find_all();
+        //Oficinas (Unidades Ejecutoras de PPT)
+        $oOfi = new Model_Oficinas();
+        $ofi = $oOfi->listaunidadesppt($this->user->id_entidad);
         foreach($ofi as $o)
             $oficina[$o->id] = $o->oficina;
         //Direccion Administrativa
-        $dadmin = ORM::factory('oficinas')->where('ppt_da','=',1)->and_where('id_entidad','=',$this->user->id_entidad)->find_all();
+        $oDadmin = new Model_Oficinas();
+        $dadmin = $oDadmin->dappt($this->user->id_oficina);
         foreach($dadmin as $d)
             $da[$d->id] = $d->ppt_cod_da.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$d->oficina;
         
         //Unidad Ejecutora
-        $uejec = ORM::factory('oficinas')->where('ppt_unid_ejecutora','=',1)->and_where('id_entidad','=',$this->user->id_entidad)->find_all();
+        $uEjec = new Model_Oficinas();
+        $uejec = $uEjec->ueppt($this->user->id_oficina);
         foreach($uejec as $d)
             $ue[$d->id] = $d->ppt_cod_ue.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$d->oficina;
         
         //Programa
         $programa = ORM::factory('pvprogramas')->where('estado','=',1)->find_all();
-        $prog[0] = '';
+        $prog[''] = 'Seleccione un Programa';
         foreach($programa as $p)
             $prog[$p->id] = $p->codigo.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$p->programa;
             
@@ -252,7 +255,11 @@ public function action_autorizarfucov($id = '') {
                 $partidas = array("22110" => $pvfucov->total_pasaje, "22210" => $pvfucov->total_viatico);
             }
             else{
-                $partidas = array("22120" => $pvfucov->total_pasaje, "22220" => $pvfucov->total_viatico, "26910" => $pvfucov->gasto_representacion);
+                $tipo_cambio = ORM::factory('pvtipocambios')->select(array(DB::expr('MAX(id)'), 'cambio_venta'))->find();
+                $pasaje = $pvfucov->total_pasaje * $tipo_cambio->cambio_venta;
+                $viatico = $pvfucov->total_viatico * $tipo_cambio->cambio_venta;
+                $gasto = $pvfucov->gasto_representacion * $tipo_cambio->cambio_venta;
+                $partidas = array("22120" => $pasaje, "22220" => $viatico, "26910" => $gasto );
             }
             foreach($partidas as $key=>$value){
                 $partida = ORM::factory('pvpartidas')->where('codigo','=',$key)->find();

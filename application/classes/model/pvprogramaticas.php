@@ -35,7 +35,7 @@ class Model_Pvprogramaticas extends ORM{
         public function detallesaldopresupuesto($id){
         $sql = "select p.id, of.oficina unidad_funcional, p.gestion, ent.sigla, ent.entidad,
                 da.ppt_cod_da codigo_da, da.oficina da, ue.ppt_cod_ue codigo_ue, ue.oficina ue,
-                prog.codigo codigo_prog, proy.codigo codigo_proy, act.codigo codigo_act, act.actividad,
+                prog.codigo codigo_prog, prog.programa, proy.codigo codigo_proy, proy.proyecto, act.codigo codigo_act, act.actividad,
                 fte.codigo codigo_fte, fte.denominacion fte,
                 org.codigo codigo_org, org.denominacion org
                 from pvprogramaticas p
@@ -54,10 +54,11 @@ class Model_Pvprogramaticas extends ORM{
     }
     
     public function listafuentesuser($id){
-        $sql = "select p.id, concat(p.codigo_entidad,'-',da.ppt_cod_da,'-',ue.ppt_cod_ue,'-' , prog.codigo,'-', proy.codigo,'-', act.codigo,'-',fte.codigo,'-', org.codigo,' : ', act.actividad) actividad
+        $sql = "select p.id, concat(ent.sigla,'-',da.ppt_cod_da,'-',ue.ppt_cod_ue,'-' , prog.codigo,'-', proy.codigo,'-', act.codigo,'-',fte.codigo,'-', org.codigo,' : ', act.actividad) actividad
                 from pvprogramaticas p 
                 inner join oficinas da on p.id_da = da.id
                 inner join oficinas ue on p.id_ue = ue.id
+                inner join entidades ent on ent.id = da.id_entidad
                 inner join pvpptactividades act on p.id_actividadppt = act.id 
                 inner join pvfuentes fte on p.id_fuente = fte.id
                 inner join pvorganismos org on p.id_organismo = org.id
@@ -68,10 +69,11 @@ class Model_Pvprogramaticas extends ORM{
     }
     
     public function listafuentesppt($id, $id_entidad){
-        $sql = "select p.id, concat(p.codigo_entidad,'-',da.ppt_cod_da,'-',ue.ppt_cod_ue,'-' , prog.codigo,'-', proy.codigo,'-', act.codigo,'-',fte.codigo,'-', org.codigo,' : ', act.actividad) actividad
+        $sql = "select p.id, concat(ent.sigla,'-',da.ppt_cod_da,'-',ue.ppt_cod_ue,'-' , prog.codigo,'-', proy.codigo,'-', act.codigo,'-',fte.codigo,'-', org.codigo,' : ', act.actividad) actividad
                 from pvprogramaticas p 
                 inner join oficinas da on p.id_da = da.id
                 inner join oficinas ue on p.id_ue = ue.id
+            	inner join entidades ent on ent.id = da.id_entidad
                 inner join pvpptactividades act on p.id_actividadppt = act.id 
                 inner join pvfuentes fte on p.id_fuente = fte.id
                 inner join pvorganismos org on p.id_organismo = org.id

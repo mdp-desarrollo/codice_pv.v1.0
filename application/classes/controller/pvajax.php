@@ -4,33 +4,32 @@ class Controller_Pvajax extends Controller {
     public function action_proyectoppt()
     {   
         $id = $_POST['id'];
-        $proyecto = ORM::factory('pvproyectos')->where('id_programa','=',$id)->and_where('estado','=',1)->find_all();
-        $obj = '<option value = "0" selected>0000</option>';
+        $proyecto = ORM::factory('pvproyectos')->where('id_programa','=',$id)->or_where('id_programa','=',0)->and_where('estado','=',1)->find_all();
+        $obj = '<option value = "" selected>Seleccione un Proyecto</option>';
         if($proyecto->count() > 0)
         {
-            //$obj = '';
             foreach($proyecto as $p){
                 $obj = $obj.'<option value="'.$p->id.'">'.$p->codigo.' - '.$p->proyecto.'</option>';
             }
         }
-        /*else
-        {
-            $obj = '<option value = "0" selected>0000</option>';
-        }*/
         echo json_encode($obj);
     }
     
     public function action_actividadppt()
-    {   
+    {
         $id = $_POST['id'];
-        $actividad = ORM::factory('pvpptactividades')->where('id_programa','=',$id)->and_where('estado','=',1)->find_all();
-        $obj = '<option value = "0" selected>000</option>';
+        $actividad = ORM::factory('pvpptactividades')->where('id_programa','=',$id)->or_where('id_programa','=',0)->and_where('estado','=',1)->find_all();
+        $obj = '<option value = "" selected>Seleccione una Actividad</option>';
         
         if($actividad->count() > 0)
         {
             foreach($actividad as $a){
                 $obj = $obj.'<option value="'.$a->id.'">'.$a->codigo.' - '.$a->actividad.'</option>';
             }
+        }
+        else
+        {
+            $obj .= '<option value = "1" selected>000</option>';
         }
         echo json_encode($obj);
     }
@@ -106,6 +105,35 @@ public function action_pptdisponibleuser()
             $obj = $obj.' '.$f['detalle'].': '.date("d-m-Y",strtotime($f['fecha']));        
         echo json_encode($obj);     
     }
+    
+    public function action_pptdetalle()
+    {
+        $id = $_POST['id'];
+        $oFuente = New Model_Pvprogramaticas();
+        $det = $oFuente->detallesaldopresupuesto($id);
+        foreach ($det as $d)
+            $detalle = $d;
+        $result = array(
+            "sigla"=>$detalle->sigla,
+            "entidad"=>$detalle->entidad,
+            "codigo_ue"=>$detalle->codigo_ue,
+            "ue"=>$detalle->ue,
+            "codigo_da"=>$detalle->codigo_da,
+            "da"=>$detalle->da,
+            "codigo_prog"=>$detalle->codigo_prog,
+            "programa"=>$detalle->programa,
+            "codigo_proy"=>$detalle->codigo_proy,
+            "proyecto"=>$detalle->proyecto,
+            "codigo_act"=>$detalle->codigo_act,
+            "actividad"=>$detalle->actividad,
+            "codigo_fte"=>$detalle->codigo_fte,
+            "fte"=>$detalle->fte,
+            "codigo_org"=>$detalle->codigo_org,
+            "org"=>$detalle->org,
+            );
+        echo json_encode($result);
+    }
+    
 
 /*
 
