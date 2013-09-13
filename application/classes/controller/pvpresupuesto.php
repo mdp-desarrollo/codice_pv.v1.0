@@ -136,18 +136,17 @@ public function action_addejecucionppt(){
             $programatica->save();
             $this->request->redirect('pvpresupuesto/ejecucion/');
         }
+        ///oficinas
+        foreach($oficinas as $o)
+            $oficina[$o->id] = $o->oficina;
         //Entidad
         $ent = ORM::factory('entidades')->where('id','=',$this->user->id_entidad)->find();
         $entidad = $ent->entidad;
         //Unidades Ejecutoras de PPT
-        //$oOfi = new Model_Oficinas();
-        //$ofi = $oOfi->listaunidadesppt($this->user->id_entidad);
         $ofi = ORM::factory('oficinas')->where('id_entidad','=',  $this->user->id_entidad)->and_where('ppt_unid_ejecutora','=',1)->find_all();
         foreach($ofi as $o)
-            $oficina[$o->id] = $o->oficina;
+            $ue[$o->id] = $o->oficina;
         //Direccion Administrativa
-        //$oDadmin = new Model_Oficinas();
-        //$dadmin = $oDadmin->dappt($this->user->id_oficina);
         $dadmin = ORM::factory('oficinas')->where('id_entidad','=', $this->user->id_entidad)->and_where('ppt_da','=',1)->find_all();
         foreach($dadmin as $d)
             $da[$d->id] = $d->ppt_cod_da.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$d->oficina;
@@ -179,7 +178,7 @@ public function action_addejecucionppt(){
                                         ->bind('entidad', $entidad)
                                         ->bind('oficina', $oficina)
                                         ->bind('da', $da)
-                                        //->bind('ue', $ue)
+                                        ->bind('ue', $ue)
                                         ->bind('programa', $prog)
                                         ->bind('fuente', $fte)
                                         ->bind('organismo', $org)

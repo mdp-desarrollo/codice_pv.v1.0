@@ -639,8 +639,9 @@ class Controller_documento extends Controller_DefaultTemplate {
         $detallepv = '';
         if ($estado == 2) {
             $pvfucov = ORM::factory('pvfucovs')->where('id_memo', '=', $id)->find();
-            $memo = ORM::factory('documentos')->where('id', '=', $pvfucov->id_memo)->find();
-            $oficina = ORM::factory('oficinas')->where('id', '=', $memo->id_oficina)->find();///oficina del usuario solicintante
+            $documento = ORM::factory('documentos')->where('id','=',$pvfucov->id_documento)->and_where('id_tipo','=',13)->find();
+            //$memo = ORM::factory('documentos')->where('id', '=', $pvfucov->id_memo)->find();
+            //$oficina = ORM::factory('oficinas')->where('id', '=', $memo->id_oficina)->find();///oficina del usuario solicintante
             $cambio = ORM::factory('pvtipocambios')->find_all();
             foreach($cambio as $c)
                  $tipo_cambio = $c;
@@ -691,7 +692,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                     case 8:///Planificacion
                         $pvpoas = ORM::factory('pvpoas')->where('id_fucov', '=', $pvfucov->id)->find();
                         $uEjepoa = New Model_oficinas();
-                        $uejecutorapoa = $uEjepoa->uejecutorapoa($this->user->id_oficina); ///buscar la unidad ejecutora POA y PPT para la oficina de este usuario
+                        $uejecutorapoa = $uEjepoa->uejecutorapoa($documento->id_oficina);
                         $obj_gest = ORM::factory('pvogestiones')->where('id_oficina', '=', $uejecutorapoa->id)->and_where('estado', '=', 1)->find_all();
                         foreach ($obj_gest as $g) {
                             $ogestion[$g->id] = $g->codigo;
