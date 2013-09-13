@@ -95,6 +95,7 @@
         <?php
         echo form::label('nombre');
         echo Form::input('nombre',$user->nombre,array('size'=>60));
+        echo Form::input('mosca',$user->mosca,array('size'=>5));
         ?>
     </p>
     <p>
@@ -108,7 +109,15 @@
         echo Form::label('Email:');
         echo Form::input('email',$user->email,array('size'=>60));
         ?>
-    </p>    
+    </p> 
+
+<p>
+        <?php
+        echo Form::label('Categoria');
+        echo Form::select('id_categoria', $pvcategoria,$user->id_categoria,array('id'=>'categoria'));
+        ?>
+    </p>
+
     <p>
         <?php
         echo Form::label('prioridad');

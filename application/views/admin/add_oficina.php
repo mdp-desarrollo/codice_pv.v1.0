@@ -29,7 +29,7 @@
 <form action="" method="post" id="frmOficina">
     <table width="100%" >
         <tr>
-            <td>Entidad:</td>
+            <td width="100px">Entidad:</td>
             <td width="600" ><?php echo $entidad->entidad; ?></td>
         </tr>
         <tr>
@@ -44,6 +44,25 @@
         <tr>
             <td>Sigla:</td>
             <td><?php echo Form::input('sigla', HTML::chars(Arr::get($_POST, 'sigla')), array('id' => 'sigla','class'=>'required')); ?></td>
+        </tr>
+        <tr>
+            <td>Unidad Ejecutora POA:</td>
+            <td>No <?php echo Form::radio('poa_unid_ejecutora', 'No', TRUE); ?> 
+                Si <?php echo Form::radio('poa_unid_ejecutora', 'Si', False); ?>
+            </td>
+
+        </tr>
+        <tr>
+            <td>Unidad Ejecutora Presupuesto:</td>
+            <td>No <?php echo Form::radio('ppt_unid_ejecutora', 'No', TRUE); ?> 
+                Si <?php echo Form::radio('ppt_unid_ejecutora', 'Si', False); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Direccion Administrativa Presupuesto:</td>
+            <td>No <?php echo Form::radio('ppt_da', 'No', TRUE); ?> 
+                Si <?php echo Form::radio('ppt_da', 'Si', False); ?>
+            </td>
         </tr>
         <tr>
             <td colspan="2">
