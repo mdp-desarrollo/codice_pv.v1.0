@@ -76,7 +76,7 @@ class Model_Oficinas extends ORM{
     
     public function lista_oficinas()
     {
-        $sql="SELECT o.id,e.id as id_entidad,o.oficina,e.entidad,e.sigla as sigla_entidad,o.sigla 
+        $sql="SELECT o.id,e.id as id_entidad,o.oficina,e.entidad,e.sigla as sigla_entidad,o.sigla,o.poa_unid_ejecutora,o.ppt_unid_ejecutora,o.ppt_cod_ue,o.ppt_da,o.ppt_cod_da 
             FROM oficinas o INNER JOIN entidades e ON o.id_entidad=e.id";
         return db::query(Database::SELECT, $sql)->execute();
     }

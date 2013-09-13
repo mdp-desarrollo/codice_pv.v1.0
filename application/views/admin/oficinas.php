@@ -21,6 +21,18 @@ $(function(){
                 OFICINA
             </th>
             <th>
+                SIGLA
+            </th>
+            <th>
+                UNIDAD EJECUTORA POA
+            </th>
+            <th>
+                UNIDAD EJECUTORA PRESUPUESTO
+            </th>
+            <th>
+                DIRECCION ADMINISTRATIVA PRESUPUESTO
+            </th>
+            <th>
                 OPCIONES
             </th>
         </tr>
@@ -33,6 +45,18 @@ $(function(){
             </td>
             <td>
                 <a href="/admin/user/lista/<?php echo $o->id;?>"><?php echo $o->oficina;?></a>
+            </td>
+            <td>
+                <a href="/admin/user/lista/<?php echo $o->id;?>"><?php echo $o->sigla;?></a>
+            </td>
+            <td>
+                <?php echo $o->poa_unid_ejecutora;?>
+            </td>
+            <td>
+                <?php echo $o->ppt_cod_ue;?>
+            </td>
+            <td>
+                <?php echo $o->ppt_cod_da;?>
             </td>
             <td>
                 <a href="/admin/user/lista/<?php echo $o->id;?>"><img src="/media/images/16x16/Write.png" /></a>
