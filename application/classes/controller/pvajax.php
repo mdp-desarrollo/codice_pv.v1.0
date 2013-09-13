@@ -61,6 +61,56 @@ public function action_detobjespecifico()
         echo json_encode($desc);
     }
 
+  public function action_pptdisponibleuser(){
+        $id = $_POST['id'];
+        $pasaje = $_POST['pasaje'];
+        $viatico = $_POST['viatico'];
+        $viaje = $_POST['viaje'];
+        $gasto = $_POST['gasto'];///el tipo de cambio para viaje al esterior ya esta cargado desde la aplicacion
+        
+        $oDisp = new Model_Pvprogramaticas();
+        $disp = $oDisp->saldopresupuesto($id);
+        $result = "<table class=\"classy\" border=\"1px\"><thead><th>C&oacute;digo</th><th>Partida</th><th>Saldo Disponible</th><th>Solicitado (Bs.)</th><th>Nuevo Saldo</th></thead><tbody>";
+        $sw = 0;
+        $resp = 0;
+        foreach($disp as $d)
+        {
+            if( $viaje == 1 || $viaje == 2){
+                if( $d['codigo'] == '22110'){///pasaje al interio del pais
+                    $resp = $d['saldo_devengado'] - $pasaje;
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$pasaje."</td><td>".($d['saldo_devengado'] - $pasaje)."</td></tr>";
+                }
+                if( $d['codigo'] == '22210'){///viatico al interior
+                    $resp = round($d['saldo_devengado'] - $viatico,2);
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$viatico."</td><td>".($d['saldo_devengado'] - $viatico)."</td></tr>";
+                }
+            }
+            else
+            {
+                if( $d['codigo'] == '22120'){///pasaje al exterior
+                    $resp = round($d['saldo_devengado'] - $pasaje,2);
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$pasaje."</td><td>".($d['saldo_devengado'] - $pasaje)."</td></tr>";
+                }
+                if( $d['codigo'] == '22220'){///viaticos al exterior
+                    $resp = round($d['saldo_devengado'] - $viatico,2);
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$viatico."</td><td>".($d['saldo_devengado'] - $viatico)."</td></tr>";
+                }                    
+                if( $d['codigo'] == '26910'){///gastos de representacion
+                    $resp = round($d['saldo_devengado'] - $gasto,2);
+                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$gasto."</td><td>".($d['saldo_devengado'] - $gasto)."</td></tr>";
+                }
+            }
+            if($resp < 0)
+                $sw = 1;
+        }
+        $result .= "</tbody></table>";
+        if($sw == 1)
+            $result .="<br /><font color=\"red\" size=\"4\"><center>NO TIENE SUFICIENTE PRESUPUESTO!!!</center></font>";
+        else
+            $result .="<br /><font color=\"green\" size=\"4\"><center>PRESUPUESTO SUFICIENTE!!!</center></font>";
+        echo json_encode($result);
+  }
+/*
 public function action_pptdisponibleuser()
     {
         $id = $_POST['id'];
@@ -92,7 +142,7 @@ public function action_pptdisponibleuser()
         }
         $result .= "</tbody></table>";
         echo json_encode($result);
-    }
+    }*/
     
     public function action_feriados()
     {

@@ -124,10 +124,15 @@ try {
     $stmt->execute();
     $oficina = $stmt->fetch(PDO::FETCH_OBJ);
     
-    ///oficina de la que depende
-    $stmt = $dbh->prepare("SELECT * FROM oficinas WHERE id=$oficina->poa_unid_ejecutora");
+    ///Unidad Ejecutora
+    $stmt = $dbh->prepare("SELECT * FROM oficinas WHERE id=$oficina->id");
     $stmt->execute();
     $oficina2 = $stmt->fetch(PDO::FETCH_OBJ);
+    while($oficina2->ppt_unid_ejecutora == NULL || $oficina2->ppt_unid_ejecutora == 0){
+        $stmt = $dbh->prepare("SELECT * FROM oficinas WHERE id=$oficina->padre");
+        $stmt->execute();
+        $oficina2 = $stmt->fetch(PDO::FETCH_OBJ);
+    }
     
     ///FUCOV
     $stmt = $dbh->prepare("SELECT * FROM pvfucovs WHERE id=$id_fucov");

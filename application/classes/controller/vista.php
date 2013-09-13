@@ -77,9 +77,11 @@ class Controller_Vista extends Controller_MinimoTemplate {
                 $pvgestion = ORM::factory('pvogestiones')->where('id','=',$pvpoas->id_obj_gestion)->find();
                 $pvespecifico = ORM::factory('pvoespecificos')->where('id','=',$pvpoas->id_obj_esp)->find();
                 ///rodrigo-PPT
+                $cambio = ORM::factory('pvtipocambios')->find_all();
+                foreach($cambio as $c)
+                    $tipo_cambio = $c;
                 $pvliquidacion = ORM::factory('pvliquidaciones')->where('id_fucov','=',$pvfucov->id)->find();
-                $tipo_cambio = ORM::factory('pvtipocambios')->select(array(DB::expr('MAX(id)'), 'cambio_venta'))->find();
-                if(!$pvliquidacion->loaded()){//liquidaciones tiene todos los montos
+                if(!$pvliquidacion->loaded()){//proceso autorizado por Presupuesto
                     $oPart = New Model_Pvprogramaticas();
                     $pvliquidacion = $oPart->pptdisponibleuser($pvfucov->id_programatica,$pvfucov->total_pasaje,$pvfucov->total_viatico,$pvfucov->id_tipoviaje,$pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
                 }

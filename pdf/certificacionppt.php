@@ -115,19 +115,28 @@ try {
     $stmt->execute();
     $doc = $stmt->fetch(PDO::FETCH_OBJ);
 
-    $stmt = $dbh->prepare("select ofi.oficina, ofi.sigla sigla_oficina, ofi.ppt_unid_ejecutora ue, ofi.ppt_da da, ent.entidad, ent.sigla sigla_entidad
+    $stmt = $dbh->prepare("select ofi.id id_oficina, ofi.oficina, ofi.sigla sigla_oficina, ofi.ppt_unid_ejecutora ue, ofi.ppt_da da, ent.id id_entidad, ent.entidad, ent.sigla sigla_entidad
 from oficinas ofi inner join entidades ent on ofi.id_entidad = ent.id
 where ofi.id = '$doc->id_oficina'");
     $stmt->execute();
-    $ofi = $stmt->fetch(PDO::FETCH_OBJ);
+    $ofi = $stmt->fetch(PDO::FETCH_OBJ);///oficina y entidad solicitante
     
-    $stmt = $dbh->prepare("select oficina, ppt_cod_da from oficinas where id = '$ofi->da'");//Direccion administrativa
+    $stmt = $dbh->prepare("select oficina, ppt_cod_da from oficinas where id_entidad = '$ofi->id_entidad' and ppt_da = 1");//Direccion administrativa
     $stmt->execute();
     $da = $stmt->fetch(PDO::FETCH_OBJ) ;
      
-    $stmt = $dbh->prepare("select oficina, ppt_cod_ue from oficinas where id = '$ofi->ue'");//unidad ejecutora Presupuesto
-    $stmt->execute();    
-    $ue = $stmt->fetch(PDO::FETCH_OBJ) ;
+    ///$stmt = $dbh->prepare("select oficina, ppt_cod_ue from oficinas where id = '$ofi->ue'");//unidad ejecutora Presupuesto
+    ///$stmt->execute();    
+    ///$ue = $stmt->fetch(PDO::FETCH_OBJ) ;
+    ///Unidad Ejecutora Presupuesto
+    $stmt = $dbh->prepare("SELECT * FROM oficinas WHERE id=$ofi->id_oficina");
+    $stmt->execute();
+    $ue = $stmt->fetch(PDO::FETCH_OBJ);
+    while($ue->ppt_unid_ejecutora == NULL || $ue->ppt_unid_ejecutora == 0){
+        $stmt = $dbh->prepare("SELECT * FROM oficinas WHERE id=$ue->padre");
+        $stmt->execute();
+        $ue = $stmt->fetch(PDO::FETCH_OBJ);
+    }
     
         
         //$pdf->SetFont('Helvetica', 'B', 15);

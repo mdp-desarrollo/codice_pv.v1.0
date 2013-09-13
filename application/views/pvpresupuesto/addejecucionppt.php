@@ -56,7 +56,7 @@ $(function(){
     </tr>
     <tr>
         <td>UE:</td>
-        <td><?php echo Form::select ('ue',$ue);?></td>
+        <td><?php //echo Form::select ('ue',$ue);?></td>
     </tr>
     <tr>
         <td>Programa:</td>

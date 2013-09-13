@@ -13,6 +13,12 @@ $(function(){
             var viatico = $('#total_viatico').val();
             var viaje = $('#id_tipoviaje').val();
             var gasto = $('#gasto_representacion').val();
+            if(viaje > 2){
+                var cambio = $('#tipo_cambio').val();
+                viatico = (viatico * cambio).toFixed(2);
+                pasaje = (pasaje * cambio).toFixed(2);
+                gasto = (gasto * cambio).toFixed(2);
+            } 
             $.ajax({
                 type: "POST",
                 data: { id: id, pasaje:pasaje, viatico:viatico, viaje:viaje, gasto:gasto},
@@ -87,7 +93,8 @@ $(function(){
     TOTAL PASAJES: <?php echo Form::input('total_pasaje', $pvfucov->total_pasaje, array('id' => 'total_pasaje', 'size' => 8,'readonly')); echo $moneda; ?>&nbsp;&nbsp;&nbsp;
 TOTAL VIATICOS: <?php echo Form::input('total_viatico', $pvfucov->total_viatico, array('id' => 'total_viatico', 'size' => 8,'readonly')); echo $moneda; ?>&nbsp;&nbsp;&nbsp;
 GASTO REP: <?php echo Form::input('gasto_representacion', $pvfucov->gasto_representacion, array('id' => 'gasto_representacion', 'size' => 8,'readonly')); echo $moneda; ?>
-<?php echo Form::hidden('id_tipoviaje', $pvfucov->id_tipoviaje, array('id' => 'id_tipoviaje', 'size' => 8,'readonly'))?><br />
+<?php echo Form::hidden('id_tipoviaje', $pvfucov->id_tipoviaje, array('id' => 'id_tipoviaje'))?>
+<?php echo Form::hidden('tipo_cambio', $tipo_cambio->cambio_venta, array('id' => 'tipo_cambio'))?>
     <form id="frmEditarFucov" action="/pvpresupuesto/editarfucov/<?php echo $pvfucov->id;?>" method="post">
         <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;  ">
         <hr/>

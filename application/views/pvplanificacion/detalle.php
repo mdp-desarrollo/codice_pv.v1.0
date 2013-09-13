@@ -54,7 +54,7 @@ $('.autorizar').live('click', function() {
                     <table width="100%" border="0px">
                         <tr>
                             <td><?php echo Form::label('unidad_ejecutora', 'Unidad Ejecutora POA:', array('class' => 'form')); ?></td>
-                            <td><?php echo $ue_poa ?>
+                            <td><?php echo $ue_poa->oficina ?>
                             </td>
                         </tr>
                         <tr>

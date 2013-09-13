@@ -82,11 +82,23 @@ class Model_Oficinas extends ORM{
     }
     
     ///rodrigo - Unidad ejecutora 260813
-    public function uejecutorapoa($id)///lista de unidades ejecutoras del POA
+    public function uejecutorapoa($id)///Buscar la primera oficina superior con ppt_uni_ejecutora = 1,
     {
-        $sql="select * from oficinas where id = (select poa_unid_ejecutora from oficinas where id= $id)";
-        return db::query(Database::SELECT, $sql)->execute();
-    }    
+        $unidad = ORM::factory('oficinas')->where('id','=',$id)->find();
+        while($unidad->poa_unid_ejecutora == NULL || $unidad->poa_unid_ejecutora == 0){
+            $unidad = ORM::factory('oficinas')->where('id','=',$unidad->padre)->find();
+        }
+        return $unidad;//->oficina;
+    }
+    public function uejecutorappt($id)///Buscar la primera oficina superior con ppt_uni_ejecutora = 1,
+    {
+        $unidad = ORM::factory('oficinas')->where('id','=',$id)->find();
+        while($unidad->ppt_unid_ejecutora == NULL || $unidad->ppt_unid_ejecutora == 0){
+            $unidad = ORM::factory('oficinas')->where('id','=',$unidad->padre)->find();
+        }
+        return $unidad;//->oficina;
+    }
+    /*
     public function listaunidades($id){///
         $sql = "select ofi.id, ofi.oficina, ent.entidad 
                 from oficinas ofi inner join entidades ent on ofi.id_entidad = ent.id
@@ -113,7 +125,7 @@ class Model_Oficinas extends ORM{
                 where ent.id = $id
                 and ofi.id = ofi.ppt_unid_ejecutora";
         return $this->_db->query(Database::SELECT, $sql, TRUE);    
-    }
+    }*/
     ///260813
 }
 ?>

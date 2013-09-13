@@ -27,7 +27,8 @@ class Model_Pvprogramaticas extends ORM{
                 from pvprogramaticas pro 
                 inner join pvejecuciones eje on eje.id_programatica = pro.id
                 inner join pvpartidas part on eje.id_partida = part.id
-                where pro.id = $id";
+                where pro.id = $id
+                ";
         //return $this->_db->query(Database::SELECT, $sql, TRUE);
         return DB::query(1, $sql)->execute();
     }
@@ -91,29 +92,46 @@ class Model_Pvprogramaticas extends ORM{
         $oDisp = new Model_Pvprogramaticas();
         $disp = $oDisp->saldopresupuesto($id);
         $result = "<table class=\"classy\" border=\"1px\"><thead><th>C&oacute;digo</th><th>Partida</th><th>Saldo Disponible</th><th>Solicitado (Bs)</th><th>Nuevo Saldo</th></thead><tbody>";
+        $resp = 0;
+        $sw = 0;
         foreach($disp as $d)
         {
+            $codigo = $d['codigo'];
+            $partida = $d['partida'];
+            $saldo = $d['saldo_devengado'];
             if( $viaje == 1 || $viaje == 2){
-                if( $d['codigo'] == '22110')///pasaje al interio del pais
-                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$pasaje."</td><td>".($d['saldo_devengado'] - $pasaje)."</td></tr>";
-                if( $d['codigo'] == '22210')///viatico al interior
-                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$viatico."</td><td>".($d['saldo_devengado'] - $viatico)."</td></tr>";
+                if( $codigo == '22110'){///pasaje al interio del pais
+                    $resp = round($saldo - $pasaje,2);
+                    $result .= "<tr><td>".$codigo."</td><td>".$partida."</td><td>".$saldo."</td><td>".$pasaje."</td><td>".$resp."</td></tr>";
+                }
+                if( $codigo == '22210'){///viatico al interior
+                    $resp = round($saldo - $viatico,2);
+                    $result .= "<tr><td>".$codigo."</td><td>".$partida."</td><td>".$saldo."</td><td>".$viatico."</td><td>".$resp."</td></tr>";
+                }
             }
             else
             {
-                $p = round($pasaje*$cambio,2);
-                $v = round($viatico*$cambio,2);
-                $g = round($gasto*$cambio,2);
-                if( $d['codigo'] == '22120')///pasaje al exterior
-                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$p."</td><td>".($d['saldo_devengado'] - $p)."</td></tr>";
-                if( $d['codigo'] == '22220')///viaticos al exterior
-                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$v."</td><td>".($d['saldo_devengado'] - $v)."</td></tr>";
-                if( $d['codigo'] == '26910')///gastos de representacion
-                    $result .= "<tr><td>".$d['codigo']."</td><td>".$d['partida']."</td><td>".$d['saldo_devengado']."</td><td>".$g."</td><td>".($d['saldo_devengado'] - $g)."</td></tr>";
+                if( $codigo == '22120'){///pasaje al exterior
+                    $resp = round($saldo - ($pasaje*$cambio),2);
+                    $result .= "<tr><td>".$codigo."</td><td>".$partida."</td><td>".$saldo."</td><td>".round($pasaje*$cambio,2)."</td><td>".$resp."</td></tr>";
+                    }
+                if( $codigo == '22220'){///viaticos al exterior
+                    $resp = round($saldo - ($viatico*$cambio),2);
+                    $result .= "<tr><td>".$codigo."</td><td>".$partida."</td><td>".$saldo."</td><td>".round($viatico*$cambio,2)."</td><td>".$resp."</td></tr>";
+                }
+                if( $codigo == '26910'){///gastos de representacion
+                    $resp = round($saldo - ($gasto*$cambio),2);
+                    $result .= "<tr><td>".$codigo."</td><td>".$partida."</td><td>".$saldo."</td><td>".round($gasto*$cambio,2)."</td><td>".$resp."</td></tr>";
+                }
             }
+            if($resp < 0)
+                $sw = 1;
         }
         $result .= "</tbody></table>";
-        //echo json_encode($result);
+        if($sw == 1)
+            $result .="<br /><font color=\"red\" size=\"4\"><center>NO TIENE SUFICIENTE PRESUPUESTO!!!</center></font>";
+        else
+            $result .="<br /><font color=\"green\" size=\"4\"><center>PRESUPUESTO SUFICIENTE!!!</center></font>";
         return $result;
     }
     
@@ -123,7 +141,7 @@ class Model_Pvprogramaticas extends ORM{
         $result = "<table class=\"classy\" border=\"1px\"><thead><th>C&oacute;digo</th><th>Partida</th><th>Saldo Disponible</th><th>Solicitado (Bs)</th><th>Nuevo Saldo</th></thead><tbody>";
         foreach($liquidacion as $d)
         {
-            $result .= "<tr><td>".$d->cod_partida."</td><td>".$d->partida."</td><td>".$d->cs_vigente."</td><td>".$d->importe_certificado."</td><td>".($d->cs_vigente - $d->importe_certificado)."</td></tr>";
+            $result .= "<tr><td>".$d->cod_partida."</td><td>".$d->partida."</td><td>".$d->cs_saldo_devengado."</td><td>".$d->importe_certificado."</td><td>".($d->cs_saldo_devengado - $d->importe_certificado)."</td></tr>";
         }
         $result .= "</tbody></table>";
         return $result;

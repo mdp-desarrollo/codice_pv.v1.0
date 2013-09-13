@@ -320,7 +320,7 @@
                     {
                         $(control).html(item);
                     },
-                    error: $(control).html('error'),
+                    error: $(control).html('error')
                 });
             }
             else
@@ -475,7 +475,7 @@ function dia_literal($n) {
                 echo Form::hidden('id_tipo', $documento->id_tipo);
                 echo Form::hidden('id_categoria', $user->id_categoria, array('id' => 'id_categoria'));
                 echo Form::hidden('titulo', '');
-                echo Form::hidden('tipo_cambio', $tipo_cambio->cambio_venta,array('id'=>'tipo_cambio'));
+                echo Form::hidden('tipo_cambio', $tipo_cambio,array('id'=>'tipo_cambio'));
                 echo Form::hidden('tipo_moneda', $pvfucov->tipo_moneda,array('id' => 'tipo_moneda'));
                 if($pvfucov->tipo_moneda==0)
                     $tipo_moneda="Bs.";
@@ -728,14 +728,8 @@ function dia_literal($n) {
                 <fieldset>
                     <table width="100%" border="1px">
                         <tr>
-                            <td><?php //echo $ue; ?>
-<?php echo Form::label('unidad_ejecutora', 'Unidad Ejecutora:', array('class' => 'form')); ?>
-                            </td>
-                            <td>
-<?php echo $ue_poa ?>
-                                <?php // echo Form::input('unidadEjecutora',$ue_poa,array('size'=>'75','id'=>'unidadEjecutora','name'=>'unidadEjecutora')) ?>
-                                <input type="hidden" id="idUnidadEjecutora" name="idUnidadEjecutora" value="<?php // echo $idunidadejecutora;?>" />
-                            </td>
+                            <td><?php echo Form::label('unidad_ejecutora', 'Unidad Ejecutora POA:', array('class' => 'form')); ?></td>
+                            <td><b><?php echo $uejecutorapoa->oficina ?></b></td>
                         </tr>
                         <tr>
                             <td>
@@ -776,13 +770,21 @@ function dia_literal($n) {
         </div>
     </div>
     <div id="pre">
-        <div class="formulario">        
+        <div class="formulario">
             <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;  ">
                 <h2 style="text-align:center;">Presupuesto</h2><hr/>
                 <fieldset>
-                    Fuentes de Financiamiento:
-<?php echo Form::select('fuente', $fuente, $pvfucov->id_programatica, array('id' => 'fuente', 'class' => 'required')) ?>
-                    <div id="saldoppt"><?php echo $partidasgasto; ?></div>
+                <table>
+                    <tr>
+                        <td>Unidad Ejecutora de Presupuesto:</td>
+                        <td><b> <?php echo $uejecutorappt->oficina?></b></td>
+                    </tr>
+                    <tr>
+                        <td>Fuentes de Financiamiento:</td>
+                        <td><?php echo Form::select('fuente', $fuente, $pvfucov->id_programatica, array('id' => 'fuente', 'class' => 'required')) ?></td>
+                    </tr>
+                </table>
+                <div id="saldoppt"><?php echo $partidasgasto?></div>
                 </fieldset>
             </div>
         </div>
