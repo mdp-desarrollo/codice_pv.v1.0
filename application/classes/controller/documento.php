@@ -438,6 +438,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                     $pvpoas->fecha_modificacion = date('Y-m-d H:i:s');
                     $pvpoas->id_obj_gestion = $_POST['obj_gestion'];
                     $pvpoas->id_obj_esp = $_POST['obj_esp'];
+                    $pvpoas->id_actividad = $_POST['actividad'];
                     $pvpoas->save();
                     ///
                 }
@@ -534,6 +535,7 @@ class Controller_documento extends Controller_DefaultTemplate {
 
                 $pvpoas = ORM::factory('pvpoas')->where('id_fucov', '=', $pvfucov->id)->find();
                 $objespecifico[''] = 'Seleccione Objetivo Especifico';
+                $actividad[''] = 'Seleccione la Actividad';
                 $partidasgasto = '';
                 if ($pvpoas->id_obj_gestion) {
                     $det = ORM::factory('pvogestiones')->where('id', '=', $pvpoas->id_obj_gestion)->find(); ///Detalle Objetivo de Gestion
@@ -543,6 +545,12 @@ class Controller_documento extends Controller_DefaultTemplate {
                         $objespecifico[$oe->id] = $oe->codigo;
                         if ($oe->id == $pvpoas->id_obj_esp)
                             $detalleespecifico = $oe->objetivo;
+                    }
+                    $act = ORM::factory('pvactividades')->where('id_objespecifico', '=', $pvpoas->id_obj_esp)->find_all(); ///actividades del POA
+                    foreach ($act as $a) {
+                        $actividad[$a->id] = $a->codigo;
+                        if ($a->id == $pvpoas->id_actividad)
+                            $detalleactividad = $a->actividad;
                     }
                     $oPart = New Model_Pvprogramaticas();
                     $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica, $pvfucov->total_pasaje, $pvfucov->total_viatico, $pvfucov->id_tipoviaje, $pvfucov->gasto_representacion,$tipo_cambio);//mostrar las partidas presupuestarias almacenadas
@@ -568,8 +576,10 @@ class Controller_documento extends Controller_DefaultTemplate {
                         ->bind('pvpoas', $pvpoas)
                         ->bind('obj_gestion', $objgestion)//ista de objetivos de gestion para la oficina
                         ->bind('obj_esp', $objespecifico)
+                        ->bind('actividad', $actividad)
                         ->bind('det_obj_gestion', $detallegestion)//detalle del objetivo de gestion
                         ->bind('det_obj_esp', $detalleespecifico)
+                        ->bind('det_act', $detalleactividad)
                         ->bind('partidasgasto', $partidasgasto)
                         ->bind('tipo_cambio', $tipo_cambio)
                 ;

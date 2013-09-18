@@ -1,6 +1,6 @@
 <script type="text/javascript">
 $(function(){
-    $("#nuevo_vigente").keydown(function(event) {
+    $("#inicial, #modificado, #vigente, #preventivo, #comprometido,#devengado, #saldoDevengado,#pagado,#saldoPagar").keydown(function(event) {
         if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 27 ||
             (event.keyCode == 65 && event.ctrlKey === true) || (event.keyCode >= 35 && event.keyCode <= 39) || (event.keyCode == 110 || event.keyCode == 190) ) {
                 return;
@@ -13,39 +13,7 @@ $(function(){
             }   
     });
     $('#frmCreate').validate();
-
-$("#inc").click(function(){
-    var nuevo_vigente = parseFloat($("#nuevo_vigente").val());
-    var vigente_actual = parseFloat($("#vigente_actual").val());
-    var vigente = parseFloat($("#vigente").val());
-    var modificado = parseFloat($("#modificado").val());
-    var saldoDevengado = parseFloat($("#saldoDevengado").val());
     
-    $("#vigente").val((nuevo_vigente + vigente).toFixed(2));
-    $("#modificado").val((nuevo_vigente + modificado).toFixed(2));
-    $("#saldoDevengado").val((nuevo_vigente + saldoDevengado).toFixed(2));
-});
-
-    $("#dec").click(function(){
-        var nuevo_vigente = parseFloat($("#nuevo_vigente").val());
-        var vigente_actual = parseFloat($("#vigente_actual").val());
-        var vigente = parseFloat($("#vigente").val());
-        var modificado = parseFloat($("#modificado").val());
-        var saldoDevengado = parseFloat($("#saldoDevengado").val());
-        if((vigente - nuevo_vigente) > 0){
-            $("#vigente").val(( vigente - nuevo_vigente ).toFixed(2));
-            $("#modificado").val(( modificado - nuevo_vigente ).toFixed(2));
-            $("#saldoDevengado").val(( saldoDevengado - nuevo_vigente ).toFixed(2));
-        }
-        else
-            alert('No hay Suficiente Saldo Vigente.');
-    });
-    
-    $("#reset").click(function(){
-        $("#vigente").val($("#vigente_actual").val());
-        $("#modificado").val($("#modificado_actual").val());
-        $("#saldoDevengado").val($("#saldoDevengado_actual").val());
-    });
 });//document.ready
 </script>
 <style>
@@ -103,65 +71,55 @@ $("#inc").click(function(){
         <thead>
             <th style="width: 25%;">Detalle</th>
             <th style="width: 25%;">Saldo Actual</th>
-            <th style="width: 25%;">opciones :<br /> <input type="button" id="inc" value="+Inc" /><input type="button" id="dec" value="-Dec" onclick="resta()" /><input type="button" id="dec" value="Reset" onclick="reset()" /></th>
             <th style="width: 25%;">Nuevo saldo:</th>
         </thead>
     </tr>
     <tr>
         <td><?php echo Form::label('inicial','Presupuesto Inicial')?></td>
         <td><?php echo $ejecucion->inicial?></td>
-        <td></td>
-        <td><?php echo Form::input('inicial',$ejecucion->inicial,array('name'=>'inicial','id'=>'inicial','class'=>'required','readonly')) ?></td>
+        <td><?php echo Form::input('inicial',$ejecucion->inicial,array('name'=>'inicial','id'=>'inicial','class'=>'required')) ?></td>
         
     </tr>
     <tr>
         <td><?php echo Form::label('modificado','Modificado')?></td>
-        <td><?php echo Form::input('modificado_actual',$ejecucion->modificado,array('name'=>'modificado_sc','id'=>'modificado_sc','readonly')) ?></td>
-        <td></td>
-        <td><?php echo Form::input('modificado',$ejecucion->modificado,array('name'=>'modificado','id'=>'modificado','class'=>'required','readonly')) ?></td>
+        <td><?php echo $ejecucion->modificado?></td>
+        <td><?php echo Form::input('modificado',$ejecucion->modificado,array('name'=>'modificado','id'=>'modificado','class'=>'required')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('vigente','Vigente')?></td>
-        <td><?php echo Form::input('vigente_actual',$ejecucion->vigente,array('name'=>'vigente_actual','id'=>'vigente_actual','readonly')) ?></td>
-        <td><?php echo Form::input('nuevo_vigente','0',array('name'=>'nuevo_vigente','id'=>'nuevo_vigente')) ?></td>
-        <td><?php echo Form::input('vigente',$ejecucion->vigente,array('name'=>'vigente','id'=>'vigente','readonly'))?></td>
+        <td><?php echo $ejecucion->vigente?></td>
+        <td><?php echo Form::input('vigente',$ejecucion->vigente,array('name'=>'vigente','id'=>'vigente'))?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('preventivo','Preventivo')?></td>
         <td><?php echo $ejecucion->preventivo?></td>
-        <td></td>
-        <td><?php echo Form::input('preventivo',$ejecucion->preventivo,array('name'=>'preventivo','id'=>'preventivo','class'=>'required','readonly')) ?></td>
+        <td><?php echo Form::input('preventivo',$ejecucion->preventivo,array('name'=>'preventivo','id'=>'preventivo','class'=>'required')) ?></td>
         
     </tr>
     <tr>
         <td><?php echo Form::label('comprometido','Comprometido')?></td>
         <td><?php echo $ejecucion->comprometido?></td>
-        <td></td>
-        <td><?php echo Form::input('comprometido',$ejecucion->comprometido,array('name'=>'comprometido','id'=>'comprometido','class'=>'required','readonly')) ?></td>
+        <td><?php echo Form::input('comprometido',$ejecucion->comprometido,array('name'=>'comprometido','id'=>'comprometido','class'=>'required')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('devengado','Devengado')?></td>
         <td><?php echo $ejecucion->devengado?></td>
-        <td></td>
-        <td><?php echo Form::input('devengado',$ejecucion->devengado,array('name'=>'devengado','id'=>'devengado','class'=>'required','readonly')) ?></td>
+        <td><?php echo Form::input('devengado',$ejecucion->devengado,array('name'=>'devengado','id'=>'devengado','class'=>'required')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('saldoDevengado','Saldo Devengado')?></td>
-        <td><?php echo Form::input('saldoDevengado_actual',$ejecucion->saldo_devengado,array('name'=>'saldoDevengado_actual','id'=>'saldoDevengado_actual','class'=>'required','readonly')) ?></td>
-        <td></td>
-        <td><?php echo Form::input('saldoDevengado',$ejecucion->saldo_devengado,array('name'=>'saldoDevengado','id'=>'saldoDevengado','class'=>'required','readonly')) ?></td>
+        <td><?php echo $ejecucion->saldo_devengado?></td>
+        <td><?php echo Form::input('saldoDevengado',$ejecucion->saldo_devengado,array('name'=>'saldoDevengado','id'=>'saldoDevengado','class'=>'required')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('pagado','Pagado')?></td>
         <td><?php echo $ejecucion->pagado?></td>
-        <td></td>
-        <td><?php echo Form::input('pagado',$ejecucion->pagado,array('name'=>'pagado','id'=>'pagado','class'=>'required','readonly')) ?></td>
+        <td><?php echo Form::input('pagado',$ejecucion->pagado,array('name'=>'pagado','id'=>'pagado','class'=>'required')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('saldoPagar','Saldo Pagar')?></td>
         <td><?php echo $ejecucion->saldo_pagar?></td>
-        <td></td>
-        <td><?php echo Form::input('saldoPagar',$ejecucion->saldo_pagar,array('name'=>'saldoPagar','id'=>'saldoPagar','class'=>'required','readonly')) ?></td>
+        <td><?php echo Form::input('saldoPagar',$ejecucion->saldo_pagar,array('name'=>'saldoPagar','id'=>'saldoPagar','class'=>'required')) ?></td>
     </tr>
     <tr>
         <td><?php echo Form::label('gestion','Gesti&oacute;n')?></td>
@@ -169,6 +127,6 @@ $("#inc").click(function(){
         <td></td>
     </tr>
 </table>
-<input type="submit" value="Modificar" class="uibutton" name="submit" id="crear" title="Modificar Ejecuci&oacute;n Presupuestaria."  />
+<input type="submit" value="Modificar" class="uibutton" name="submit" id="crear" title="Modificar Saldo Presupuesto."  />
 </form>
 </div>

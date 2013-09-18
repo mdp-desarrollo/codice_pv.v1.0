@@ -2,6 +2,7 @@
 
 $(function(){
     $('#frmCreate').validate();
+    $('#codigo').focus();
 });
 </script>
 <style>
@@ -40,7 +41,7 @@ $(function(){
     </tr>
     <tr>
         <td><?php echo Form::label('objetivo','Objetivo de Gestion')?></td>
-        <td><textarea id="objetivo" name="objetivo" class="required"></textarea></td>
+        <td><textarea id="objetivo" name="objetivo" class="required" rows="10"></textarea></td>
     </tr>
 </table>
 

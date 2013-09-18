@@ -37,13 +37,61 @@ class Controller_Pvplanificacion extends Controller_DefaultTemplate {
     }
 
     public function action_index() {
-        $oAut = new Model_Pvpoas();
+        $this->request->redirect('pvplanificacion/lista');
+        /*$oAut = new Model_Pvpoas();
         $autorizados = $oAut->listaautorizados($this->user->id, $this->user->id_entidad);//lista de solicitudes autorizadas
         $this->template->styles = array('media/css/tablas.css' => 'all');
         $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
         $this->template->content = View::factory('pvplanificacion/index')
                                         ->bind('autorizados', $autorizados)
-                                        ;    
+                                        ;  */  
+    }
+    
+    public  function action_lista(){
+        $ofi = ORM::factory('oficinas')->where('id_entidad','=',$this->user->id_entidad)->find_all();
+        $oficinas[''] = 'TODAS LAS OFICINAS';
+        foreach($ofi as $o)
+            $oficinas [$o->id] = $o->oficina;
+        if(isset($_POST['submit']))
+        {
+            $fecha1=$_POST['fecha1'].' 00:00:00';
+            $fecha2=$_POST['fecha2'].' 23:59:00';
+            if(strtotime($fecha1)>strtotime($fecha2))
+            {
+                $fecha1=$_POST['fecha2'].' 23:59:00';
+                $fecha2=$_POST['fecha1'].' 00:00:00';
+            }
+            $o_poas=New Model_Pvpoas();
+            $results=$o_poas->avanzada($this->user->id, $this->user->id_entidad, $_POST['funcionario'],$_POST['oficina'],$fecha1,$fecha2);
+            $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+            $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
+            $this->template->content=View::factory('pvplanificacion/lista')
+                                        ->bind('autorizados',$results)
+                                        ->bind('oficinas', $oficinas)
+                     ;
+        }
+        else{
+            $oAut = new Model_Pvpoas();
+            $autorizados = $oAut->listaautorizados($this->user->id, $this->user->id_entidad);//lista de solicitudes autorizadas
+            $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+            $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
+            $this->template->content = View::factory('pvplanificacion/lista')
+                ->bind('autorizados', $autorizados)
+                ->bind('oficinas', $oficinas)
+                ;
+        }
+    }
+    public function action_detalleautorizados($id = ''){
+        $memo = ORM::factory('documentos',$id);
+        $pvfucov = ORM::factory('pvfucovs')->where('id_memo','=',$id)->find();
+        $pvpasajes = ORM::factory('pvpasajes')->where('id_fucov','=',$pvfucov->id)->find_all();
+        $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+        $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
+        $this->template->content = View::factory('pvpresupuesto/detalleautorizados')
+                ->bind('memo',$memo)
+                ->bind('pvfucov', $pvfucov)
+                ->bind('pvpasajes', $pvpasajes)
+                ;
     }
     
     public function action_unidades(){
@@ -96,7 +144,7 @@ class Controller_Pvplanificacion extends Controller_DefaultTemplate {
     
     public function action_objetivogestion($id = ''){
         $oficina = ORM::factory('oficinas')->where('id','=',$id)->find();
-        $objetivos = ORM::factory('pvogestiones')->where('id_oficina','=',$id)->and_where('estado','=',1)->find_all();
+        $objetivos = ORM::factory('pvogestiones')->where('id_oficina','=',$id)->and_where('estado','=',1)->order_by('id','asc')->find_all();
         $this->template->styles = array('media/css/tablas.css' => 'all');
         $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
         $this->template->content = View::factory('pvplanificacion/listaogestion')
@@ -254,6 +302,50 @@ class Controller_Pvplanificacion extends Controller_DefaultTemplate {
         $this->template->content = View::factory('pvplanificacion/objetivosespecificos')
                                         ->bind('objetivos', $oespecifico)
                                         ->bind('entidad', $entidad)
+                                        ;
+    }
+    
+    public function action_listaactividades($id = ''){
+        $oespecifico = ORM::factory('pvoespecificos')->where('id','=',$id)->and_where('estado','=',1)->find();
+        $ogestion = ORM::factory('pvogestiones')->where('id','=',$oespecifico->id_obj_gestion)->find();
+        $actividades = ORM::factory('pvactividades')->where('id_objespecifico','=',$oespecifico->id)->find_all();
+        $oficina = ORM::factory('oficinas')->where('id','=',$ogestion->id_oficina)->find();
+        $this->template->styles = array('media/css/tablas.css' => 'all');
+        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
+        $this->template->content = View::factory('pvplanificacion/listaactividades')
+                                        ->bind('objetivos', $actividades)
+                                        ->bind('oespecifico', $oespecifico)
+                                        ->bind('ogestion', $ogestion)
+                                        ->bind('actividades', $actividades)
+                                        ->bind('oficina', $oficina)
+                                        ;
+    }
+    
+    public function action_addactividad($id = ''){
+        $mensajes=array();
+        if (isset($_POST['submit'])) {
+            $actividad = ORM::factory('pvactividades');
+            $actividad->codigo = trim($_POST['codigo']);
+            $actividad->actividad = trim($_POST['actividad']);
+            $actividad->id_objespecifico = $id;
+            $actividad->estado = 1;
+            $actividad->save();
+            $mensajes['Adidionado!'] = 'La Actividad se adiciono correctamente.';
+        }
+        $actividades = ORM::factory('pvactividades')->where('id_objespecifico','=',$id)->find_all();
+        $oespecifico = ORM::factory('pvoespecificos')->where('id','=',$id)->and_where('estado','=',1)->find();
+        $ogestion = ORM::factory('pvogestiones')->where('id','=',$oespecifico->id_obj_gestion)->find();
+        $oficina = ORM::factory('oficinas')->where('id','=',$ogestion->id_oficina)->find();
+        $entidad = ORM::factory('entidades')->where('id','=',$oficina->id_entidad)->find();
+        $this->template->styles = array('media/css/tablas.css' => 'all');
+        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
+        $this->template->content = View::factory('pvplanificacion/addactividad')
+                ->bind('actividades', $actividades)                        
+                ->bind('ogestion', $ogestion)
+                ->bind('oespecifico', $oespecifico)
+                ->bind('oficina', $oficina)
+                ->bind('entidad', $entidad)
+                ->bind('mensajes', $mensajes)
                                         ;
     }
 }

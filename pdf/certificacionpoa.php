@@ -145,11 +145,21 @@ try {
     $pvpoa = $stmt->fetch(PDO::FETCH_OBJ);
     
     ///objetivos
-    $stmt = $dbh->prepare("select og.codigo cod_gest, oe.codigo cod_esp from pvogestiones og inner join pvoespecificos oe on og.id = oe.id_obj_gestion 
-                           where og.id_oficina = $oficina2->id  and og.id = $pvpoa->id_obj_gestion  and oe.id = $pvpoa->id_obj_esp");
+    //$stmt = $dbh->prepare("select og.codigo cod_gest, oe.codigo cod_esp from pvogestiones og inner join pvoespecificos oe on og.id = oe.id_obj_gestion 
+    //                       where og.id_oficina = $oficina2->id  and og.id = $pvpoa->id_obj_gestion  and oe.id = $pvpoa->id_obj_esp");
+    $stmt = $dbh->prepare("select og.codigo cod_gest, oe.codigo cod_esp, act.codigo cod_act, act.actividad
+                        from pvogestiones og 
+                        inner join pvoespecificos oe on og.id = oe.id_obj_gestion 
+                        inner join pvactividades act on oe.id = act.id_objespecifico
+                        where og.id_oficina = $oficina2->id  
+                        and og.id = $pvpoa->id_obj_gestion 
+                        and oe.id = $pvpoa->id_obj_esp
+                        and act.id = $pvpoa->id_actividad
+            ");
+    
     $stmt->execute();
     $pvobjetivos = $stmt->fetch(PDO::FETCH_OBJ);
-    
+    if($pvobjetivos){
     $pdf->Ln(0);
     $pdf->SetFont('Helvetica', 'B', 9);
     $pdf->write(0,'CERTIFICACION POA','',0,'C');
@@ -178,20 +188,20 @@ try {
             </tr>
             <tr>
                 <td>
-                    <table border = \"1px\" STYLE=\" WIDTH:580px;\">
+                    <table border = \"1px\" style=\" width:580px;\">
                         <tr bgcolor=\"$color\">
                             <td style=\"width: 120px; text align:center\">POA</td>
                             <td style=\"width: 60px;\">CODIGO</td>
                             <td style=\"width: 40px;\" ></td>
-                            <td style=\"width: 60px;\" >CODIGO:</td>
+                            <td style=\"width: 60px;\" >CODIGO</td>
                             <td style=\"width: 300px;\" >ACTIVIDAD - DESCRIPCION SEGUN POA</td>
                         </tr>
                         <tr>
                             <td>Objetivo de Gestion</td>
                             <td>$pvobjetivos->cod_gest</td>
                             <td></td>
-                            <td></td>
-                            <td></td>
+                            <td rowspan=\"2\">$pvobjetivos->cod_act</td>
+                            <td rowspan=\"2\">$pvobjetivos->actividad</td>
                         </tr>
                         <tr>
                             <td>Objetivo Especifico</td>
@@ -301,13 +311,14 @@ try {
                     </table>
                     </center>
                     </p>
+                    <br />
                 </td>
             </tr>
             <tr>
                 <td style = \" width: 100%;\" bgcolor = \"$color\"><b>Responsable de la certificacion</b></td>
             </tr>
             <tr>
-                <td><p>
+                <td><br /><p>
                     <table border = \"1px\" style=\" width:580px;\" >
                         <tr>
                             <td style=\"width: 80px;\" bgcolor = \"$color\">Responsable Verificacion POA</td>
@@ -329,7 +340,10 @@ try {
     ";
     $pdf->Ln(10);
     $pdf->writeHTML($tabla2, false, false, false);
-        
+    }
+    else{         
+        $pdf->writeHTML('ERROR AL GENERAR EL DOCUMENTO.', false, false, false);
+    }
 } catch (PDOException $e) {
     print "Error!: " . $e->getMessage() . "<br/>";
     die();

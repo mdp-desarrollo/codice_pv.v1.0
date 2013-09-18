@@ -129,9 +129,9 @@ class Model_Pvprogramaticas extends ORM{
         }
         $result .= "</tbody></table>";
         if($sw == 1)
-            $result .="<br /><font color=\"red\" size=\"4\"><center>NO TIENE SUFICIENTE PRESUPUESTO!!!</center></font>";
-        else
-            $result .="<br /><font color=\"green\" size=\"4\"><center>PRESUPUESTO SUFICIENTE!!!</center></font>";
+            $result .="<br /><font color=\"red\" size=\"4\"><center>PRESUPUESTO INSUFICIENTE!!!</center></font>";
+        //else
+          //  $result .="<br /><font color=\"green\" size=\"4\"><center>PRESUPUESTO SUFICIENTE!!!</center></font>";
         return $result;
     }
     
