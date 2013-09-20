@@ -166,7 +166,7 @@ else{
                 <!--<form action="/pvpasajes/editarfucov/<?php echo $pvfucov->id; ?>" method="post" id="frmEditarFucov" >-->
                 <h2 style="text-align: center;"> PASAJES Y VI&Aacute;TICOS</h2>
                 <br /><hr /><br />
-                <table border ="0" width="100 %">
+                <table border ="0" width="100%">
                     <tr>
                         <td><b>Autoriza el Viaje:</b></td>
                         <td colspan="2"><?php echo $memo->nombre_remitente;?><br/><b><?php echo $memo->cargo_remitente;?></b></td>

@@ -67,7 +67,7 @@ $(function(){
     td{padding:5px;}    
 </style>
 <h2 class="subtitulo">Solicitudes de pasajes y viaticos<br/> <span>Lista de solicitudes autorizadas</span></h2>
-<?php if(sizeof($autorizados)>0):?> 
+<?php //if(sizeof($autorizados)>0):?> 
 <div id="buscador">
 B&uacute;squeda Avanzada
     <form action="" method="post">
@@ -98,6 +98,14 @@ B&uacute;squeda Avanzada
     </table>
 </form>
     <hr />
+    <?php if (sizeof($mensajes) > 0): ?>
+                    <div class="info">
+                        <p><span style="float: left; margin-right: .3em;" class="ui-icon-info"></span>
+                            <?php foreach ($mensajes as $k => $v): ?>
+                                <strong><?= $k ?>: </strong> <?php echo $v; ?></p>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?> 
 </div>
 <!--<button id="buscar">B&uacute;squeda Avanzada</button>-->
 <br />
@@ -134,11 +142,11 @@ B&uacute;squeda Avanzada
     <?php endforeach;?>
    </tbody>   
 </table>
-<?php else: ?>
+<?php /*else: ?>
 <div style="margin-top: 20px; padding: 10px;" class="info">
     <p><span style="float: left; margin-right: .3em;" class=""></span>    
      <strong>Info: </strong> <?php echo 'Usted no tiene Pasajes autorizados';?></p>    
 </div>
-<?php endif; ?>
+<?php endif;*/ ?>
 
 <?php /// echo 'SQL::::: '.$sql?>

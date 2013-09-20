@@ -72,7 +72,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                     $contenido = "<p>Por medio del presente Memorándum se ordena a su persona trasladarse desde:</p>
                         <p>la ciudad " . $_POST['origen'] . " hasta la ciudad " . $_POST['destino'] . " con el objetivo de asistir a " . $_POST['detalle_comision'] . " .</p>
                         <p>Desde el " . $_POST['fecha_inicio'] . " a Hrs. " . $_POST['hora_inicio'] . " hasta el " . $_POST['fecha_fin'] . " a Hrs. " . $_POST['hora_fin'] . ".</p>    
-                        <p>Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para los cual su persona deberá coordinar la elaboración del FUCOV. Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural.</p>
+                        <p>Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para lo cual su persona deberá coordinar la elaboración del FUCOV. Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y Viáticos del Ministerio de Desarrollo Productivo y Economía Plural.</p>
                         <p>Saludo a usted atentamente. </p>    
                         ";
                     // if ($_POST['observacion']) {
@@ -718,6 +718,14 @@ class Controller_documento extends Controller_DefaultTemplate {
                                 $det_obj_esp = $e->objetivo;
                             }
                         }
+                        $act = ORM::factory('pvactividades')->where('id_objespecifico', '=', $pvpoas->id_obj_esp)->and_where('estado', '=', 1)->find_all();
+                        $det_actividad = '';
+                        foreach ($act as $a) {
+                            $actividad[$a->id] = $a->codigo;
+                            if ($a->id == $pvpoas->id_actividad) {
+                                $det_actividad = $a->actividad;
+                            }
+                        }
                         $detallepv = View::factory('pvplanificacion/detalle')
                                 ->bind('pvfucov', $pvfucov)
                                 ->bind('estado', $estado)
@@ -726,6 +734,8 @@ class Controller_documento extends Controller_DefaultTemplate {
                                 ->bind('det_obj_gestion', $det_obj_gestion)
                                 ->bind('obj_esp', $oespecifico)
                                 ->bind('det_obj_esp', $det_obj_esp)
+                                ->bind('actividad', $actividad)
+                                ->bind('det_act', $det_actividad)
                                 ->bind('ue_poa', $uejecutorapoa)
                         ;
                         break;

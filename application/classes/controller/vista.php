@@ -76,6 +76,7 @@ class Controller_Vista extends Controller_MinimoTemplate {
                 $pvpoas = ORM::factory('pvpoas')->where('id_fucov','=',$pvfucov->id)->find();
                 $pvgestion = ORM::factory('pvogestiones')->where('id','=',$pvpoas->id_obj_gestion)->find();
                 $pvespecifico = ORM::factory('pvoespecificos')->where('id','=',$pvpoas->id_obj_esp)->find();
+                $pvactividad = ORM::factory('pvactividades')->where('id','=',$pvpoas->id_actividad)->find();
                 ///rodrigo-PPT
                 $cambio = ORM::factory('pvtipocambios')->find_all();
                 foreach($cambio as $c)
@@ -97,6 +98,7 @@ class Controller_Vista extends Controller_MinimoTemplate {
                         ->bind('pvpoas', $pvpoas)
                         ->bind('pvgestion', $pvgestion)
                         ->bind('pvespecifico', $pvespecifico)
+                        ->bind('pvactividad', $pvactividad)
                         ///PPT
                         ->bind('pvliquidacion', $pvliquidacion)
                         ;

@@ -64,7 +64,7 @@
     td{padding:5px;}    
 </style>
 <h2 class="subtitulo">Certificaciones POA para Pasajes y Vi&aacute;ticos<br/> <span>Lista de solicitudes autorizadas</span></h2>
-<?php if(sizeof($autorizados)>0):?>
+<?php //if(sizeof($autorizados)>0):?>
 <div id="buscador">
 B&uacute;squeda Avanzada
     <form action="" method="post">
@@ -89,6 +89,14 @@ B&uacute;squeda Avanzada
     </table>
 </form>
     <hr />
+    <?php if (sizeof($mensajes) > 0): ?>
+                    <div class="info">
+                        <p><span style="float: left; margin-right: .3em;" class="ui-icon-info"></span>
+                            <?php foreach ($mensajes as $k => $v): ?>
+                                <strong><?= $k ?>: </strong> <?php echo $v; ?></p>
+                        <?php endforeach; ?>
+                    </div>
+    <?php endif; ?>     
 </div>
 <p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" /></p>
 <table id="theTable" class="tablesorter" border="1px" >
@@ -108,7 +116,7 @@ B&uacute;squeda Avanzada
         <tr>
             <!--<td ><a href="/documento/detalle/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
             <td ><?php echo $aut->nur;?></td>-->
-            <td ><a href="/pvplanificacion/detalleautorizado/<?php echo $aut->id_memo;?>"><?php echo $aut->nur;?></a></td>
+            <td ><a href="/pvplanificacion/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->nur;?></a></td>
             <td ><?php echo $aut->fecha_certificacion;?></td>
             <td ><?php echo $aut->oficina;?></td>
             <td ><?php echo $aut->nombre;?><br /><b><?php echo $aut->cargo;?></b></td>
@@ -117,9 +125,9 @@ B&uacute;squeda Avanzada
     <?php endforeach; ?>
    </tbody>   
 </table>
-<?php else: ?>
+<?php /* else: ?>
 <div style="margin-top: 20px; padding: 10px;" class="info">
     <p><span style="float: left; margin-right: .3em;" class=""></span>    
      <strong>Info: </strong> <?php echo 'Usted no tiene Solicitudes Certificadas';?></p>    
 </div>
-<?php endif; ?>
+<?php endif; */?>

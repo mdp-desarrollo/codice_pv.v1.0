@@ -375,13 +375,19 @@ public  function action_lista(){
     public function action_detalleautorizados($id = ''){
         $memo = ORM::factory('documentos',$id);
         $pvfucov = ORM::factory('pvfucovs')->where('id_memo','=',$id)->find();
-        $pvpasajes = ORM::factory('pvpasajes')->where('id_fucov','=',$pvfucov->id)->find_all();
+        $oPpt = new Model_Pvprogramaticas();
+        $det = $oPpt->detallesaldopresupuesto($pvfucov->id_programatica);///detalle de la estructura programatica
+        foreach ($det as $d)
+            $detalle = $d;
+        $oPart = New Model_Pvprogramaticas();
+            $pvliquidacion = $oPart->pptliquidado($pvfucov->id,0,0,0,0,0);
         $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
         $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
         $this->template->content = View::factory('pvpresupuesto/detalleautorizados')
                 ->bind('memo',$memo)
                 ->bind('pvfucov', $pvfucov)
-                ->bind('pvpasajes', $pvpasajes)
+                ->bind('detalle', $detalle)
+                ->bind('pvliquidacion', $pvliquidacion)
                 ;
     }
 }

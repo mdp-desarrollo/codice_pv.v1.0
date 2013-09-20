@@ -39,7 +39,7 @@ class Model_Pvpasajes extends ORM{
         if($oficina != '')
             $sql .= " and d.id_oficina = $oficina ";
         if($numero != '')
-            $sql .= " and p.nro_boleto = $numero ";
+            $sql .= " and p.nro_boleto = '$numero' ";
         if($f1 != '' && $f2 != '')
             $sql .= " and (f.fecha_salida between '$f1' and '$f2' or f.fecha_arribo between '$f1' and '$f2')";
         if($nombre != '')
