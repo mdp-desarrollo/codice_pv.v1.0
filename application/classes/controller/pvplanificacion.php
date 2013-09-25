@@ -361,6 +361,32 @@ class Controller_Pvplanificacion extends Controller_DefaultTemplate {
                 ->bind('mensajes', $mensajes)
                                         ;
     }
+    
+    public function action_editactividad($id = ''){
+        $mensajes = array();
+        $actividad = ORM::factory('pvactividades')->where('id','=',$id)->find();
+        if (isset($_POST['submit'])) {
+            $actividad->codigo = trim($_POST['codigo']);
+            $actividad->actividad = trim($_POST['actividad']);
+            $actividad->save();
+            $this->request->redirect('pvplanificacion/listaactividades/'.$actividad->id_objespecifico);
+        }
+        //$actividades = ORM::factory('pvactividades')->where('id_objespecifico','=',$id)->find_all();
+        $oespecifico = ORM::factory('pvoespecificos')->where('id','=',$actividad->id_objespecifico)->and_where('estado','=',1)->find();
+        $ogestion = ORM::factory('pvogestiones')->where('id','=',$oespecifico->id_obj_gestion)->find();
+        $oficina = ORM::factory('oficinas')->where('id','=',$ogestion->id_oficina)->find();
+        $entidad = ORM::factory('entidades')->where('id','=',$oficina->id_entidad)->find();
+        $this->template->styles = array('media/css/tablas.css' => 'all');
+        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
+        $this->template->content = View::factory('pvplanificacion/editactividad')
+                ->bind('actividad', $actividad)
+                ->bind('ogestion', $ogestion)
+                ->bind('oespecifico', $oespecifico)
+                ->bind('oficina', $oficina)
+                ->bind('entidad', $entidad)
+                ->bind('mensajes', $mensajes)
+                ;
+    }
 }
 
 ?>

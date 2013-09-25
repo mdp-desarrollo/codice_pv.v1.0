@@ -71,13 +71,13 @@ $(function()
     <?php endforeach; ?>
    </tbody>
 </table>
-<div class="info" style="text-align:center;margin-top: 20px;">
-    <p><span style="float: left; margin-right: .3em;" class=""></span>    
-      &larr;<a href="/pvplanificacion/objetivoespecifico/<?php echo $ogestion->id;?>" class="uibutton" title="Regresar" >Regresar</a></p>    
-</div>
 <?php else: ?>
 <div style="margin-top: 20px; padding: 10px;" class="info">
     <p><span style="float: left; margin-right: .3em;" class=""></span>    
      <strong>Info: </strong> <?php echo 'No Hay Actividades para el Objetivo Especifico.';?></p>    
 </div>
 <?php endif; ?>
+<div class="info" style="text-align:center;margin-top: 20px;">
+    <p><span style="float: left; margin-right: .3em;" class=""></span>    
+      &larr;<a href="/pvplanificacion/objetivoespecifico/<?php echo $ogestion->id;?>" class="uibutton" title="Regresar" >Regresar</a></p>    
+</div>

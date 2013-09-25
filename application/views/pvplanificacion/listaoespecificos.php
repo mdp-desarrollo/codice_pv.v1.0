@@ -76,3 +76,7 @@ $(function()
      <strong>Info: </strong> <?php echo 'No Hay Objetivos Especificos Para El Objetivo de Gestion.';?></p>    
 </div>
 <?php endif; ?>
+<div class="info" style="text-align:center;margin-top: 20px;">
+    <p><span style="float: left; margin-right: .3em;" class=""></span>    
+      &larr;<a href="/pvplanificacion/objetivogestion/<?php echo $oficina->id;?>" class="uibutton" title="Regresar" >Regresar</a></p>    
+</div>

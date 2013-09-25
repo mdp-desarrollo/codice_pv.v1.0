@@ -152,9 +152,8 @@ if ($diff==0)
 else{
     if($hora >'12:00:00')
         $dias = intval((($diff) / (60*60*24))+1);
-
     else
-        $dias = intval((($diff) / (60*60*24))+0);    
+        $dias = intval((($diff) / (60*60*24))+0);
 }
     if($pvfucov->tipo_moneda == '0')
         $moneda = 'Bs.';
