@@ -215,7 +215,7 @@
                         echo Form::select('documento', $options, NULL, array('id' => 'documento'));
                         echo Form::hidden('id_seg', '', array('id' => 'id_seg'));
                         echo Form::hidden('id_documento', '', array('id' => 'id_documento'));
-                        echo Form::hidden('fucov', 'Hola como estas', array('id' => 'fucov'));
+                        echo Form::input('fucov', '', array('id' => 'fucov'));
                         echo Form::hidden('nur', '', array('id' => 'nur'));
                         ?>
                     </td>
