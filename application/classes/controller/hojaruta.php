@@ -131,7 +131,7 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                     $documento->nombre_remitente = $this->user->nombre;
                     $documento->cargo_remitente = $this->user->cargo;
                     $documento->mosca_remitente = $this->user->mosca;
-                    if ($fucov == 1) {
+                    if ($fucov == 1 && $id_tipo==13) {
                         $documento->referencia = $memo->referencia;
                     }
                     $documento->fecha_creacion = date('Y-m-d H:i:s');
@@ -147,7 +147,7 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
                     if ($documento->id) {
 
                         //Modificado por freddy
-                        if ($fucov == 1) {
+                        if ($fucov == 1 && $id_tipo==13) {
                             $entidad = ORM::factory('entidades', $this->user->id_entidad);
                             
                             $pvfucov = ORM::factory('pvfucovs');
