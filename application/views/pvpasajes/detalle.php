@@ -143,17 +143,18 @@ function dia_literal($n) {
 //calcular el numero de dias
 $fecha1 = strtotime($pvfucov->fecha_salida);
 $fecha2 = strtotime($pvfucov->fecha_arribo);
-$diff =  $fecha2 - $fecha1;
+$diff =  $fecha2 - $fecha1;//echo 'DIFF.: '.$diff.'<br />';
 if($diff < 0)
     $diff = $diff*(-1);
 $hora = date('H:i:s', strtotime($pvfucov->fecha_arribo));
 if ($diff==0)
     $dias = 1;
 else{
-    if($hora >'12:00:00')
-        $dias = intval((($diff) / (60*60*24))+1);
-    else
-        $dias = intval((($diff) / (60*60*24))+0);
+    $dias = intval((($diff) / (60*60*24))+1);
+    if (strcasecmp($hora, '12:00:00') != 0) {
+        if(strcasecmp($hora, '12:00:00') > 0)
+            $dias ++;
+    }
 }
     if($pvfucov->tipo_moneda == '0')
         $moneda = 'Bs.';
