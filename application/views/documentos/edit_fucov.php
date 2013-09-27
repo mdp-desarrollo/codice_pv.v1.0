@@ -164,10 +164,10 @@
         function calculo_dias(){
             $("#justificacion_finsem").removeAttr("class");
             var fecha_s = $("#fecha_salida").val();
-            var dia_s = fecha_s.substring(0, 3);
+            //var dia_s = fecha_s.substring(0, 3);
             fecha_s = fecha_s.substring(4, 14);
             var fecha_a = $("#fecha_arribo").val();
-            var dia_a = fecha_a.substring(0, 3);
+            //var dia_a = fecha_a.substring(0, 3);
             fecha_a = fecha_a.substring(4, 14);
             
             //validamos fin de semana
@@ -205,7 +205,9 @@
             }
             //calculo de viaticos
             if(fecha_s != '' && fecha_a !='') {
-                var diferencia =  Math.floor(( Date.parse(fecha_a) - Date.parse(fecha_s) ) / 86400000);
+            var fecha2 = fecha_a.replace(/-/g, '/');
+            var fecha1 = fecha_s.replace(/-/g, '/');
+                var diferencia =  Math.floor(( Date.parse(fecha2) - Date.parse(fecha1) ) / 86400000);
                 if(diferencia >= 0){
                     if(diferencia == 0){
                         diferencia = 1;
@@ -441,6 +443,7 @@ function dia_literal($n) {
 ?>
 
 <h2 class="subtitulo">Editar <?php echo $documento->codigo; ?> - <b><?php echo $documento->nur; ?></b><br/><span> Editar documento <?php echo $documento->codigo; ?> </span></h2>
+<form action="/documento/editar/<?php echo $documento->id; ?>" method="post" id="frmEditar" >
 <div class="tabs">
     <ul class="tabNavigation">
         <li><a href="#editar">Edición</a></li>
@@ -448,8 +451,8 @@ function dia_literal($n) {
         <li><a href="#pre">Presupuesto</a></li>
         <li><a href="#adjuntos">Adjuntos</a></li>        
     </ul>
-    <div id="editar"> 
 
+    <div id="editar">
         <div class="formulario"  >  
             <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;  ">    
                 <a href="#" class="link save" id="save" title="Guardar cambios hechos al documento" > Guardar</a>
@@ -467,7 +470,8 @@ function dia_literal($n) {
                     |  <a href="/word/print.php?id=<?php echo $documento->id; ?>" class="link word" target="_blank" title="Editar este documento en word" >Editar en Word</a>       
                 <?php endif; ?>
             </div>
-            <form action="/documento/editar/<?php echo $documento->id; ?>" method="post" id="frmEditar" >  
+            
+                <?php //echo Form::open('documento/editar/'.$documento->id, array('id'=>'frmEditar', 'method'=>'post'));?>
                 <?php if (sizeof($mensajes) > 0): ?>
                     <div class="info">
                         <p><span style="float: left; margin-right: .3em;" class="ui-icon-info"></span>
@@ -475,7 +479,8 @@ function dia_literal($n) {
                                 <strong><?= $k ?>: </strong> <?php echo $v; ?></p>
                         <?php endforeach; ?>
                     </div>
-                <?php endif; ?>        
+                <?php endif; ?>
+            
                 <br/>
                 <?php
                 if ($documento->id_tipo == 5):
@@ -498,7 +503,7 @@ function dia_literal($n) {
                 
                     ?>
                         </legend>
-                    <?php endif; ?>            
+                    <?php endif; ?>
                     <table width="100%">
                         <tr>
                             <td style=" border-right:1px dashed #ccc; padding-left: 5px;">
@@ -528,11 +533,11 @@ function dia_literal($n) {
                                     <p>
                                         <?php
                                         echo Form::label('via', 'Via:', array('class' => 'form'));
-                                        echo Form::input('via', $documento->nombre_via, array('id' => 'via', 'size' => 45/* ,'class'=>'required' */));
+                                        echo Form::input('via', $documento->nombre_via, array('id' => 'via', 'size' => 45));
                                         ?>
                                         <?php
                                         echo Form::label('cargovia', 'Cargo Via:', array('class' => 'form'));
-                                        echo Form::input('cargovia', $documento->cargo_via, array('id' => 'cargovia', 'size' => 45/* ,'class'=>'required' */));
+                                        echo Form::input('cargovia', $documento->cargo_via, array('id' => 'cargovia', 'size' => 45));
                                         ?>
                                     <?php endif; ?>
 
@@ -554,11 +559,11 @@ function dia_literal($n) {
                                     ?>
                                     <?php
                                     echo Form::label('adjuntos', 'Adjunto:', array('class' => 'form'));
-                                    echo Form::input('adjuntos', $documento->adjuntos, array('id' => 'adjuntos', 'size' => 45/* ,'class'=>'required','title'=>'Ejemplo: Lo citado' */));
+                                    echo Form::input('adjuntos', $documento->adjuntos, array('id' => 'adjuntos', 'size' => 45));
                                     ?>
                                     <?php
                                     echo Form::label('copias', 'Con copia a:', array('class' => 'form'));
-                                    echo Form::input('copias', $documento->copias, array('id' => 'adjuntos', 'size' => 45/* ,'class'=>'required' */));
+                                    echo Form::input('copias', $documento->copias, array('id' => 'adjuntos', 'size' => 45));
                                     ?>
                                 </p>
                             </td>
@@ -734,8 +739,11 @@ function dia_literal($n) {
 
 
         </div>
+        
     </div>
+    
     <div id="poa">
+        
         <div class="formulario">        
             <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;  ">
                 <h2 style="text-align:center;">Certificaci&oacute;n POA</h2><hr/>
@@ -800,7 +808,7 @@ function dia_literal($n) {
 <b><?php echo Form::label('det_act', 'Detalle:', array('class' => 'form')); ?></b>
                             </td>
                             <td><br />
-                                <textarea name="det_act" id="det_act" style="width: 600px;" disabled="true" readonly ><?php echo $det_act; ?></textarea>
+                                <textarea name="det_act" id="det_act" style="width: 600px;" readonly ><?php echo $det_act; ?></textarea>
                             </td>
                         </tr>
                     </table>
@@ -829,6 +837,8 @@ function dia_literal($n) {
         </div>
     </div>
 </form>
+
+<?php // echo Form::close();?>
 <div id="adjuntos">
     <div class="formulario">        
         <form method="post" enctype="multipart/form-data" action="" >
