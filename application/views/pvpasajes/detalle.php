@@ -121,7 +121,6 @@ $.datepicker.setDefaults($.datepicker.regional['es']);
     $hi = date('H:i:s', strtotime($pvfucov->fecha_salida));
     $hf = date('H:i:s', strtotime($pvfucov->fecha_arribo));
     $diai = dia_literal(date("w", strtotime($fi)));
-    echo 'dia i ::'.$pvfucov->fecha_salida.'dia f ::'.$pvfucov->fecha_arribo ;
     $diaf = dia_literal(date("w", strtotime($ff)));
 function dia_literal($n) {
     switch ($n) {
@@ -144,16 +143,18 @@ function dia_literal($n) {
 //calcular el numero de dias
 $fecha1 = strtotime($pvfucov->fecha_salida);
 $fecha2 = strtotime($pvfucov->fecha_arribo);
-$diff =  $fecha2 - $fecha1;
+$diff =  $fecha2 - $fecha1;//echo 'DIFF.: '.$diff.'<br />';
+if($diff < 0)
+    $diff = $diff*(-1);
 $hora = date('H:i:s', strtotime($pvfucov->fecha_arribo));
 if ($diff==0)
     $dias = 1;
 else{
-    if($hora >'12:00:00')
-        $dias = intval((($diff) / (60*60*24))+2);
-
-    else
-        $dias = intval((($diff) / (60*60*24))+1);    
+    $dias = intval((($diff) / (60*60*24))+1);
+    if (strcasecmp($hora, '12:00:00') != 0) {
+        if(strcasecmp($hora, '12:00:00') > 0)
+            $dias ++;
+    }
 }
     if($pvfucov->tipo_moneda == '0')
         $moneda = 'Bs.';
@@ -180,6 +181,8 @@ else{
                                 <td><input type="submit" value="Modificar Comision" class="uibutton" name="submit" id="crear" title="Modificar"/></td>                    
                             </tr>
                         </table>
+                <br />
+                <hr />
                 <br />
                 <table border="1" width="100%">
                     <tr>
@@ -228,14 +231,14 @@ else{
                                 <th>EMPRESA</th>
                             </thead>
                                 <tr>
-                                    <td><?php echo Form::input('origen','',array('id'=>'origen','size'=>'12','class'=>'required'));?></td>
-                                    <td><?php echo Form::input('destino','',array('id'=>'destino','size'=>'12','class'=>'required'));?></td>
-                                    <td><?php echo Form::input('fecha_ida',dia_literal(date("w")).' '.date("Y-m-d"),array('id'=>'fecha_ida','size'=>'15','class'=>'required'));?><br /> <?php echo Form::input('hora_ida',date("h:m:s"),array('id'=>'hora_ida','size'=>'10','class'=>'required'));?></td>
-                                    <td><?php echo Form::input('fecha_llegada',dia_literal(date("w")).' '.date("Y-m-d"),array('id'=>'fecha_llegada','size'=>'15','class'=>'required'));?><br /><?php echo Form::input('hora_llegada',date("h:m:s"),array('id'=>'hora_llegada','size'=>'10','class'=>'required'));?></td>
+                                    <td><?php echo Form::input('origen','',array('id'=>'origen','size'=>'11','class'=>'required'));?></td>
+                                    <td><?php echo Form::input('destino','',array('id'=>'destino','size'=>'11','class'=>'required'));?></td>
+                                    <td><?php echo Form::input('fecha_ida',dia_literal(date("w")).' '.date("Y-m-d"),array('id'=>'fecha_ida','size'=>'14','class'=>'required'));?><br /> <?php echo Form::input('hora_ida','00:00:00',array('id'=>'hora_ida','size'=>'10','class'=>'required'));?></td>
+                                    <td><?php echo Form::input('fecha_llegada',dia_literal(date("w")).' '.date("Y-m-d"),array('id'=>'fecha_llegada','size'=>'14','class'=>'required'));?><br /><?php echo Form::input('hora_llegada','00:00:00',array('id'=>'hora_llegada','size'=>'10','class'=>'required'));?></td>
                                     <td><?php echo Form::select('transporte',array('Aereo'=>'Aereo','Terrestre'=>'Terrestre','Vehiculo Oficial'=>'Vehiculo Oficial'),'',array('id'=>'transporte'));?></td>
-                                    <td><?php echo Form::input('nro_boleto','',array('id'=>'nro_boleto','size'=>'5','class'=>'required'));?></td>
-                                    <td><?php echo Form::input('costo','',array('id'=>'costo','size'=>'5','class'=>'required'));?></td>
-                                    <td><?php echo Form::input('empresa','',array('id'=>'empresa','size'=>'8','class'=>'required'));?></td>
+                                    <td><?php echo Form::input('nro_boleto','',array('id'=>'nro_boleto','size'=>'3','class'=>'required'));?></td>
+                                    <td><?php echo Form::input('costo','',array('id'=>'costo','size'=>'3','class'=>'required'));?></td>
+                                    <td><?php echo Form::input('empresa','',array('id'=>'empresa','size'=>'5','class'=>'required'));?></td>
                                 </tr>
                                 <tr>
                                     <td colspan="8" style="text-align: center;"><button id="adicionar">Adicionar</button><button id="cancelar" class="uibutton">Cancelar</button></td>

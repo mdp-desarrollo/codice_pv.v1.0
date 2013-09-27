@@ -104,7 +104,8 @@ $(function(){
             <td ><?php echo $ppt['saldo_devengado'];?></td>
             <td ><?php echo $ppt['pagado'];?></td>
             <td ><?php echo $ppt['saldo_pagar'];?></td>
-            <td ><a href="/pvpresupuesto/editsaldoppt/<?php echo $ppt['id'];?>" class="uibutton" title="Modificar" ><img src="/media/images/edit.png"/> </a></td>
+            <td ><a href="/pvpresupuesto/movimiento/<?php echo $ppt['id'];?>" class="uibutton" title="Movimiento Saldo" ><img src="/media/images/reprogramar.png"/></a>&nbsp;&nbsp;&nbsp;
+                    <a href="/pvpresupuesto/editsaldoppt/<?php echo $ppt['id'];?>" class="uibutton" title="Editar" ><img src="/media/images/edit.png"/> </a></td>
         </tr>        
     <?php endforeach; ?>
    </tbody>   

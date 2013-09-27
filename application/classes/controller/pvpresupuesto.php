@@ -37,14 +37,14 @@ class Controller_Pvpresupuesto extends Controller_DefaultTemplate {
     }
 
     public function action_index($id = '') {
-        $oAut = new Model_Pvliquidaciones();
+        $this->request->redirect('pvpresupuesto/lista');
+        /*$oAut = new Model_Pvliquidaciones();
         $aut = $oAut->pptautorizados($this->user->id_entidad);
         $this->template->styles = array('media/css/tablas.css' => 'all');
         $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
         $this->template->content = View::factory('pvpresupuesto/index')
                                         ->bind('autorizados', $aut)
-                                        ;
-        
+                                        ;*/
     }
     
 public function action_ejecucion($id = ''){
@@ -136,26 +136,30 @@ public function action_addejecucionppt(){
             $programatica->save();
             $this->request->redirect('pvpresupuesto/ejecucion/');
         }
+        ///oficinas
+        foreach($oficinas as $o)
+            $oficina[$o->id] = $o->oficina;
         //Entidad
         $ent = ORM::factory('entidades')->where('id','=',$this->user->id_entidad)->find();
         $entidad = $ent->entidad;
-        //Oficinas
-        $ofi = ORM::factory('oficinas')->where('id_entidad','=',$this->user->id_entidad)->find_all();
+        //Unidades Ejecutoras de PPT
+        $ofi = ORM::factory('oficinas')->where('id_entidad','=',  $this->user->id_entidad)->and_where('ppt_unid_ejecutora','=',1)->find_all();
         foreach($ofi as $o)
-            $oficina[$o->id] = $o->oficina;
+            $ue[$o->id] = $o->oficina;
         //Direccion Administrativa
-        $dadmin = ORM::factory('oficinas')->where('ppt_da','=',1)->and_where('id_entidad','=',$this->user->id_entidad)->find_all();
+        $dadmin = ORM::factory('oficinas')->where('id_entidad','=', $this->user->id_entidad)->and_where('ppt_da','=',1)->find_all();
         foreach($dadmin as $d)
             $da[$d->id] = $d->ppt_cod_da.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$d->oficina;
         
         //Unidad Ejecutora
-        $uejec = ORM::factory('oficinas')->where('ppt_unid_ejecutora','=',1)->and_where('id_entidad','=',$this->user->id_entidad)->find_all();
+        /*$uEjec = new Model_Oficinas();
+        $uejec = $uEjec->ueppt($this->user->id_oficina);
         foreach($uejec as $d)
-            $ue[$d->id] = $d->ppt_cod_ue.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$d->oficina;
+            $ue[$d->id] = $d->ppt_cod_ue.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$d->oficina;*/
         
         //Programa
         $programa = ORM::factory('pvprogramas')->where('estado','=',1)->find_all();
-        $prog[0] = '';
+        $prog[''] = 'Seleccione un Programa';
         foreach($programa as $p)
             $prog[$p->id] = $p->codigo.' &nbsp;&nbsp;-&nbsp;&nbsp; '.$p->programa;
             
@@ -192,17 +196,17 @@ public function action_editsaldoppt($id = ''){///saldo partidas
     if ($ejecucion->loaded()) {
         if (isset($_POST['submit'])) {
             //$ejecucion = ORM::factory('pvejecuciones');
-            //$ejecucion->inicial = $_POST['inicial'];
-            $ejecucion->vigente = $_POST['vigente'];
-            $ejecucion->modificado = $_POST['modificado'];
-            //$ejecucion->preventivo = $_POST['preventivo'];
-            //$ejecucion->comprometido = $_POST['comprometido'];
-            //$ejecucion->devengado = $_POST['devengado'];
-            $ejecucion->saldo_devengado = $_POST['saldoDevengado'];
-            //$ejecucion->pagado = $_POST['pagado'];
-            $ejecucion->saldo_pagar = $_POST['saldoPagar'];
-            //$ejecucion->estado = 1;
-            //$ejecucion->gestion = $_POST['gestion'];
+            $ejecucion->inicial = (float) $_POST['inicial'];
+            $ejecucion->vigente = (float) $_POST['vigente'];
+            $ejecucion->modificado = (float) $_POST['modificado'];
+            $ejecucion->preventivo = (float) $_POST['preventivo'];
+            $ejecucion->comprometido = (float) $_POST['comprometido'];
+            $ejecucion->devengado = (float) $_POST['devengado'];
+            $ejecucion->saldo_devengado = (float) $_POST['saldoDevengado'];
+            $ejecucion->pagado = (float) $_POST['pagado'];
+            $ejecucion->saldo_pagar = (float) $_POST['saldoPagar'];
+            $ejecucion->estado = 1;
+            $ejecucion->gestion = $_POST['gestion'];
             //$ejecucion->id_programatica = $id;
             //$ejecucion->id_partida = $_POST['partidas'];
             $ejecucion->save();
@@ -216,6 +220,39 @@ public function action_editsaldoppt($id = ''){///saldo partidas
         $this->template->styles = array('media/css/tablas.css' => 'all');
         $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
         $this->template->content = View::factory('pvpresupuesto/editsaldoppt')
+                                        ->bind('presupuesto', $ppt)
+                                        ->bind('detalle', $detalle)
+                                        ->bind('id_programatica', $id)
+                                        ->bind('ejecucion', $ejecucion)
+                                        ->bind('mensajes', $mensajes)
+                                        ;
+    }
+    else {
+            $this->template->content = 'La categoria programatica no fue encontrada.';
+    }
+}
+
+public function action_movimiento($id = ''){///saldo partidas
+    $mensajes = array();
+    //$programatica = ORM::factory('pvprogramaticas')->where('id', '=', $id)->and_where('estado', '=', 1)->find();
+    $ejecucion = ORM::factory('pvejecuciones')->where('id','=',$id)->find();
+    if ($ejecucion->loaded()) {
+        if (isset($_POST['submit'])) {
+            $ejecucion->vigente = $_POST['vigente'];
+            $ejecucion->modificado = $_POST['modificado'];
+            $ejecucion->saldo_devengado = $_POST['saldoDevengado'];
+            $ejecucion->saldo_pagar = $_POST['saldoPagar'];
+            $ejecucion->save();
+            $mensajes['Modificado'] = 'El saldo Presupuestario fue Modificado.';
+        }
+        $oPpt = new Model_Pvprogramaticas();
+        $ppt = $oPpt->saldopresupuesto($id);
+        $det = $oPpt->detallesaldopresupuesto($ejecucion->id_programatica);
+        foreach ($det as $d)
+            $detalle = $d;
+        $this->template->styles = array('media/css/tablas.css' => 'all');
+        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
+        $this->template->content = View::factory('pvpresupuesto/movimiento')
                                         ->bind('presupuesto', $ppt)
                                         ->bind('detalle', $detalle)
                                         ->bind('id_programatica', $id)
@@ -252,7 +289,15 @@ public function action_autorizarfucov($id = '') {
                 $partidas = array("22110" => $pvfucov->total_pasaje, "22210" => $pvfucov->total_viatico);
             }
             else{
-                $partidas = array("22120" => $pvfucov->total_pasaje, "22220" => $pvfucov->total_viatico, "26910" => $pvfucov->gasto_representacion);
+                //$tipo_cambio = ORM::factory('pvtipocambios')->select(array(DB::expr('MAX(id)'), 'cambio_venta'))->find();
+                ///rodrigo-PPT
+                $cambio = ORM::factory('pvtipocambios')->find_all();
+                foreach($cambio as $c)
+                    $tipo_cambio = $c;
+                $pasaje = round($pvfucov->total_pasaje * $tipo_cambio->cambio_venta,2);
+                $viatico = round($pvfucov->total_viatico * $tipo_cambio->cambio_venta,2);
+                $gasto = round($pvfucov->gasto_representacion * $tipo_cambio->cambio_venta,2);
+                $partidas = array("22120" => $pasaje, "22220" => $viatico, "26910" => $gasto );
             }
             foreach($partidas as $key=>$value){
                 $partida = ORM::factory('pvpartidas')->where('codigo','=',$key)->find();
@@ -285,47 +330,66 @@ public function action_autorizarfucov($id = '') {
         $this->template->content = 'El documento no existe';
 }
 
-/*
-public function action_detallecertificado($id){
-    //id = id_memo
-    $memo = ORM::factory('documentos')->where('id', '=', $id)->find();
-        if ($memo->loaded()) {
-        $fucov = ORM::factory('pyvfucov')->where('id_memo', '=', $id)->find();
-        $documento = ORM::factory('documentos')->where('id','=', $fucov->id_documento)->find();
-            if($fucov->loaded()){
-            //$pasaje = ORM::factory('pyvpasajes')->where('id_fucov','=',$fucov->id);
-            $oPsj = new Model_Pyvpasajes();
-            $pas = $oPsj->pasaje_asignado($fucov->id);
-            foreach ($pas as $p) $pasaje = $p;
-            $liq = ORM::factory('pyvliquidacion')->where('id_fucov','=',$fucov->id)->find();
-            $oFte = New Model_pyvprogramatica();
-            $fte = $oFte->listadetallefuentes($liq->id_programatica);
-            foreach ($fte as $ft) $fuente = $ft;
-    //$this->template->scripts = array('media/js/jquery-ui-1.8.16.custom.min.js','media/js/jquery.timeentry.js');
-            $pyvmenu = View::factory('pyv/templates/menus')->bind('menu', $this->pmenu)->set('titulo', 'PRESUPUESTO');
-                        $this->template->content = View::factory('pyv/presupuesto/detallecertificado')
-                                ->bind('memo', $memo)
-                                ->bind('d', $documento)
-                                //->bind('tipo', $tipo)
-                                //->bind('archivo', $archivo)
-                                //->bind('errors', $errors)
-                                //->bind('mensajes', $mensajes)
-                                ->bind('f',$fucov)
-                                ->bind('pasaje',$pasaje)
-                                ->bind('fuente',$fuente)                                
-                                ->bind('liq',$liq)
-                                ->bind('menu',$menu)
-                                ;
-            }
-            else
-                $this->template->content = 'No hay FUCOV asignado';
-        }
-        else
+public  function action_lista(){
+        $ofi = ORM::factory('oficinas')->where('id_entidad','=',$this->user->id_entidad)->find_all();
+        $oficinas[''] = 'TODAS LAS OFICINAS';
+        foreach($ofi as $o)
+            $oficinas [$o->id] = $o->oficina;
+        if(isset($_POST['submit']))
         {
-            $this->template->content = 'El Memor&aacute;ndum no existe';
+            $fecha1=$_POST['fecha1'].' 00:00:00';
+            $fecha2=$_POST['fecha2'].' 23:59:00';
+            if(strtotime($fecha1)>strtotime($fecha2))
+            {
+                $fecha1=$_POST['fecha2'].' 23:59:00';
+                $fecha2=$_POST['fecha1'].' 00:00:00';
+            }
+            $o_liquidados=New Model_Pvliquidaciones();
+            //$ofi = ORM::factory('oficinas')->where('id_entidad','=',$this->user->id_entidad)->find_all();
+            //$oficinas[''] = 'TODAS LAS OFICINAS';
+            //foreach($ofi as $o)
+            //$oficinas [$o->id] = $o->oficina;
+            //$res = 'RESULTADOSasdasdasd';            
+            $results=$o_liquidados->avanzada($this->user->id_entidad, $_POST['funcionario'],$_POST['oficina'],$fecha1,$fecha2);
+            ///$res=$o_pasajes->consulta($this->user->id_entidad, $_POST['funcionario'],$_POST['boleto'],$_POST['oficina'],$fecha1,$fecha2);
+            //$this->template->styles=array('media/css/tablas.css'=>'screen');
+            $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+            $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
+            $this->template->content=View::factory('pvpresupuesto/lista')
+                                        ->bind('autorizados',$results)
+                                        ->bind('oficinas', $oficinas)
+                                        ///->bind('sql', $res)
+                     ;
         }
-}
-*/
+        else{
+            $oAut = new Model_Pvliquidaciones();
+            $aut = $oAut->pptautorizados($this->user->id_entidad);
+            $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+            $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
+            $this->template->content = View::factory('pvpresupuesto/lista')
+                ->bind('autorizados', $aut)
+                ->bind('oficinas', $oficinas)
+                ;
+        }
+    }
+    public function action_detalleautorizados($id = ''){
+        $memo = ORM::factory('documentos',$id);
+        $pvfucov = ORM::factory('pvfucovs')->where('id_memo','=',$id)->find();
+        $oPpt = new Model_Pvprogramaticas();
+        $det = $oPpt->detallesaldopresupuesto($pvfucov->id_programatica);///detalle de la estructura programatica
+        foreach ($det as $d)
+            $detalle = $d;
+        $oPart = New Model_Pvprogramaticas();
+            $pvliquidacion = $oPart->pptliquidado($pvfucov->id,0,0,0,0,0);
+        $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+        $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
+        $this->template->content = View::factory('pvpresupuesto/detalleautorizados')
+                ->bind('memo',$memo)
+                ->bind('pvfucov', $pvfucov)
+                ->bind('detalle', $detalle)
+                ->bind('pvliquidacion', $pvliquidacion)
+                ;
+    }
 }
 
 ?>

@@ -26,8 +26,8 @@ INNER JOIN entidades AS c ON b.id_entidad = c.id WHERE a.id = '$id'");
             }
             $id_entidad=$rs2->id;
         }
-        if($id_entidad<>2){
-        $this->Image($image_file, 20, 7, 40, 23, 'PNG');
+        if($id_entidad<>2 && $id_entidad<>4){
+        $this->Image($image_file, 89, 5, 40, 23, 'PNG');
         }
         $this->SetFont('helvetica', 'B', 20);        
     }
@@ -65,7 +65,8 @@ INNER JOIN entidades AS c ON b.id_entidad = c.id WHERE a.id = '$id'");
 }
 
 // create new PDF document
-$pdf = new MYPDF('L', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
+$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, 'LETTER', true, 'UTF-8', false);
+//$pdf = new MYPDF('L', PDF_UNIT, 'LETTER', true, 'UTF-8', false);
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
@@ -115,24 +116,24 @@ try {
     $stmt->execute();
     $doc = $stmt->fetch(PDO::FETCH_OBJ);
 
-    $stmt = $dbh->prepare("select ofi.oficina, ofi.sigla sigla_oficina, ofi.ppt_unid_ejecutora ue, ofi.ppt_da da, ent.entidad, ent.sigla sigla_entidad
+    $stmt = $dbh->prepare("select ofi.id id_oficina, ofi.oficina, ofi.sigla sigla_oficina, ofi.ppt_unid_ejecutora ue, ofi.ppt_da da, ent.id id_entidad, ent.entidad, ent.sigla sigla_entidad
 from oficinas ofi inner join entidades ent on ofi.id_entidad = ent.id
 where ofi.id = '$doc->id_oficina'");
     $stmt->execute();
-    $ofi = $stmt->fetch(PDO::FETCH_OBJ);
+    $ofi = $stmt->fetch(PDO::FETCH_OBJ);///oficina y entidad solicitante
     
-    $stmt = $dbh->prepare("select oficina, ppt_cod_da from oficinas where id = '$ofi->da'");//Direccion administrativa
+    $stmt = $dbh->prepare("select oficina, ppt_cod_da from oficinas where id_entidad = '$ofi->id_entidad' and ppt_da = 1");//Direccion administrativa
     $stmt->execute();
     $da = $stmt->fetch(PDO::FETCH_OBJ) ;
-     
-    $stmt = $dbh->prepare("select oficina, ppt_cod_ue from oficinas where id = '$ofi->ue'");//unidad ejecutora Presupuesto
-    $stmt->execute();    
-    $ue = $stmt->fetch(PDO::FETCH_OBJ) ;
-    
-        
-        //$pdf->SetFont('Helvetica', 'B', 15);
-        //$pdf->Write(0, strtoupper($rs->tipo), '', 0, 'C');
-        //$pdf->Ln();
+    ///Unidad Ejecutora Presupuesto
+    $stmt = $dbh->prepare("SELECT * FROM oficinas WHERE id=$ofi->id_oficina");
+    $stmt->execute();
+    $ue = $stmt->fetch(PDO::FETCH_OBJ);
+    while($ue->ppt_unid_ejecutora == NULL || $ue->ppt_unid_ejecutora == 0){
+        $stmt = $dbh->prepare("SELECT * FROM oficinas WHERE id=$ue->padre");
+        $stmt->execute();
+        $ue = $stmt->fetch(PDO::FETCH_OBJ);
+    }
         $pdf->SetFont('Helvetica', 'U', 12);
         $pdf->Write(0, 'CERTIFICACION PRESUPUESTARIA', '', 0, 'C');
         $pdf->Ln();
@@ -152,20 +153,13 @@ where ofi.id = '$doc->id_oficina'");
         $pdf->Ln(10);
         
         $pdf->SetFont('Helvetica', '', 10);
-        $antecedentes = "Analizada la Presente Solicitud se CERTIFICA que existe el requirimiento de inscripcion en el Presupuesto de la Gestion ".date("Y", strtotime($doc->fecha_creacion))." para llevar adelante esta actividad, con cargo a:";
+        $antecedentes = "Analizada la Presente Solicitud se CERTIFICA que existe el requerimiento de inscripción en el Presupuesto de la Gestión ".date("Y", strtotime($doc->fecha_creacion))." para llevar adelante esta actividad, con cargo a:";
         $pdf->write(0, $antecedentes, '', 0, 'L');
         $pdf->Ln(10);
         
         $pdf->SetFont('Helvetica', 'U', 11);
         $pdf->write(0, 'ESTRUCTURA PROGRAMATICA', '', 0, 'L');
         $pdf->Ln(10);
-        //obtener el id para la estructura programatica, donde se guarda la informacion presupuetaria
-        /*$stmt = $dbh->prepare("select * from entidadespyvliquidacion where id_fucov = '$fucov->id'");
-        $stmt->execute();    
-        $entidad = $stmt->fetch(PDO::FETCH_OBJ) ;*/
-        
-
-        
         $stmt = $dbh->prepare("select prog.codigo cod_programa, prog.programa programa, proy.codigo cod_proyecto, proy.proyecto proyecto, act.codigo cod_actividad, act.actividad actividad, fte.codigo cod_fuente, 
 fte.denominacion fuente, org.codigo cod_organismo, org.denominacion organismo
 from pvprogramaticas p 
@@ -245,27 +239,24 @@ where p.id = $fucov->id_programatica");
                 $c++;
         }
         $html = $html."</table>";
-        //$pdf->Ln(10);
         $pdf->writeHTML($html, false, false, false);
-        //$pdf->Ln(10);
         if ($c == 0){
             $pdf->Ln(3);
             $pdf->SetFont('Helvetica', 'B', 12);        
             $pdf->Write(0, 'El Presupuesto No Fue Autorizado', '', 0, 'C');
             $pdf->Ln(10);
         }
-        
         $pdf->SetFont('Helvetica', 'U', 12);
         $pdf->Write(0, 'CONCLUSION:', '', 0, 'L');
-        $pdf->SetFont('Helvetica', '', 9);
+        $pdf->SetFont('Helvetica', '', 10);
         $mes = (int) date('m', strtotime(date("d-m-Y")));
         $meses = array(1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre');
         $fecha_certificacion = date('d', strtotime(date("d-m-Y"))) . ' de ' . $meses[$mes] . ' de ' . date('Y', strtotime(date("d-m-Y")));
-        $html = "&Eacute;ste certificado solo refrenda y verifica la existencia de saldos presupuestarios. En este sentido, se hace notar que la verificaci&oacute;
+        $html = "&Eacute;ste certificado s&oacute;lo refrenda y verifica la existencia de saldos presupuestarios. En este sentido, se hace notar que la verificaci&oacute;n
         de dicha actividad est&eacute; incorporada en el Programa Operativo Anual Gesti&oacute;n ".date("Y", strtotime($doc->fecha_creacion)).", es de plena responsabilidad de la 
         Unidad Solicitante, as&iacute; como la tramitaci&oacute;n de la cuota de devengamiento correspondiente.
         <br />Es Cuanto se certifica para fines consiguientes.
-        <br />La Paz, ".$fecha_certificacion.".";
+        <br /><br />La Paz, ".$fecha_certificacion.".";
         $pdf->Ln(10);
         $pdf->writeHTML($html, false, false, false);
     

@@ -285,8 +285,8 @@ $('#hora_inicio,#hora_fin').timeEntry({show24Hours: true, showSeconds: true});
                 <input type="text" id="fecha_inicio" name="fecha_inicio" size='16'/> a Hrs. <input type="text" name="hora_inicio" id="hora_inicio" value="00:00:00" size='6'/>
                     hasta el
                 <input type="text" id="fecha_fin" name="fecha_fin" size='16'/> a Hrs. <input type="text" id="hora_fin" name="hora_fin" value="00:00:00" size='6'/><br>
+                Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para los cual su persona deberá coordinar la elaboración del FUCOV.
                 Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural.
-                Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para los cual su persona deberá coordinar la elaboración del FUCOV. 
                 <?php echo Form::label('observacion', 'Observacion:',array('id'=>'label_observacion','class'=>'form'));?> 
                 <?php echo Form::textarea('observacion','',array('id'=>'observacion','cols'=>150,'rows'=>2)); ?>
             </div>

@@ -1,23 +1,24 @@
 <script type="text/javascript">
 
-$(function(){
+    $(function()
+    {
         $("#theTable").tablesorter({sortList:[[3,1]], 
             widgets: ['zebra'],
             headers: {             
-                5: { sorter:false},
-                6: { sorter:false}
+                5: { sorter:false}//,
+                //6: { sorter:false}
             }
         });
         
         //add index column with all content.
-    $("table#theTable tbody tr:has(td)").each(function(){
-      var t = $(this).text().toLowerCase(); //all row text
-      $("<td class='indexColumn'></td>")
-       .hide().text(t).appendTo(this);
-    });//each tr
+ $("table#theTable tbody tr:has(td)").each(function(){
+   var t = $(this).text().toLowerCase(); //all row text
+   $("<td class='indexColumn'></td>")
+    .hide().text(t).appendTo(this);
+ });//each tr
 
         
-    $("#FilterTextBox").keyup(function(){
+        $("#FilterTextBox").keyup(function(){
             var s = $(this).val().toLowerCase().split(" ");
             //show all rows.
             $("#theTable tbody tr:hidden").show();
@@ -25,12 +26,11 @@ $(function(){
                 $("#theTable tbody tr:visible .indexColumn:not(:contains('"
                     + this + "'))").parent().hide();
             });//each
-    });//key up.
-    //zebra
-     
-    $("#FilterTextBox").focus();
+        });//key up.
+        //zebra
         
-     $.datepicker.regional['es'] = {
+        $("#FilterTextBox").focus();
+        $.datepicker.regional['es'] = {
             closeText: 'Cerrar',
             prevText: '&#x3c;Ant',
             nextText: 'Sig&#x3e;',
@@ -55,28 +55,24 @@ $(function(){
         yearRange: "-10:+1",
         dateFormat:"yy-mm-dd"
         };
-      $("#fecha1,#fecha2").datepicker(pickerOpts,$.datepicker.regional['es']);    
+      $("#fecha1,#fecha2").datepicker(pickerOpts,$.datepicker.regional['es']);
+        
     });//document.ready
 </script>
 <style>
     #file-word{ display: none;  }
     td{padding:5px;}    
 </style>
-<h2 class="subtitulo">Solicitudes de pasajes y viaticos<br/> <span>Lista de solicitudes autorizadas</span></h2>
-<?php if(sizeof($autorizados)>0):?> 
-<div>
+<h2 class="subtitulo">Certificaciones POA para Pasajes y Vi&aacute;ticos<br/> <span>Lista de solicitudes autorizadas</span></h2>
+<?php //if(sizeof($autorizados)>0):?>
+<div id="buscador">
+B&uacute;squeda Avanzada
     <form action="" method="post">
-    <table border="1">
+    <table border="0">
         <tr>
             <td>Funcionario: </td>
             <td colspan="4">
                <?php echo Form::input('funcionario',NULL,array('id'=>'funcionario'));?>
-            </td>
-        </tr>
-        <tr>
-            <td>Boleto: </td>
-            <td colspan="4">
-               <?php echo Form::input('boleto',NULL,array('id'=>'boleto'));?>
             </td>
         </tr>
         <td>Oficina: </td>
@@ -85,50 +81,53 @@ $(function(){
         </td>
         <tr>
             <td>De fecha:</td>
-            <td><input type="text" name="fecha1" id="fecha1" value="<?php echo date('Y-m-d');?>"/></td>
+            <td><input type="text" name="fecha1" id="fecha1" value="<?php echo date('Y-m-01');?>"/></td>
             <td>A fecha:</td>
             <td colspan="2"><input type="text" name="fecha2" id="fecha2" value="<?php echo date('Y-m-d');?>" /></td>
             <td><input type="submit" name="submit" value="Buscar"/></td>
         </tr>
     </table>
 </form>
+    <hr />
+    <?php if (sizeof($mensajes) > 0): ?>
+                    <div class="info">
+                        <p><span style="float: left; margin-right: .3em;" class="ui-icon-info"></span>
+                            <?php foreach ($mensajes as $k => $v): ?>
+                                <strong><?= $k ?>: </strong> <?php echo $v; ?></p>
+                        <?php endforeach; ?>
+                    </div>
+    <?php endif; ?>     
 </div>
-<br />
 <p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" /></p>
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>
-            <th>Memor&aacute;ndum</th>
-            <th>Hoja de Ruta</th>
+            <!--<th>Memor&aacute;ndum</th>-->
+            <th>Nur</th>
             <th>Fecha Solicitud</th>
-            <th>Fecha Salida</th>
-            <th>Fecha Retorno</th>
-            <th>Linea A&eacute;rea</th>
-            <th>Boleto Salida</th>
-            <th>Oficina</th>
+            <th>Unidad Funcional</th>
             <th>Nombre Funcionario</th>
+            <th>Acci&oacute;n</th>
         </tr>
     </thead>    
     <tbody>
     <?php    
     foreach( $autorizados as $aut): ?>
         <tr>
-            <td ><a href="/pyvpasajes/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
-            <td ><?php echo $aut->nur;?></td>
-            <td ><?php echo $aut->fecha_creacion;?></td>
-            <td ><?php echo $aut->fecha_salida;?></td>
-            <td ><?php echo $aut->fecha_arribo;?></td>
-            <td ><?php //echo $aut->empresa;?></td>
-            <td ><?php //echo $aut->nro_boleto;?></td>
+            <!--<td ><a href="/documento/detalle/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
+            <td ><?php echo $aut->nur;?></td>-->
+            <td ><a href="/pvplanificacion/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->nur;?></a></td>
+            <td ><?php echo $aut->fecha_certificacion;?></td>
             <td ><?php echo $aut->oficina;?></td>
             <td ><?php echo $aut->nombre;?><br /><b><?php echo $aut->cargo;?></b></td>
+            <td><a href="../../pdf/certificacionpoa.php?id=<?php echo $aut->id_documento.'&f='.$aut->id_fucov;?>" class="uibutton" target="_blank" title="Imprimir Certificado" ><img src="/media/images/print.png"/> Imprimir </a></td>
         </tr>        
     <?php endforeach; ?>
    </tbody>   
 </table>
-<?php else: ?>
+<?php /* else: ?>
 <div style="margin-top: 20px; padding: 10px;" class="info">
     <p><span style="float: left; margin-right: .3em;" class=""></span>    
-     <strong>Info: </strong> <?php echo 'Usted no tiene Pasajes autorizados';?></p>    
+     <strong>Info: </strong> <?php echo 'Usted no tiene Solicitudes Certificadas';?></p>    
 </div>
-<?php endif; ?>
+<?php endif; */?>

@@ -5,6 +5,8 @@ $('#obj_gestion').change(function(){
             $('#det_obj_gestion').html('');
             $('#obj_esp').html('');
             $('#det_obj_esp').html('');
+            $('#actividad').html('');
+            $('#det_act').html('');
             var act = 'detobjgestion';///detalle del Objetivo de Gestion 
             var ctr = $('#det_obj_gestion');
             ajaxs(id, act, ctr);
@@ -15,8 +17,21 @@ $('#obj_gestion').change(function(){
         $('#obj_esp').change(function(){
             var id = $('#obj_esp').val();
             $('#det_obj_esp').html('');
+            $('#actividad').html('');
+            $('#det_act').html('');
             var act = 'detobjespecifico';///detalle del Objetivo Especifico 
             var ctr = $('#det_obj_esp');
+            ajaxs(id, act, ctr);
+            act = 'actividad';///actividades 
+            ctr = $('#actividad');
+            ajaxs(id, act, ctr);
+            
+        });
+        $('#actividad').change(function(){
+            var id = $('#actividad').val();
+            $('#det_act').html('');
+            var act = 'detactividad';///detalle del Objetivo Especifico 
+            var ctr = $('#det_act');
             ajaxs(id, act, ctr);
             
         });
@@ -54,7 +69,7 @@ $('.autorizar').live('click', function() {
                     <table width="100%" border="0px">
                         <tr>
                             <td><?php echo Form::label('unidad_ejecutora', 'Unidad Ejecutora POA:', array('class' => 'form')); ?></td>
-                            <td><?php echo $ue_poa ?>
+                            <td><?php echo $ue_poa->oficina ?>
                             </td>
                         </tr>
                         <tr>
@@ -64,7 +79,7 @@ $('.autorizar').live('click', function() {
                         <tr>
                             <td><?php echo Form::label('detalle_obj_gestion', 'Detalle Objetivo de Gesti&oacute;n:', array('class' => 'form')); ?></td>
                             <td><br />
-                                <textarea name="det_obj_gestion" id="det_obj_gestion" style="width: 600px;" readonly="true" ><?php echo $det_obj_gestion; ?></textarea>
+                                <textarea name="det_obj_gestion" id="det_obj_gestion" style="width: 600px;" readonly rows="5" ><?php echo $det_obj_gestion; ?></textarea>
                             </td>
                         </tr>
                         <tr>
@@ -73,7 +88,17 @@ $('.autorizar').live('click', function() {
                         </tr>
                         <tr>
                             <td><?php echo Form::label('det_obj_esp', 'Detalle Objetivo Espec&iacutefico:', array('class' => 'form')); ?></td>
-                            <td><textarea name="det_obj_esp" id="det_obj_esp" style="width: 600px;" readonly="true" ><?php echo $det_obj_esp; ?></textarea></td>
+                            <td><textarea name="det_obj_esp" id="det_obj_esp" style="width: 600px;" readonly rows="5" ><?php echo $det_obj_esp; ?></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><b><?php echo Form::label('actividad', 'C&oacute;digo Actividad', array('class' => 'form')); ?></b></td>
+                            <td><?php echo Form::select('actividad', $actividad, $pvpoas->id_actividad, array('class' => 'form', 'class' => 'required', 'id' => 'actividad', 'name' => 'actividad')); ?></td>
+                        </tr>
+                        <tr>
+                            <td><b><?php echo Form::label('det_act', 'Detalle:', array('class' => 'form')); ?></b></td>
+                            <td><br />
+                                <textarea name="det_act" id="det_act" style="width: 600px;" disabled="true" readonly rows="5" ><?php echo $det_act; ?></textarea>
+                            </td>
                         </tr>
                     </table>
             </fieldset>
@@ -92,3 +117,5 @@ $('.autorizar').live('click', function() {
     <?php endif;?>
     <br />
     </div>
+
+

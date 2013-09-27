@@ -33,7 +33,6 @@ $(function(){
     });
     
     $('#frmCreate').validate();
-    
 });
 </script>
 <style>

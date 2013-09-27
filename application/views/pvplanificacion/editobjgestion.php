@@ -32,7 +32,7 @@ $(function(){
     </tr>
     <tr>
         <td><?php echo Form::label('objetivo','Objetivo de Gestion')?></td>
-        <td><textarea id="objetivo" name="objetivo" class="required"><?php echo $objetivo->objetivo;?></textarea></td>
+        <td><textarea id="objetivo" name="objetivo" class="required" rows="10"><?php echo $objetivo->objetivo;?></textarea></td>
     </tr>
 </table>
 

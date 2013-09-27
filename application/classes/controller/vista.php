@@ -1,4 +1,4 @@
-<?php
+}<?php
 
 defined('SYSPATH') or die('Acceso denegado');
 
@@ -71,21 +71,25 @@ class Controller_Vista extends Controller_MinimoTemplate {
                 $archivo = ORM::factory('archivos')->where('id_documento', '=', $documento->id)->find();
 
                 $pvfucov = ORM::factory('pvfucovs')->where('id_documento', '=', $documento->id)->find();
-                
-                ///rodrigo-POA
-                $pvpoas = ORM::factory('pvpoas')->where('id_fucov','=',$pvfucov->id)->find();
-                $pvgestion = ORM::factory('pvogestiones')->where('id','=',$pvpoas->id_obj_gestion)->find();
-                $pvespecifico = ORM::factory('pvoespecificos')->where('id','=',$pvpoas->id_obj_esp)->find();
-                ///rodrigo-PPT
-                $pvliquidacion = ORM::factory('pvliquidaciones')->where('id_fucov','=',$pvfucov->id)->find();
-                $tipo_cambio = ORM::factory('pvtipocambios')->select(array(DB::expr('MAX(id)'), 'cambio_venta'))->find();
-                if(!$pvliquidacion->loaded()){//liquidaciones tiene todos los montos
-                    $oPart = New Model_Pvprogramaticas();
-                    $pvliquidacion = $oPart->pptdisponibleuser($pvfucov->id_programatica,$pvfucov->total_pasaje,$pvfucov->total_viatico,$pvfucov->id_tipoviaje,$pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
-                }
-                else{
-                    $oPart = New Model_Pvprogramaticas();
-                    $pvliquidacion = $oPart->pptliquidado($pvfucov->id,$pvfucov->total_pasaje,$pvfucov->total_viatico,$pvfucov->id_tipoviaje,$pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
+                if ($pvfucov->loaded()) {
+                    ///rodrigo-POA
+                    $pvpoas = ORM::factory('pvpoas')->where('id_fucov','=',$pvfucov->id)->find();
+                    $pvgestion = ORM::factory('pvogestiones')->where('id','=',$pvpoas->id_obj_gestion)->find();
+                    $pvespecifico = ORM::factory('pvoespecificos')->where('id','=',$pvpoas->id_obj_esp)->find();
+                    $pvactividad = ORM::factory('pvactividades')->where('id','=',$pvpoas->id_actividad)->find();
+                    ///rodrigo-PPT
+                    $cambio = ORM::factory('pvtipocambios')->find_all();
+                    foreach($cambio as $c)
+                        $tipo_cambio = $c;
+                    $pvliquidacion = ORM::factory('pvliquidaciones')->where('id_fucov','=',$pvfucov->id)->find();
+                    if(!$pvliquidacion->loaded()){//proceso autorizado por Presupuesto
+                        $oPart = New Model_Pvprogramaticas();
+                        $pvliquidacion = $oPart->pptdisponibleuser($pvfucov->id_programatica,$pvfucov->total_pasaje,$pvfucov->total_viatico,$pvfucov->id_tipoviaje,$pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
+                    }
+                    else{
+                        $oPart = New Model_Pvprogramaticas();
+                        $pvliquidacion = $oPart->pptliquidado($pvfucov->id,$pvfucov->total_pasaje,$pvfucov->total_viatico,$pvfucov->id_tipoviaje,$pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
+                    }
                 }
                 $this->template->content = View::factory('documentos/vista')
                         ->bind('d', $documento)
@@ -95,6 +99,7 @@ class Controller_Vista extends Controller_MinimoTemplate {
                         ->bind('pvpoas', $pvpoas)
                         ->bind('pvgestion', $pvgestion)
                         ->bind('pvespecifico', $pvespecifico)
+                        ->bind('pvactividad', $pvactividad)
                         ///PPT
                         ->bind('pvliquidacion', $pvliquidacion)
                         ;

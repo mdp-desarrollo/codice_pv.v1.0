@@ -11,7 +11,7 @@ $(function()
         $("#theTable").tablesorter({sortList:[[2,1]], 
             widgets: ['zebra'],
             headers: {             
-                5: { sorter:false}//,
+                1: { sorter:false}//,
                 //6: { sorter:false}
             }
         });

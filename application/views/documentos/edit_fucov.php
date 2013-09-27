@@ -261,6 +261,8 @@
             $('#det_obj_gestion').html('');
             $('#obj_esp').html('');
             $('#det_obj_esp').html('');
+            $('#actividad').html('');
+            $('#det_act').html('');
             var act = 'detobjgestion';///detalle del Objetivo de Gestion 
             var ctr = $('#det_obj_gestion');
             ajaxs(id, act, ctr);
@@ -271,8 +273,20 @@
         $('#obj_esp').change(function(){
             var id = $('#obj_esp').val();
             $('#det_obj_esp').html('');
+            $('#actividad').html('');
+            $('#det_act').html('');
             var act = 'detobjespecifico';///detalle del Objetivo Especifico 
             var ctr = $('#det_obj_esp');
+            ajaxs(id, act, ctr);
+            act = 'actividad';///actividades 
+            ctr = $('#actividad');
+            ajaxs(id, act, ctr);
+        });
+        $('#actividad').change(function(){
+            var id = $('#actividad').val();
+            $('#det_act').html('');
+            var act = 'detactividad';///detalle del Objetivo Especifico 
+            var ctr = $('#det_act');
             ajaxs(id, act, ctr);
             
         });
@@ -288,7 +302,7 @@
                 {
                     $(control).html(item);
                 },
-                error: $(control).html(''),
+                error: $(control).html('')
             });
         }
         $('#fuente').change(function(){
@@ -320,7 +334,7 @@
                     {
                         $(control).html(item);
                     },
-                    error: $(control).html('error'),
+                    error: $(control).html('error')
                 });
             }
             else
@@ -475,7 +489,7 @@ function dia_literal($n) {
                 echo Form::hidden('id_tipo', $documento->id_tipo);
                 echo Form::hidden('id_categoria', $user->id_categoria, array('id' => 'id_categoria'));
                 echo Form::hidden('titulo', '');
-                echo Form::hidden('tipo_cambio', $tipo_cambio->cambio_venta,array('id'=>'tipo_cambio'));
+                echo Form::hidden('tipo_cambio', $tipo_cambio,array('id'=>'tipo_cambio'));
                 echo Form::hidden('tipo_moneda', $pvfucov->tipo_moneda,array('id' => 'tipo_moneda'));
                 if($pvfucov->tipo_moneda==0)
                     $tipo_moneda="Bs.";
@@ -724,22 +738,19 @@ function dia_literal($n) {
     <div id="poa">
         <div class="formulario">        
             <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;  ">
-                <h2 style="text-align:center;">Certificaci&oacute;n POA </h2><hr/>
+                <h2 style="text-align:center;">Certificaci&oacute;n POA</h2><hr/>
                 <fieldset>
-                    <table width="100%" border="1px">
+                    <table width="100%" border="0px">
                         <tr>
-                            <td><?php //echo $ue; ?>
-<?php echo Form::label('unidad_ejecutora', 'Unidad Ejecutora:', array('class' => 'form')); ?>
-                            </td>
-                            <td>
-<?php echo $ue_poa ?>
-                                <?php // echo Form::input('unidadEjecutora',$ue_poa,array('size'=>'75','id'=>'unidadEjecutora','name'=>'unidadEjecutora')) ?>
-                                <input type="hidden" id="idUnidadEjecutora" name="idUnidadEjecutora" value="<?php // echo $idunidadejecutora;?>" />
-                            </td>
+                            <td><b><?php echo Form::label('unidad_ejecutora', 'Unidad Ejecutora POA:', array('class' => 'form')); ?></b></td>
+                            <td><?php echo $uejecutorapoa->oficina ?></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><hr /><br/></td>
                         </tr>
                         <tr>
                             <td>
-<?php echo Form::label('obj_gestion', 'C&oacute;digo Objetivo de Gesti&oacute;n:', array('class' => 'form')); ?>
+                                <b><?php echo Form::label('obj_gestion', 'C&oacute;digo Objetivo de Gesti&oacute;n:', array('class' => 'form')); ?></b>
                             </td>
                             <td>
                                 <?php echo Form::select('obj_gestion', $obj_gestion, $pvpoas->id_obj_gestion, array('class' => 'form', 'name' => 'obj_gestion', 'id' => 'obj_gestion', 'class' => 'required')); ?>
@@ -747,16 +758,19 @@ function dia_literal($n) {
                         </tr>
                         <tr>
                             <td>
-<?php echo Form::label('detalle_obj_gestion', 'Detalle Objetivo de Gesti&oacute;n:', array('class' => 'form')); ?>
+<b><?php echo Form::label('detalle_obj_gestion', 'Detalle:', array('class' => 'form')); ?></b>
                             </td>
                             <td>
                                 <br />
-                                <textarea name="det_obj_gestion" id="det_obj_gestion" style="width: 600px;" disabled="true" ><?php echo $det_obj_gestion; ?></textarea>
+                                <textarea name="det_obj_gestion" id="det_obj_gestion" style="width: 600px;" readonly ><?php echo $det_obj_gestion; ?></textarea>
                             </td>
                         </tr>
                         <tr>
+                            <td colspan="2"><hr /><br/></td>
+                        </tr>
+                        <tr>
                             <td>
-<?php echo Form::label('obj_esp', 'C&oacute;digo Objetivo Espec&iacute;fico:', array('class' => 'form')); ?>
+<b><?php echo Form::label('obj_esp', 'C&oacute;digo Objetivo Espec&iacute;fico:', array('class' => 'form')); ?></b>
                             </td>
                             <td>
                     <?php echo Form::select('obj_esp', $obj_esp, $pvpoas->id_obj_esp, array('class' => 'form', 'class' => 'required', 'id' => 'obj_esp', 'name' => 'obj_esp')); ?>
@@ -764,10 +778,29 @@ function dia_literal($n) {
                         </tr>
                         <tr>
                             <td>
-<?php echo Form::label('det_obj_esp', 'Detalle Objetivo Espec&iacutefico:', array('class' => 'form')); ?>
+<b><?php echo Form::label('det_obj_esp', 'Detalle:', array('class' => 'form')); ?></b>
+                            </td>
+                            <td><br />
+                                <textarea name="det_obj_esp" id="det_obj_esp" style="width: 600px;" readonly ><?php echo $det_obj_esp; ?></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><hr /><br /></td>
+                        </tr>
+                        <tr>
+                            <td>
+<b><?php echo Form::label('actividad', 'C&oacute;digo Actividad', array('class' => 'form')); ?></b>
                             </td>
                             <td>
-                                <textarea name="det_obj_esp" id="det_obj_esp" style="width: 600px;" disabled="true" ><?php echo $det_obj_esp; ?></textarea>
+                    <?php echo Form::select('actividad', $actividad, $pvpoas->id_actividad, array('class' => 'form', 'class' => 'required', 'id' => 'actividad', 'name' => 'actividad')); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+<b><?php echo Form::label('det_act', 'Detalle:', array('class' => 'form')); ?></b>
+                            </td>
+                            <td><br />
+                                <textarea name="det_act" id="det_act" style="width: 600px;" disabled="true" readonly ><?php echo $det_act; ?></textarea>
                             </td>
                         </tr>
                     </table>
@@ -776,13 +809,21 @@ function dia_literal($n) {
         </div>
     </div>
     <div id="pre">
-        <div class="formulario">        
+        <div class="formulario">
             <div style="border-bottom: 1px solid #ccc; background: #F2F7FC; display: block; padding: 10px 0;   width: 100%;  ">
                 <h2 style="text-align:center;">Presupuesto</h2><hr/>
                 <fieldset>
-                    Fuentes de Financiamiento:
-<?php echo Form::select('fuente', $fuente, $pvfucov->id_programatica, array('id' => 'fuente', 'class' => 'required')) ?>
-                    <div id="saldoppt"><?php echo $partidasgasto; ?></div>
+                <table>
+                    <tr>
+                        <td>Unidad Ejecutora de Presupuesto:</td>
+                        <td><b> <?php echo $uejecutorappt->oficina?></b></td>
+                    </tr>
+                    <tr>
+                        <td>Fuentes de Financiamiento:</td>
+                        <td><?php echo Form::select('fuente', $fuente, $pvfucov->id_programatica, array('id' => 'fuente', 'class' => 'required')) ?></td>
+                    </tr>
+                </table>
+                <div id="saldoppt"><?php echo $partidasgasto?></div>
                 </fieldset>
             </div>
         </div>

@@ -65,6 +65,14 @@ class Controller_Admin_User extends Controller_AdminTemplate {
             foreach ($roles as $o) {
                 $options[$o->id] = $o->nivel;
             }
+            //Modificado por freddy
+            $pvcategoria = ORM::factory('pvcategorias')->find_all();
+            $opt_categorias = array();
+            foreach ($pvcategoria as $o) {
+                $opt_categorias[$o->id] = $o->categoria;
+            }
+
+
             $superiores = ORM::factory('users')
                     ->where('id_oficina', '=', $id)
                     ->and_where('dependencia', '=', 0)
@@ -79,6 +87,7 @@ class Controller_Admin_User extends Controller_AdminTemplate {
                     ->bind('message', $message)
                     ->bind('errors', $errors)
                     ->bind('oficina', $oficina)
+                    ->bind('pvcategoria', $opt_categorias)
                     ->bind('jefes', $jefes)
                     ->bind('entidad', $entidad);
             if ($_POST) {
@@ -99,6 +108,7 @@ class Controller_Admin_User extends Controller_AdminTemplate {
                         'dependencia',
                         'id_entidad',
                         'fecha_creacion',
+                        'id_categoria',
                             ));
 
 
@@ -177,6 +187,14 @@ class Controller_Admin_User extends Controller_AdminTemplate {
     public function action_detalle($id = '') {
         $user = ORM::factory('users', array('id' => $id));
         if ($user->loaded()) {
+            //Modificado por freddy
+            $pvcategoria = ORM::factory('pvcategorias')->find_all();
+            $opt_categorias = array();
+            foreach ($pvcategoria as $o) {
+                $opt_categorias[$o->id] = $o->categoria;
+            }
+
+
             $documentos = $user->tipo->find_all();
             $oficina = ORM::factory('oficinas', $user->id_oficina);
             $o_destinos = New Model_Destinatarios();
@@ -185,6 +203,7 @@ class Controller_Admin_User extends Controller_AdminTemplate {
                     ->bind('documentos', $documentos)
                     ->bind('destinatarios', $destinatarios)
                     ->bind('user', $user)
+                    ->bind('pvcategoria', $opt_categorias)
                     ->bind('oficina', $oficina);
         } else {
             $this->template->content = 'Usuario inexistente';
@@ -237,6 +256,8 @@ class Controller_Admin_User extends Controller_AdminTemplate {
                 $usuario->cargo = html::chars($_POST['cargo']);
                 $usuario->email = html::chars($_POST['email']);
                 $usuario->dependencia = html::chars($_POST['dependencia']);
+                $usuario->mosca = html::chars($_POST['mosca']);
+                $usuario->id_categoria = html::chars($_POST['id_categoria']);
                 $usuario->save();
                 $this->request->redirect('/admin/user/detalle/' . $usuario->id);
             }

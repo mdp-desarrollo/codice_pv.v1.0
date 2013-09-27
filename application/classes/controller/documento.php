@@ -72,7 +72,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                     $contenido = "<p>Por medio del presente Memorándum se ordena a su persona trasladarse desde:</p>
                         <p>la ciudad " . $_POST['origen'] . " hasta la ciudad " . $_POST['destino'] . " con el objetivo de asistir a " . $_POST['detalle_comision'] . " .</p>
                         <p>Desde el " . $_POST['fecha_inicio'] . " a Hrs. " . $_POST['hora_inicio'] . " hasta el " . $_POST['fecha_fin'] . " a Hrs. " . $_POST['hora_fin'] . ".</p>    
-                        <p>Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural. Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para los cual su persona deberá coordinar la elaboración del FUCOV. </p>
+                        <p>Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para lo cual su persona deberá coordinar la elaboración del FUCOV. Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y Viáticos del Ministerio de Desarrollo Productivo y Economía Plural.</p>
                         <p>Saludo a usted atentamente. </p>    
                         ";
                     // if ($_POST['observacion']) {
@@ -358,7 +358,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                     $contenido = "<p>Por medio del presente Memorándum se ordena a su persona trasladarse desde:</p>
                         <p>la ciudad " . $_POST['origen'] . " hasta la ciudad " . $_POST['destino'] . " con el objetivo de asistir a " . $_POST['detalle_comision'] . " .</p>
                         <p>Desde el " . $_POST['fecha_inicio'] . " a Hrs. " . $_POST['hora_inicio'] . " hasta el " . $_POST['fecha_fin'] . " a Hrs. " . $_POST['hora_fin'] . ".</p>    
-                        <p>Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural. Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para los cual su persona deberá coordinar la elaboración del FUCOV. </p>    
+                        <p>Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para los cual su persona deberá coordinar la elaboración del FUCOV. Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural. </p>    
                         <p>Saludo a usted atentamente. </p>
                         ";
                     // if ($_POST['observacion']) {
@@ -438,6 +438,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                     $pvpoas->fecha_modificacion = date('Y-m-d H:i:s');
                     $pvpoas->id_obj_gestion = $_POST['obj_gestion'];
                     $pvpoas->id_obj_esp = $_POST['obj_esp'];
+                    $pvpoas->id_actividad = $_POST['actividad'];
                     $pvpoas->save();
                     ///
                 }
@@ -471,7 +472,7 @@ class Controller_documento extends Controller_DefaultTemplate {
                         $_POST = array();
                 }
             }
-            $oficina = ORM::factory('oficinas', $this->user->id_oficina);
+            //$oficina = ORM::factory('oficinas', $this->user->id_oficina);
 
             $oVias = new Model_data();
             $vias = $oVias->vias($this->user->id);
@@ -517,38 +518,42 @@ class Controller_documento extends Controller_DefaultTemplate {
                 }
 
                 ///rodrigo 260813, Unidad Ejecutora POA para el usuario
+                $cambio = ORM::factory('pvtipocambios')->find_all();
+                foreach($cambio as $c)
+                    $tipo_cambio = $c->cambio_venta;
                 $uEjepoa = New Model_oficinas();
-                $uejecutora = $uEjepoa->uejecutorapoa($this->user->id_oficina); ///unidad ejecutora
-                foreach ($uejecutora as $ue)
-                    $ue_poa = $ue['oficina'];
+                $uejecutorapoa = $uEjepoa->uejecutorapoa($this->user->id_oficina); ///buscar la unidad ejecutora POA y PPT para la oficina de este usuario
+                $uejecutorappt = $uEjepoa->uejecutorappt($this->user->id_oficina);
                 $oFuente = New Model_Pvprogramaticas(); ///fuentes de financiamiento
-                $fte = $oFuente->listafuentesuser($this->user->id_oficina);
-                $fuente = array();
+                $fte = $oFuente->listafuentesuser($uejecutorappt->id);
                 $fuente[''] = 'Seleccione Una Fuente de Financiamiento';
-                foreach ($fte as $f)
-                    $fuente[$f->id] = $f->actividad;
-                $ogestion = ORM::factory('pvogestiones')->where('id_oficina','=',$oficina->poa_unid_ejecutora)->and_where('estado','=',1)->find_all();///objetivos de gestion
-                $objespecifico = array();
-                $objgestion = array();
+                foreach ($fte as $f){$fuente[$f->id] = $f->actividad;}
+                
+                $ogestion = ORM::factory('pvogestiones')->where('id_oficina','=',$uejecutorapoa->id)->and_where('estado','=',1)->find_all();///objetivos de gestion
                 $objgestion[''] = 'Seleccione Objetivo de Gestion';
-                foreach ($ogestion as $og)
-                    $objgestion[$og->id] = $og->codigo;
+                foreach ($ogestion as $og){$objgestion[$og->id] = $og->codigo;}
 
                 $pvpoas = ORM::factory('pvpoas')->where('id_fucov', '=', $pvfucov->id)->find();
-                $tipo_cambio = ORM::factory('pvtipocambios')->select(array(DB::expr('MAX(id)'), 'cambio_venta'))->find();
-                if ($pvpoas->id_obj_gestion <> 0) {
+                $objespecifico[''] = 'Seleccione Objetivo Especifico';
+                $actividad[''] = 'Seleccione la Actividad';
+                $partidasgasto = '';
+                if ($pvpoas->id_obj_gestion) {
                     $det = ORM::factory('pvogestiones')->where('id', '=', $pvpoas->id_obj_gestion)->find(); ///Detalle Objetivo de Gestion
-                    $detalleges = $det->objetivo;
+                    $detallegestion = $det->objetivo;
                     $oesp = ORM::factory('pvoespecificos')->where('id_obj_gestion', '=', $pvpoas->id_obj_gestion)->find_all(); ///objetivo especifico
-                    $objespecifico[''] = 'Seleccione Objetivo Especifico';
                     foreach ($oesp as $oe) {
                         $objespecifico[$oe->id] = $oe->codigo;
                         if ($oe->id == $pvpoas->id_obj_esp)
-                            $detalleesp = $oe->objetivo;
+                            $detalleespecifico = $oe->objetivo;
                     }
-                    
+                    $act = ORM::factory('pvactividades')->where('id_objespecifico', '=', $pvpoas->id_obj_esp)->find_all(); ///actividades del POA
+                    foreach ($act as $a) {
+                        $actividad[$a->id] = $a->codigo;
+                        if ($a->id == $pvpoas->id_actividad)
+                            $detalleactividad = $a->actividad;
+                    }
                     $oPart = New Model_Pvprogramaticas();
-                    $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica, $pvfucov->total_pasaje, $pvfucov->total_viatico, $pvfucov->id_tipoviaje, $pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
+                    $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica, $pvfucov->total_pasaje, $pvfucov->total_viatico, $pvfucov->id_tipoviaje, $pvfucov->gasto_representacion,$tipo_cambio);//mostrar las partidas presupuestarias almacenadas
                 }
                 /// fin 260813/
 
@@ -565,13 +570,16 @@ class Controller_documento extends Controller_DefaultTemplate {
                         ->bind('opt_tv', $opt_tv)
                         ->bind('pvfucov', $pvfucov)
                         ///rodrigo-POA
-                        ->bind('ue_poa', $ue_poa)//unidad ejecurtora del POA 
-                        ->bind('obj_gestion', $objgestion)//ista de objetivos de gestion para la oficina
-                        ->bind('det_obj_gestion', $detalleges)//detalle del objetivo de gestion
-                        ->bind('obj_esp', $objespecifico)
-                        ->bind('det_obj_esp', $detalleesp)
-                        ->bind('fuente', $fuente)//lista de fuentes de financiamiento por oficina
+                        ->bind('uejecutorapoa', $uejecutorapoa)
+                        ->bind('uejecutorappt', $uejecutorappt)
+                        ->bind('fuente', $fuente)
                         ->bind('pvpoas', $pvpoas)
+                        ->bind('obj_gestion', $objgestion)//ista de objetivos de gestion para la oficina
+                        ->bind('obj_esp', $objespecifico)
+                        ->bind('actividad', $actividad)
+                        ->bind('det_obj_gestion', $detallegestion)//detalle del objetivo de gestion
+                        ->bind('det_obj_esp', $detalleespecifico)
+                        ->bind('det_act', $detalleactividad)
                         ->bind('partidasgasto', $partidasgasto)
                         ->bind('tipo_cambio', $tipo_cambio)
                 ;
@@ -641,9 +649,12 @@ class Controller_documento extends Controller_DefaultTemplate {
         $detallepv = '';
         if ($estado == 2) {
             $pvfucov = ORM::factory('pvfucovs')->where('id_memo', '=', $id)->find();
-            $memo = ORM::factory('documentos')->where('id', '=', $pvfucov->id_memo)->find();
-            $oficina = ORM::factory('oficinas')->where('id', '=', $memo->id_oficina)->find();///oficina del usuario solicintante
-            $tipo_cambio = ORM::factory('pvtipocambios')->select(array(DB::expr('MAX(id)'), 'cambio_venta'))->find();
+            $documento = ORM::factory('documentos')->where('id','=',$pvfucov->id_documento)->and_where('id_tipo','=',13)->find();
+            //$memo = ORM::factory('documentos')->where('id', '=', $pvfucov->id_memo)->find();
+            //$oficina = ORM::factory('oficinas')->where('id', '=', $memo->id_oficina)->find();///oficina del usuario solicintante
+            $cambio = ORM::factory('pvtipocambios')->find_all();
+            foreach($cambio as $c)
+                 $tipo_cambio = $c;
             if ($pvfucov->loaded()) {
                 $nivel = $this->user->nivel;
                 switch ($nivel) {
@@ -657,25 +668,42 @@ class Controller_documento extends Controller_DefaultTemplate {
                         ;
                         break;
                     case 7:///presupuesto
+                        $uEjepoa = New Model_oficinas();                
+                        $uejecutorappt = $uEjepoa->uejecutorappt($this->user->id_oficina);///buscar unidad ejecutora del PPT
                         $oFuente = New Model_Pvprogramaticas();
-                        $fte = $oFuente->listafuentesppt($oficina->ppt_unid_ejecutora, $this->user->id_entidad); ///fuente por oficina + dgga en caso del MDP
+                        $fte = $oFuente->listafuentesppt($uejecutorappt->id, $this->user->id_entidad); ///fuente por oficina + dgga en caso del MDP
                         $fuente = array();
                         $fuente[''] = 'Seleccione Una Fuente de Financiamiento';
                         foreach ($fte as $f)
                             $fuente[$f->id] = $f->actividad;
                         $oPart = New Model_Pvprogramaticas();
-                        $partidasgasto = $oPart->pptdisponibleuser($pvfucov->id_programatica, $pvfucov->total_pasaje, $pvfucov->total_viatico, $pvfucov->id_tipoviaje, $pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
-
+                        $pvliquidacion = ORM::factory('pvliquidaciones')->where('id_fucov','=',$pvfucov->id)->find();
+                        if($pvliquidacion->loaded()){
+                            $oPart = New Model_Pvprogramaticas();
+                            $pvliquidacion = $oPart->pptliquidado($pvfucov->id,$pvfucov->total_pasaje,$pvfucov->total_viatico,$pvfucov->id_tipoviaje,$pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
+                        }
+                        else{
+                            $oPart = New Model_Pvprogramaticas();
+                            $pvliquidacion = $oPart->pptdisponibleuser($pvfucov->id_programatica,$pvfucov->total_pasaje,$pvfucov->total_viatico,$pvfucov->id_tipoviaje,$pvfucov->gasto_representacion,$tipo_cambio->cambio_venta);
+                        }
+                        ///detalle de la fuente presupuestaria
+                        $det = $oFuente->detallesaldopresupuesto($pvfucov->id_programatica);
+                        foreach ($det as $d)
+                            $detallefuente = $d;
                         $detallepv = View::factory('pvpresupuesto/detalle')
                                 ->bind('pvfucov', $pvfucov)
                                 ->bind('estado', $estado)
                                 ->bind('fuente', $fuente)
-                                ->bind('partidasgasto', $partidasgasto)
+                                ->bind('partidasgasto', $pvliquidacion)
+                                ->bind('detallefuente', $detallefuente)
+                                ->bind('tipo_cambio', $tipo_cambio)
                         ;
                         break;
                     case 8:///Planificacion
                         $pvpoas = ORM::factory('pvpoas')->where('id_fucov', '=', $pvfucov->id)->find();
-                        $obj_gest = ORM::factory('pvogestiones')->where('id_oficina', '=', $oficina->poa_unid_ejecutora)->and_where('estado', '=', 1)->find_all();
+                        $uEjepoa = New Model_oficinas();
+                        $uejecutorapoa = $uEjepoa->uejecutorapoa($documento->id_oficina);
+                        $obj_gest = ORM::factory('pvogestiones')->where('id_oficina', '=', $uejecutorapoa->id)->and_where('estado', '=', 1)->find_all();
                         foreach ($obj_gest as $g) {
                             $ogestion[$g->id] = $g->codigo;
                             if ($g->id == $pvpoas->id_obj_gestion) {
@@ -683,17 +711,21 @@ class Controller_documento extends Controller_DefaultTemplate {
                             }
                         }
                         $oesp = ORM::factory('pvoespecificos')->where('id_obj_gestion', '=', $pvpoas->id_obj_gestion)->and_where('estado', '=', 1)->find_all();
-                        $det_obj_esp = 'no ingresa: ';
+                        $det_obj_esp = '';
                         foreach ($oesp as $e) {
                             $oespecifico[$e->id] = $e->codigo;
-                            $det_obj_esp .= ' '.$e->id;
                             if ($e->id == $pvpoas->id_obj_esp) {
                                 $det_obj_esp = $e->objetivo;
                             }
                         }
-                        $uejecutora = ORM::factory('oficinas')->where('id', '=', $oficina->poa_unid_ejecutora)->find();
-                        $ue_poa = $uejecutora->oficina;
-                        //$office = $memo->id_oficina;
+                        $act = ORM::factory('pvactividades')->where('id_objespecifico', '=', $pvpoas->id_obj_esp)->and_where('estado', '=', 1)->find_all();
+                        $det_actividad = '';
+                        foreach ($act as $a) {
+                            $actividad[$a->id] = $a->codigo;
+                            if ($a->id == $pvpoas->id_actividad) {
+                                $det_actividad = $a->actividad;
+                            }
+                        }
                         $detallepv = View::factory('pvplanificacion/detalle')
                                 ->bind('pvfucov', $pvfucov)
                                 ->bind('estado', $estado)
@@ -702,7 +734,9 @@ class Controller_documento extends Controller_DefaultTemplate {
                                 ->bind('det_obj_gestion', $det_obj_gestion)
                                 ->bind('obj_esp', $oespecifico)
                                 ->bind('det_obj_esp', $det_obj_esp)
-                                ->bind('ue_poa', $ue_poa)
+                                ->bind('actividad', $actividad)
+                                ->bind('det_act', $det_actividad)
+                                ->bind('ue_poa', $uejecutorapoa)
                         ;
                         break;
                 }

@@ -26,8 +26,8 @@ INNER JOIN entidades AS c ON b.id_entidad = c.id WHERE a.id = '$id'");
             }
             $id_entidad=$rs2->id;
         }
-        if($id_entidad<>2){
-        $this->Image($image_file, 20, 7, 40, 23, 'PNG');
+        if($id_entidad<>2 && $id_entidad<>4){
+        $this->Image($image_file, 89, 5, 40, 23, 'PNG');
         }
         $this->SetFont('helvetica', 'B', 20);        
     }
@@ -113,8 +113,6 @@ try {
     $rs = $stmt->fetch(PDO::FETCH_OBJ);
     $mes = (int) date('m', strtotime($rs->fecha_creacion));
     $meses = array(1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre');
-    //$fecha = $esp.date('d', strtotime($rs->fecha_creacion)) . ' de ' . $meses[$mes] . ' de ' . date('Y', strtotime($rs->fecha_creacion));
-    ///documento para el fucov
     $stmt = $dbh->prepare("SELECT * FROM documentos WHERE id=$id");
     $stmt->execute();
     $documento = $stmt->fetch(PDO::FETCH_OBJ);
@@ -124,10 +122,15 @@ try {
     $stmt->execute();
     $oficina = $stmt->fetch(PDO::FETCH_OBJ);
     
-    ///oficina de la que depende
-    $stmt = $dbh->prepare("SELECT * FROM oficinas WHERE id=$oficina->poa_unid_ejecutora");
+    ///Unidad Ejecutora
+    $stmt = $dbh->prepare("SELECT * FROM oficinas WHERE id=$oficina->id");
     $stmt->execute();
     $oficina2 = $stmt->fetch(PDO::FETCH_OBJ);
+    while($oficina2->ppt_unid_ejecutora == NULL || $oficina2->ppt_unid_ejecutora == 0){
+        $stmt = $dbh->prepare("SELECT * FROM oficinas WHERE id=$oficina2->padre");
+        $stmt->execute();
+        $oficina2 = $stmt->fetch(PDO::FETCH_OBJ);
+    }
     
     ///FUCOV
     $stmt = $dbh->prepare("SELECT * FROM pvfucovs WHERE id=$id_fucov");
@@ -138,17 +141,23 @@ try {
     $stmt = $dbh->prepare("select * from pvpoas where id_fucov = $pvfucov->id");
     $stmt->execute();
     $pvpoa = $stmt->fetch(PDO::FETCH_OBJ);
-    
-    ///objetivos
-    $stmt = $dbh->prepare("select og.codigo cod_gest, oe.codigo cod_esp from pvogestiones og inner join pvoespecificos oe on og.id = oe.id_obj_gestion 
-                           where og.id_oficina = $oficina2->id  and og.id = $pvpoa->id_obj_gestion  and oe.id = $pvpoa->id_obj_esp");
+    $stmt = $dbh->prepare("select og.codigo cod_gest, oe.codigo cod_esp, act.codigo cod_act, act.actividad
+                        from pvogestiones og 
+                        inner join pvoespecificos oe on og.id = oe.id_obj_gestion 
+                        inner join pvactividades act on oe.id = act.id_objespecifico
+                        where og.id_oficina = $oficina2->id  
+                        and og.id = $pvpoa->id_obj_gestion 
+                        and oe.id = $pvpoa->id_obj_esp
+                        and act.id = $pvpoa->id_actividad
+            ");
     $stmt->execute();
     $pvobjetivos = $stmt->fetch(PDO::FETCH_OBJ);
-    
+    if($pvobjetivos){
     $pdf->Ln(0);
     $pdf->SetFont('Helvetica', 'B', 9);
     $pdf->write(0,'CERTIFICACION POA','',0,'C');
     $color = "#CBCBCB";
+    $actividad = utf8_encode($pvobjetivos->actividad);
     $tabla1 = "
         <table style=\" width: 600px;\"  border=\"0px\">
             <tr>
@@ -173,20 +182,20 @@ try {
             </tr>
             <tr>
                 <td>
-                    <table border = \"1px\" STYLE=\" WIDTH:580px;\">
+                    <table border = \"1px\" style=\" width:580px;\">
                         <tr bgcolor=\"$color\">
                             <td style=\"width: 120px; text align:center\">POA</td>
                             <td style=\"width: 60px;\">CODIGO</td>
                             <td style=\"width: 40px;\" ></td>
-                            <td style=\"width: 60px;\" >CODIGO:</td>
+                            <td style=\"width: 60px;\" >CODIGO</td>
                             <td style=\"width: 300px;\" >ACTIVIDAD - DESCRIPCION SEGUN POA</td>
                         </tr>
                         <tr>
                             <td>Objetivo de Gestion</td>
                             <td>$pvobjetivos->cod_gest</td>
                             <td></td>
-                            <td></td>
-                            <td></td>
+                            <td rowspan=\"2\">$pvobjetivos->cod_act</td>
+                            <td rowspan=\"2\">$actividad</td>
                         </tr>
                         <tr>
                             <td>Objetivo Especifico</td>
@@ -289,29 +298,30 @@ try {
                     <p><center>
                     <table border = \"1px\" style=\" width:580px;\" >
                         <tr>
-                            <td>En cumplimiento de los reglamentos Especificos del Sistema de Programacion de Operaciones y del Sistema de 
-                            Administracion de Bienes y servicios del MDPyEP, la Direccion General de Planificacion <b>Certifica</b> que la actividad solicitada
+                            <td>En cumplimiento de los reglamentos Específicos del Sistema de Programación de Operaciones y del Sistema de 
+                            Administración de Bienes y servicios del MDPyEP, la Dirección General de Planificación <b>Certifica</b> que la actividad solicitada
                             se encuentra inscrita en el POA 2013 del MDPyEP.</td>
                         </tr>
                     </table>
                     </center>
                     </p>
+                    <br />
                 </td>
             </tr>
             <tr>
                 <td style = \" width: 100%;\" bgcolor = \"$color\"><b>Responsable de la certificacion</b></td>
             </tr>
             <tr>
-                <td><p>
+                <td><br /><p>
                     <table border = \"1px\" style=\" width:580px;\" >
                         <tr>
-                            <td style=\"width: 80px;\" bgcolor = \"$color\">Responsable Verificacion POA</td>
+                            <td style=\"width: 80px;\" bgcolor = \"$color\">Responsable Verificación POA</td>
                             <td style=\"width: 210px;\"><span style=\"color:#DADADA; text-align:center;\"><br /><br />FIRMA</span></td>
                             <td style=\"width: 210px;\"><span style=\"color:#DADADA; text-align:center;\"><br /><br />SELLO</span></td>
                             <td style=\"width: 80px;\">FECHA</td>
                         </tr>
                         <tr>
-                            <td bgcolor = \"$color\">Direccion General de Planificacion</td>
+                            <td bgcolor = \"$color\">Dirección General de Planificación</td>
                             <td><span style=\"color:#DADADA; text-align:center;\"><br /><br />FIRMA</span></td>
                             <td><span style=\"color:#DADADA; text-align:center;\"><br /><br />SELLO</span></td>
                             <td><span style=\"text-align:center;\"><br />$fecha</span></td>
@@ -324,7 +334,14 @@ try {
     ";
     $pdf->Ln(10);
     $pdf->writeHTML($tabla2, false, false, false);
-        
+    $pdf->Ln(10);
+    $pdf->SetFont('Helvetica', '', 5);
+    $pdf->writeHTML('cc. ' . strtoupper($rs->copias));
+    $pdf->writeHTML('Adj. ' . strtoupper($rs->adjuntos));
+    }
+    else{         
+        $pdf->writeHTML('ERROR AL GENERAR EL DOCUMENTO.', false, false, false);
+    }
 } catch (PDOException $e) {
     print "Error!: " . $e->getMessage() . "<br/>";
     die();

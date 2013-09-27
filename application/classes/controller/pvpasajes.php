@@ -36,14 +36,36 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
         parent::after();
     }
 
-    public function action_index($id = '') {
+    public function action_index() {
+        $this->request->redirect('pvpasajes/lista');
+        /*if(isset($_POST['submit']))
+        {            
+            $fecha1=$_POST['fecha1'].' 00:00:00';
+            $fecha2=$_POST['fecha2'].' 23:59:00';            
+            if(strtotime($fecha1)>strtotime($fecha2))
+            {   
+                $fecha1=$_POST['fecha2'].' 23:59:00';
+                $fecha2=$_POST['fecha1'].' 00:00:00';
+            }
+             $o_pasajes=New Model_Pvpasajes();
+             $results=$o_pasajes->personal($_POST['funcionario'],$_POST['boleto'],$_POST['oficina'],$fecha1,$fecha2);            
+             $this->template->styles=array('media/css/tablas.css'=>'screen');
+             $this->template->content=View::factory('pvpasajes/vista')
+                                        ->bind('results',$results)
+                     ;
+        }
         $oAut = new Model_Pvpasajes();
-        $autorizados = $oAut->pasajesautorizados();//lista de solicitudes autorizadas
-        $this->template->styles = array('media/css/tablas.css' => 'all');
-        $this->template->scripts = array('media/js/jquery.tablesorter.min.js');
+        $autorizados = $oAut->pasajesautorizados($this->user->id_entidad);//lista de solicitudes autorizadas
+        $ofi = ORM::factory('oficinas')->where('id_entidad','=',$this->user->id_entidad)->find_all();
+        $oficinas[''] = 'TODAS LAS OFICINAS';
+        foreach($ofi as $o)
+            $oficinas [$o->id] = $o->oficina;
+        $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+        $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
         $this->template->content = View::factory('pvpasajes/index')
                                         ->bind('autorizados', $autorizados)
-                                        ;    
+                                        ->bind('oficinas', $oficinas)
+                                        ;*/
     }
     
     public function action_adicionarpasaje($id = '') {
@@ -113,6 +135,58 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
             $fucov->save();
             $this->request->redirect('documento/detalle/'.$fucov->id_memo);
         }
+    }
+    public  function action_lista(){
+        $mensajes=array();
+        $ofi = ORM::factory('oficinas')->where('id_entidad','=',$this->user->id_entidad)->find_all();
+        $oficinas[''] = 'TODAS LAS OFICINAS';
+        foreach($ofi as $o)
+            $oficinas [$o->id] = $o->oficina;
+        if(isset($_POST['submit']))
+        {
+            $fecha1=$_POST['fecha1'].' 00:00:00';
+            $fecha2=$_POST['fecha2'].' 23:59:00';
+            if(strtotime($fecha1)>strtotime($fecha2))
+            {
+                $fecha1=$_POST['fecha2'].' 23:59:00';
+                $fecha2=$_POST['fecha1'].' 00:00:00';
+            }
+            $o_pasajes=New Model_Pvpasajes();
+            $results=$o_pasajes->avanzada($this->user->id_entidad, $_POST['funcionario'],$_POST['boleto'],$_POST['oficina'],$fecha1,$fecha2);
+            if(!sizeof($results)>0)
+                $mensajes['No Encontrado!'] = 'La búsqueda no produjo resultados.';
+            $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+                $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
+                $this->template->content=View::factory('pvpasajes/lista')
+                                            ->bind('autorizados',$results)
+                                            ->bind('oficinas', $oficinas)
+                        ->bind('mensajes', $mensajes)
+                         ;
+        }
+        else{            
+        $oAut = new Model_Pvpasajes();
+        $autorizados = $oAut->pasajesautorizados($this->user->id_entidad);//lista de solicitudes autorizadas
+        $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+        $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
+        $this->template->content = View::factory('pvpasajes/lista')
+                                        ->bind('autorizados', $autorizados)
+                                        ->bind('oficinas', $oficinas)
+                ->bind('mensajes', $mensajes)
+                ;
+        }
+    }
+    public function action_detalleautorizados($id = ''){
+        $memo = ORM::factory('documentos',$id);
+        $pvfucov = ORM::factory('pvfucovs')->where('id_memo','=',$id)->find();
+        $pvpasajes = ORM::factory('pvpasajes')->where('id_fucov','=',$pvfucov->id)->find_all();
+        $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+        $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
+        $this->template->content = View::factory('pvpasajes/detalleautorizados')
+                ->bind('memo',$memo)
+                ->bind('pvfucov', $pvfucov)
+                                        ->bind('pvpasajes', $pvpasajes)
+                
+                ;
     }
 }
 ?>

@@ -198,6 +198,15 @@ if($d->id_tipo==13){
                     <tr>                        
                         <td><?php echo $pvespecifico->objetivo?></td>
                     </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td><b>Actividad:</b>&nbsp;&nbsp;&nbsp;<?php echo $pvactividad->codigo?></td>
+                    </tr>
+                    <tr>                        
+                        <td><?php echo $pvactividad->actividad?></td>
+                    </tr>
                 </table>
             </div>
             </td>

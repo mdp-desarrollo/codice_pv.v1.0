@@ -29,24 +29,46 @@
 <form action="" method="post" id="frmOficina">
     <table width="100%" >
         <tr>
-            <td>Entidad:</td>
-            <td width="600" ><?php echo $entidad->entidad; ?></td>
+            <td width="180px">Entidad:</td>
+            <td width="600" colspan="3" ><?php echo $entidad->entidad; ?></td>
         </tr>
         <tr>
             <td>Depende de:</td>
-            <td><?php echo Form::select('padre', $options, HTML::chars(Arr::get($_POST, 'oficina', NULL)), array('id' => 'padre')); ?></td>
+            <td colspan="3"><?php echo Form::select('padre', $options, HTML::chars(Arr::get($_POST, 'oficina', NULL)), array('id' => 'padre')); ?></td>
         </tr>
         <tr>
             <td>Nombre de la Oficina:</td>
-            <td><?php echo Form::input('oficina', HTML::chars(Arr::get($_POST, 'oficina')),array('class'=>'required')); ?></td>
+            <td colspan="3"><?php echo Form::input('oficina', HTML::chars(Arr::get($_POST, 'oficina')),array('class'=>'required')); ?></td>
             <?php echo Form::hidden('entidad', $entidad->id); ?></td>
         </tr>
         <tr>
             <td>Sigla:</td>
-            <td><?php echo Form::input('sigla', HTML::chars(Arr::get($_POST, 'sigla')), array('id' => 'sigla','class'=>'required')); ?></td>
+            <td colspan="3"><?php echo Form::input('sigla', HTML::chars(Arr::get($_POST, 'sigla')), array('id' => 'sigla','class'=>'required')); ?></td>
         </tr>
         <tr>
-            <td colspan="2">
+            <td>Unidad Ejecutora POA:</td>
+            <td colspan="3">No <?php echo Form::radio('poa_unid_ejecutora', 'No', TRUE); ?> 
+                Si <?php echo Form::radio('poa_unid_ejecutora', 'Si', False); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Unidad Ejecutora Presupuesto:</td>
+            <td>No <?php echo Form::radio('ppt_unid_ejecutora', 'No', TRUE); ?> 
+                Si <?php echo Form::radio('ppt_unid_ejecutora', 'Si', False); ?>
+            </td>
+            <td width="80px">Codigo:</td>
+            <td><?php echo Form::input('ppt_cod_ue', HTML::chars(Arr::get($_POST, 'ppt_cod_ue')), array('id' => 'ppt_cod_ue','class'=>'required')); ?></td>
+        </tr>
+        <tr>
+            <td>Direccion Administrativa Presupuesto:</td>
+            <td>No <?php echo Form::radio('ppt_da', 'No', TRUE); ?> 
+                Si <?php echo Form::radio('ppt_da', 'Si', False); ?>
+            </td>
+            <td>Codigo:</td>
+            <td><?php echo Form::input('ppt_cod_da', HTML::chars(Arr::get($_POST, 'ppt_cod_da')), array('id' => 'ppt_cod_da','class'=>'required')); ?></td>
+        </tr>
+        <tr>
+            <td colspan="4">
                 <hr/>
                 <br/>
                 <input type="submit" name="create" value="Crear Oficina" class="uibutton" />
