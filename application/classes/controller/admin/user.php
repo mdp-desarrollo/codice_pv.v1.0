@@ -33,12 +33,10 @@ class Controller_Admin_User extends Controller_AdminTemplate {
 
     //
     public function action_index() {
-        //$oUser = New Model_Users();
-        //$users = $oUser->listaGeneral();
-        //if (sizeof($users) > 0) {
-            //$this->template->content = View::factory('admin/users')
-                    //->bind('users', $users);
-        //}
+        // $entidades=ORM::factory('entidades')->find_all();
+        // $this->template->content = View::factory('admin/lista_entidades')
+        //                             ->('entidades',$entidades);
+
         $this->template->content = View::factory('admin/bienvenida');
     }
 
