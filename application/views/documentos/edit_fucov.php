@@ -443,7 +443,7 @@ function dia_literal($n) {
 ?>
 
 <h2 class="subtitulo">Editar <?php echo $documento->codigo; ?> - <b><?php echo $documento->nur; ?></b><br/><span> Editar documento <?php echo $documento->codigo; ?> </span></h2>
-<form action="/documento/editar/<?php echo $documento->id; ?>" method="post" id="frmEditar" >
+<form action="/documento/editar/<?php echo $documento->id; ?>" method="post" id="frmEditar" name="frmEditar" >
 <div class="tabs">
     <ul class="tabNavigation">
         <li><a href="#editar">Edición</a></li>

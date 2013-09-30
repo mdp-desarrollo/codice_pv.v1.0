@@ -141,7 +141,7 @@ try {
     $stmt = $dbh->prepare("select * from pvpoas where id_fucov = $pvfucov->id");
     $stmt->execute();
     $pvpoa = $stmt->fetch(PDO::FETCH_OBJ);
-    $stmt = $dbh->prepare("select og.codigo cod_gest, oe.codigo cod_esp, act.codigo cod_act, act.actividad
+    $stmt = $dbh->prepare("select og.codigo cod_gest, oe.codigo cod_esp, act.codigo cod_act, act.actividad, og.gestion
                         from pvogestiones og 
                         inner join pvoespecificos oe on og.id = oe.id_obj_gestion 
                         inner join pvactividades act on oe.id = act.id_objespecifico
@@ -153,21 +153,25 @@ try {
     $stmt->execute();
     $pvobjetivos = $stmt->fetch(PDO::FETCH_OBJ);
     if($pvobjetivos){
-    $pdf->Ln(0);
+    //$pdf->Ln(0);
+    $pdf->SetFont('Helvetica', 'B', 20);
+    $pdf->write(0,'CERTIFICACIÓN POA '.$pvobjetivos->gestion,'',0,'C');
+    //$pdf->Cell(5, 6, 'D.N.I.:',0,0,'',$valign='M');
     $pdf->SetFont('Helvetica', 'B', 9);
-    $pdf->write(0,'CERTIFICACION POA','',0,'C');
     $color = "#CBCBCB";
+    $altura = "21 px";
+    $altura2 = "18 px";
     $actividad = utf8_encode($pvobjetivos->actividad);
     $tabla1 = "
         <table style=\" width: 600px;\"  border=\"0px\">
             <tr>
-                <td style = \" width: 100%;\"><b>I. SOLICITUD</b></td>
+                <td style = \" width: 100%;\" colspan = \"3\"><b>I. SOLICITUD</b></td>
             </tr>
             <tr>
-                <td style = \" width: 100%;\">&nbsp;</td>
+                <td style = \" width: 100%;\" colspan = \"3\">&nbsp;</td>
             </tr>
             <tr>
-                <td>
+                <td colspan = \"3\">
                     <table border = \"1px\" STYLE=\" WIDTH:580px;\">
                         <tr>
                             <td style=\"width: 150px;\" bgcolor=\"$color\">UNIDAD SOLICITANTE:</td>
@@ -178,93 +182,102 @@ try {
                 </td>
             </tr>
             <tr>
-                <td style = \" width: 100%;\">&nbsp;</td>
+                <td style = \" width: 100%;\" colspan = \"3\">&nbsp;</td>
             </tr>
             <tr>
                 <td>
                     <table border = \"1px\" style=\" width:580px;\">
                         <tr bgcolor=\"$color\">
-                            <td style=\"width: 120px; text align:center\">POA</td>
-                            <td style=\"width: 60px;\">CODIGO</td>
-                            <td style=\"width: 40px;\" ></td>
+                            <td style=\"width: 120px; text align:center\" height =\"$altura\">POA</td>
                             <td style=\"width: 60px;\" >CODIGO</td>
+                        </tr>
+                        <tr>
+                            <td height =\"$altura2\">Objetivo de Gestion</td>
+                            <td>$pvobjetivos->cod_gest</td>
+                        </tr>
+                        <tr>
+                            <td height =\"$altura2\">Objetivo Especifico</td>
+                            <td>$pvobjetivos->cod_esp</td>
+                        </tr>
+                    </table>
+                </td>
+                <td colspan =\"2\">
+                    <table border = \"1px\" style=\" width:580px;\">
+                        <tr bgcolor=\"$color\">
+                            <td style=\"width: 60px;\" height =\"$altura\" >CODIGO</td>
                             <td style=\"width: 300px;\" >ACTIVIDAD - DESCRIPCION SEGUN POA</td>
                         </tr>
                         <tr>
-                            <td>Objetivo de Gestion</td>
-                            <td>$pvobjetivos->cod_gest</td>
-                            <td></td>
-                            <td rowspan=\"2\">$pvobjetivos->cod_act</td>
-                            <td rowspan=\"2\">$actividad</td>
-                        </tr>
-                        <tr>
-                            <td>Objetivo Especifico</td>
-                            <td>$pvobjetivos->cod_esp</td>
+                            <td >$pvobjetivos->cod_act</td>
+                            <td >$actividad</td>
                         </tr>
                     </table>
                 </td>
             </tr>
             <tr>
-                <td style = \" width: 100%;\">&nbsp;</td>
+                <td style = \" width: 100%;\" colspan = \"3\">&nbsp;</td>
             </tr>
             <tr>
                 <td>
                     <table border = \"1px\" style=\" width:180px;\">
                         <tr bgcolor=\"$color\">
-                            <td colspan=\"2\" >TIPO DE ACTIVIDAD</td>
+                            <td colspan=\"2\" height =\"$altura\">TIPO DE ACTIVIDAD</td>
                         </tr>
                         <tr>
-                            <td style=\"width: 120px;\">INVERSION</td>
+                            <td style=\"width: 120px;\" height =\"$altura2\">INVERSION</td>
                             <td style=\"width: 60px;\"></td>
                         </tr>
                         <tr>
-                            <td>FUNCIONAMIENTO</td>
+                            <td height =\"$altura2\">FUNCIONAMIENTO</td>
                             <td><b>X</b></td>
                         </tr>
                     </table>
                 </td>
-            </tr>
-            <tr>
-                <td style = \" width: 100%;\">&nbsp;</td>
-            </tr>
-            <tr>
-                <td>
+                <td colspan = \"2\">
                     <table border = \"1px\" style=\" width:300px;\">
                         <tr bgcolor=\"$color\">
-                            <td colspan=\"2\" >TIPO DE CONTRATACION</td>
+                            <td colspan=\"2\" height =\"$altura\">TIPO DE CONTRATACION</td>
                         </tr>
                         <tr>
-                            <td style=\"width: 250px;\">Consultoria Individual de linea</td>
+                            <td height =\"$altura2\" style=\"width: 250px;\">Consultoria Individual de linea</td>
                             <td style=\"width: 50px;\"></td>
                         </tr>
                         <tr>
-                            <td>Consultoria Individual por producto</td>
+                            <td height =\"$altura2\">Consultoria Individual por producto</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td>Servicios de Empresa consultora(estidios)</td>
+                            <td height =\"$altura2\">Servicios de Empresa consultora(estidios)</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td>Adquisicion de Bienes</td>
+                            <td height =\"$altura2\">Adquisicion de Bienes</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td>Contratacion de obras</td>
+                            <td height =\"$altura2\">Contratacion de obras</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td>Otros</td>
+                            <td height =\"$altura2\">Otros</td>
                             <td><b>X</b></td>
                         </tr>
                     </table>
                 </td>
             </tr>
             <tr>
-                <td style = \" width: 100%;\">&nbsp;</td>
+                <td style = \" width: 100%;\" colspan = \"3\">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan = \"3\">
+                    
+                </td>
+            </tr>
+            <tr>
+                <td style = \" width: 100%;\" colspan = \"3\">&nbsp;</td>
             </tr>
             <!--<tr>
-                <td>
+                <td colspan = \"3\">
                     <table border = \"1px\" style=\" width:580px;\">
                         <tr bgcolor=\"$color\">
                             <td style=\"width: 400px;\">PROCESO DE CONTRATACION / ADQUISICION:</td>
@@ -282,16 +295,19 @@ try {
                 </td>
             </tr>-->
             <tr>
-                <td style = \" width: 100%;\">&nbsp;</td>
+                <td style = \" width: 100%;\" colspan = \"3\">&nbsp;</td>
             </tr>
         </table>";
-    $pdf->Ln(20);
+    $pdf->Ln(10);
+    $pdf->Cell(169.5,90,'',1,0,'C');
+    $pdf->Ln(5);
     $pdf->writeHTML($tabla1, false, false, false);
+    
     $fecha = date("d / m / Y");
     $tabla2 = "
-    <table style=\"width: 600px;\"  border=\"0px\" >
+    <table style=\"width: 600px;\"  border=\"1px\" >
             <tr bgcolor = \"$color\">
-                <td style = \" width: 100%;\"><b>II. CERTIFICACION (llenado por la DGP)</b></td>
+                <td style = \" width: 100%;\" height =\"$altura\"><b>II. CERTIFICACI&Oacute;N (A ser llenado por la DGP)</b></td>
             </tr>
             <tr>
                 <td style = \" width: 100%;\">
@@ -305,25 +321,24 @@ try {
                     </table>
                     </center>
                     </p>
-                    <br />
                 </td>
             </tr>
             <tr>
-                <td style = \" width: 100%;\" bgcolor = \"$color\"><b>Responsable de la certificacion</b></td>
+                <td style = \" width: 100%;\" bgcolor = \"$color\" height =\"$altura\"><b>Responsable de la certificación</b></td>
             </tr>
             <tr>
                 <td><br /><p>
                     <table border = \"1px\" style=\" width:580px;\" >
                         <tr>
                             <td style=\"width: 80px;\" bgcolor = \"$color\">Responsable Verificación POA</td>
-                            <td style=\"width: 210px;\"><span style=\"color:#DADADA; text-align:center;\"><br /><br />FIRMA</span></td>
-                            <td style=\"width: 210px;\"><span style=\"color:#DADADA; text-align:center;\"><br /><br />SELLO</span></td>
+                            <td style=\"width: 210px;\"><span style=\"color:#DADADA; text-align:center; font-size: 60%;\"><br /><br /><br /><br />FIRMA</span></td>
+                            <td style=\"width: 210px;\"><span style=\"color:#DADADA; text-align:center; font-size: 60%;\"><br /><br /><br /><br />SELLO</span></td>
                             <td style=\"width: 80px;\">FECHA</td>
                         </tr>
                         <tr>
                             <td bgcolor = \"$color\">Dirección General de Planificación</td>
-                            <td><span style=\"color:#DADADA; text-align:center;\"><br /><br />FIRMA</span></td>
-                            <td><span style=\"color:#DADADA; text-align:center;\"><br /><br />SELLO</span></td>
+                            <td><span style=\"color:#DADADA; text-align:center; font-size: 60%;\"><br /><br /><br /><br />FIRMA</span></td>
+                            <td><span style=\"color:#DADADA; text-align:center; font-size: 60%;\"><br /><br /><br /><br />SELLO</span></td>
                             <td><span style=\"text-align:center;\"><br />$fecha</span></td>
                         </tr>
                     </table>                
@@ -332,9 +347,11 @@ try {
             </tr>
     </table>
     ";
-    $pdf->Ln(10);
+    //$pdf->Ln(10);
+    //$pdf->Cell(169.5,70,'',1,0,'C');
+    //$pdf->Ln(5);
     $pdf->writeHTML($tabla2, false, false, false);
-    $pdf->Ln(10);
+    
     $pdf->SetFont('Helvetica', '', 5);
     $pdf->writeHTML('cc. ' . strtoupper($rs->copias));
     $pdf->writeHTML('Adj. ' . strtoupper($rs->adjuntos));
