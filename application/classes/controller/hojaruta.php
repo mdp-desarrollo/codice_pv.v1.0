@@ -78,8 +78,9 @@ class Controller_Hojaruta extends Controller_DefaultTemplate {
             $seguimiento = ORM::factory('seguimiento', $id_seg);
             if ($seguimiento->loaded()) {
                 //Freddy Validamos si el memo ya tiene un fucov asignado
+                
                 $pvfucov = ORM::factory('pvfucovs')->where('id_memo', '=', $id_memo)->find();
-                if ($pvfucov->loaded()) {
+                if ($pvfucov->loaded() && $id_tipo==13) {
 
                     $info['info'] = '<b>Mensaje!: </b>El siguiente documento ' . $nur . ' ya tiene asignado un fucov';
                     $oSeg = New Model_Seguimiento();
