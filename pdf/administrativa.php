@@ -34,10 +34,10 @@ INNER JOIN entidades AS c ON b.id_entidad = c.id WHERE a.id = '$id'");
     }
 
     // Page footer
-    public function Footer() {
+    // public function Footer() {
 
 
-    }
+    // }
 
 }
 
@@ -120,6 +120,12 @@ try {
         $pdf->Write(0, strtoupper($rs->codigo), '', 0, 'R');
         
         $pdf->Ln(10);
+        $pdf->SetFont('Helvetica', 'B', 10);
+        $pdf->Cell(15, 5, 'TEMA:');
+        $pdf->SetFont('Helvetica', '', 10);
+        $pdf->MultiCell(160, 5, utf8_encode($rs->referencia), 0, 'L');
+                
+        $pdf->Ln(8);
         $pdf->writeHTML($rs->contenido);
         $pdf->Ln(10);
         
