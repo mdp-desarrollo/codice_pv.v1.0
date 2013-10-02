@@ -27,14 +27,16 @@ function calculo_viaticos(){
     
 function calculo_dias(){
     var fecha_s = $("#fecha_salida").val();
-    var dia_s = fecha_s.substring(0, 3);
+    //var dia_s = fecha_s.substring(0, 3);
     fecha_s = fecha_s.substring(4, 14);
     var fecha_a = $("#fecha_arribo").val();
-    var dia_a = fecha_a.substring(0, 3);
+    //var dia_a = fecha_a.substring(0, 3);
     fecha_a = fecha_a.substring(4, 14);
     //calculo de viaticos
     if(fecha_s != '' && fecha_a !='') {
-        var diferencia =  Math.floor(( Date.parse(fecha_a) - Date.parse(fecha_s) ) / 86400000);
+        var fecha2 = fecha_a.replace(/-/g, '/');
+        var fecha1 = fecha_s.replace(/-/g, '/');
+        var diferencia =  Math.floor(( Date.parse(fecha2) - Date.parse(fecha1) ) / 86400000);
         if(diferencia >= 0){
             if(diferencia == 0){
                 diferencia = 1;
@@ -54,6 +56,7 @@ function calculo_dias(){
 }
 
 $(function(){
+calculo_dias();
 $.datepicker.regional['es'] = {
             closeText: 'Cerrar',
             prevText: '&#x3c;Ant',
@@ -141,7 +144,7 @@ function dia_literal($n) {
     }
 }
 //calcular el numero de dias
-$fecha1 = strtotime($pvfucov->fecha_salida);
+/*$fecha1 = strtotime($pvfucov->fecha_salida);
 $fecha2 = strtotime($pvfucov->fecha_arribo);
 $diff =  $fecha2 - $fecha1;//echo 'DIFF.: '.$diff.'<br />';
 if($diff < 0)
@@ -155,7 +158,7 @@ else{
         if(strcasecmp($hora, '12:00:00') > 0)
             $dias ++;
     }
-}
+}*/
     if($pvfucov->tipo_moneda == '0')
         $moneda = 'Bs.';
     else
@@ -196,7 +199,7 @@ else{
                         <td>Total Pasajes</td>
                     </tr>
                     <tr>
-                        <td><?php echo Form::input('nro_dias', $dias, array('id' => 'nro_dias', 'size' => 3,'readonly')) ?></td>
+                        <td><?php echo Form::input('nro_dias', /*$dias*/'', array('id' => 'nro_dias', 'size' => 3,'readonly')) ?></td>
                         <td><?php echo Form::input('porcentaje_viatico', $pvfucov->porcentaje_viatico, array('id' => 'porcentaje_viatico', 'size' => 3,'readonly')) ?> %</td>
                         <td><?php echo Form::input('viatico_dia', $pvfucov->viatico_dia, array('id' => 'viatico_dia', 'size' => 5,'readonly'));echo $moneda;?> </td>
                         <td><?php echo Form::input('total_viatico', $pvfucov->total_viatico, array('id' => 'total_viatico', 'size' => 8,'readonly'));echo $moneda; ?></span></td>

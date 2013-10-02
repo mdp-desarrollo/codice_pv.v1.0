@@ -97,7 +97,7 @@ $('.autorizar').live('click', function() {
                         <tr>
                             <td><b><?php echo Form::label('det_act', 'Detalle:', array('class' => 'form')); ?></b></td>
                             <td><br />
-                                <textarea name="det_act" id="det_act" style="width: 600px;" disabled="true" readonly rows="5" ><?php echo $det_act; ?></textarea>
+                                <textarea name="det_act" id="det_act" style="width: 600px;" readonly rows="5" ><?php echo $det_act; ?></textarea>
                             </td>
                         </tr>
                     </table>

@@ -188,5 +188,44 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
                 
                 ;
     }
+    public function action_informes(){
+        $mensajes=array();
+        $ofi = ORM::factory('oficinas')->where('id_entidad','=',$this->user->id_entidad)->find_all();
+        $oficinas[''] = 'TODAS LAS OFICINAS';
+        foreach($ofi as $o)
+            $oficinas [$o->id] = $o->oficina;
+        if(isset($_POST['submit']))
+        {
+            $fecha1=$_POST['fecha1'].' 00:00:00';
+            $fecha2=$_POST['fecha2'].' 23:59:00';
+            if(strtotime($fecha1)>strtotime($fecha2))
+            {
+                $fecha1=$_POST['fecha2'].' 23:59:00';
+                $fecha2=$_POST['fecha1'].' 00:00:00';
+            }
+            $o_pendientes=New Model_Pvpasajes();
+            $pendientes=$o_pendientes->pendienteavanzado($this->user->id_entidad, $_POST['funcionario'],$_POST['oficina'],$fecha1,$fecha2);
+            if(!sizeof($pendientes)>0)
+                $mensajes['No Encontrado!'] = 'La búsqueda no produjo resultados.';
+            $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+                $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
+                $this->template->content=View::factory('pvpasajes/pendientes')
+                        ->bind('pendientes',$pendientes)
+                        ->bind('oficinas', $oficinas)
+                        ->bind('mensajes', $mensajes)
+                         ;
+        }
+        else{
+        $oPendientes = new Model_Pvpasajes();
+        $pendientes = $oPendientes->informependiente($this->user->id_entidad);//lista de solicitudes sin informe de descargo
+        $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+        $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
+        $this->template->content = View::factory('pvpasajes/pendientes')
+                ->bind('pendientes', $pendientes)
+                ->bind('oficinas', $oficinas)
+                ->bind('mensajes', $mensajes)
+                ;
+        }
+    }
 }
 ?>

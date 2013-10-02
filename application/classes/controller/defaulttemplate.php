@@ -54,7 +54,8 @@
                                               //'media/js/jquery-ui-1.8.14.custom.min.js',                                                             
                                               'media/js/jquery.validate.js',                                                             
                                               'media/js/main.js',                                                             
-                                              'media/js/jquery-1.6.1.min.js'
+                                              //'media/js/jquery-1.6.1.min.js'
+                                              'media/js/jquery-1.4.4.min.js'//para validacion en IE 8
                                               );
 
              // Add defaults to template variables.
