@@ -134,30 +134,35 @@ where ofi.id = '$doc->id_oficina'");
         $stmt->execute();
         $ue = $stmt->fetch(PDO::FETCH_OBJ);
     }
-        $pdf->SetFont('Helvetica', 'U', 12);
-        $pdf->Write(0, 'CERTIFICACION PRESUPUESTARIA', '', 0, 'C');
-        $pdf->Ln();
-        $pdf->Write(0, 'GESTION '.date("Y", strtotime($doc->fecha_creacion)), '', 0, 'C');
-        $pdf->Ln(10);
+    $color = "#CBCBCB";
+        $pdf->SetFont('Helvetica', 'B', 15);
+        $pdf->write(0,'CERTIFICACIÓN PRESUPUESTARIA '.date("Y", strtotime($doc->fecha_creacion)),'',0,'C');
         
+        $pdf->Ln();
+        $pdf->SetFont('Helvetica', '', 13);
+        $pdf->write(0,$doc->nur,'',0,'C');
+        
+        $pdf->Ln(10);
+        $pdf->SetFont('Helvetica', 'U', 12);
         $pdf->Write(0, 'ANTECEDENTES: ' ,'', 0, 'L');
         $pdf->Ln(10);
 
         $pdf->SetFont('Helvetica', '', 10);
-        $antecedentes = "Mediante Hoja de Seguimiento $doc->nur, se remite el FUCOV $doc->codigo, del Sr(a). $doc->nombre_remitente,  $doc->cargo_remitente, solicitando viaticos por viaje a realizar a la ciudad de $fucov->destino, con el objeto de: $doc->referencia.";
-        $pdf->write(0, $antecedentes, '', 0, 'L');
+        $antecedentes = "<p style=\"text-align: justify;\">Mediante Hoja de Seguimiento $doc->nur, se remite el FUCOV $doc->codigo, del Sr(a). $doc->nombre_remitente,  $doc->cargo_remitente, solicitando viaticos por viaje a realizar a la ciudad de $fucov->destino, con el objeto de: $doc->referencia.</p>";
+        //$pdf->write(0, $antecedentes, '', 0, 'L');
+        $pdf->writeHTML(utf8_encode($antecedentes), false, false, false);
         $pdf->Ln(10);
         
-        $pdf->SetFont('Helvetica', 'U', 13);
+        $pdf->SetFont('Helvetica', 'U', 12);
         $pdf->write(0, 'ANALISIS Y/O VERIFICACION:', '', 0, 'L');
         $pdf->Ln(10);
         
         $pdf->SetFont('Helvetica', '', 10);
-        $antecedentes = "Analizada la Presente Solicitud se CERTIFICA que existe el requerimiento de inscripción en el Presupuesto de la Gestión ".date("Y", strtotime($doc->fecha_creacion))." para llevar adelante esta actividad, con cargo a:";
-        $pdf->write(0, $antecedentes, '', 0, 'L');
+        $antecedentes = "<p style=\"text-align: justify;\">Analizada la Presente Solicitud se CERTIFICA que existe el requerimiento de inscripción en el Presupuesto de la Gestión ".date("Y", strtotime($doc->fecha_creacion))." para llevar adelante esta actividad, con cargo a:</p>";
+        $pdf->writeHTML($antecedentes, false, false, false);
         $pdf->Ln(10);
         
-        $pdf->SetFont('Helvetica', 'U', 11);
+        $pdf->SetFont('Helvetica', 'U', 12);
         $pdf->write(0, 'ESTRUCTURA PROGRAMATICA', '', 0, 'L');
         $pdf->Ln(10);
         $stmt = $dbh->prepare("select prog.codigo cod_programa, prog.programa programa, proy.codigo cod_proyecto, proy.proyecto proyecto, act.codigo cod_actividad, act.actividad actividad, fte.codigo cod_fuente, 
@@ -180,18 +185,19 @@ where p.id = $fucov->id_programatica");
                 <td>$ppt->proyecto</td>
             </tr>";
     else
-        $proyact = "<tr>
+        $proyact = "
+            <tr>
                 <td>ACTIVIDAD</td>
                 <td>:$ppt->cod_actividad</td>
                 <td>$ppt->actividad</td>
             </tr>";
-    $pdf->SetFont('Helvetica', '', 10);
+    $pdf->SetFont('Helvetica', '', 8);
     $html = "
         <table style=\" width: 100%;\"  border=\"0px\">
             <tr>
                 <td style = \" width: 30%;\">ENTIDAD</td>
-                <td style = \" width: 5%;\">:$ofi->sigla_entidad</td>
-                <td style = \" width: 65%;\">$ofi->entidad</td>
+                <td style = \" width: 10%;\">:$ofi->sigla_entidad</td>
+                <td style = \" width: 60%;\">$ofi->entidad</td>
             </tr>
             <tr>
                 <td>DIRECCION ADMINISTRATIVA</td>
@@ -219,16 +225,17 @@ where p.id = $fucov->id_programatica");
                 <td>$ppt->organismo</td>
             </tr>
         </table>";
-        $pdf->writeHTML($html, false, false, false);
+        $pdf->writeHTML(utf8_encode($html), false, false, false);
+        $pdf->Ln(5);
         $stmt = $dbh->prepare("select * from pvliquidaciones where id_fucov = $fucov->id");
         $stmt->execute();
         $html = "<table border=\"1px\">
                     <tr>
-                        <td style = \" width: 10%;\">Partida</td>
-                        <td style = \" width: 40%;\">Descripci&oacute;n</td>
-                        <td style = \" width: 20%;\">Saldo Disponible</td>
-                        <td style = \" width: 20%;\">Importe Certificado</td>
-                        <td style = \" width: 10%;\">Saldo Actual</td>
+                        <td style = \" width: 10%;\" bgcolor=\"$color\">Partida</td>
+                        <td style = \" width: 40%;\" bgcolor=\"$color\">Descripci&oacute;n</td>
+                        <td style = \" width: 20%;\" bgcolor=\"$color\">Saldo Disponible</td>
+                        <td style = \" width: 20%;\" bgcolor=\"$color\">Importe Certificado</td>
+                        <td style = \" width: 10%;\" bgcolor=\"$color\">Saldo Actual</td>
                     </tr>";
         $c = 0;
         while ($ppt = $stmt->fetch(PDO::FETCH_OBJ)) {
@@ -246,16 +253,17 @@ where p.id = $fucov->id_programatica");
             $pdf->Write(0, 'El Presupuesto No Fue Autorizado', '', 0, 'C');
             $pdf->Ln(10);
         }
+        $pdf->Ln(5);
         $pdf->SetFont('Helvetica', 'U', 12);
         $pdf->Write(0, 'CONCLUSION:', '', 0, 'L');
         $pdf->SetFont('Helvetica', '', 10);
         $mes = (int) date('m', strtotime(date("d-m-Y")));
         $meses = array(1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre');
         $fecha_certificacion = date('d', strtotime(date("d-m-Y"))) . ' de ' . $meses[$mes] . ' de ' . date('Y', strtotime(date("d-m-Y")));
-        $html = "&Eacute;ste certificado s&oacute;lo refrenda y verifica la existencia de saldos presupuestarios. En este sentido, se hace notar que la verificaci&oacute;n
+        $html = "<p style=\"text-align: justify;\">&Eacute;ste certificado s&oacute;lo refrenda y verifica la existencia de saldos presupuestarios. En este sentido, se hace notar que la verificaci&oacute;n
         de dicha actividad est&eacute; incorporada en el Programa Operativo Anual Gesti&oacute;n ".date("Y", strtotime($doc->fecha_creacion)).", es de plena responsabilidad de la 
         Unidad Solicitante, as&iacute; como la tramitaci&oacute;n de la cuota de devengamiento correspondiente.
-        <br />Es Cuanto se certifica para fines consiguientes.
+        <br />Es Cuanto se certifica para fines consiguientes.</p>
         <br /><br />La Paz, ".$fecha_certificacion.".";
         $pdf->Ln(10);
         $pdf->writeHTML($html, false, false, false);

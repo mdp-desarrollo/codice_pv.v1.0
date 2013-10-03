@@ -109,6 +109,7 @@ B&uacute;squeda Avanzada
         <tr>
             <!--<th>Memor&aacute;ndum</th>-->
             <th>Hoja de Ruta</th>
+            <th>Detalle</th>
             <!--<th>Fecha Solicitud</th>-->
             <th>Fecha Salida</th>
             <th>Fecha Retorno</th>
@@ -123,7 +124,8 @@ B&uacute;squeda Avanzada
     foreach( $pendientes as $aut): ?>
         <tr>
             <!--<td ><a href="/pyvpasajes/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->nur;?></a></td>-->
-            <td ><a href="/pvpasajes/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->nur;?></a></td>
+            <td ><a href="/seguimiento/?nur=<?php echo $aut->nur?>"><?php echo $aut->nur?></a></td>
+            <td ><a href="/pvpasajes/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
             <!--<td ><?php echo $aut->nur;?></td>-->
             <!--<td ><?php //echo $aut->fecha_creacion;?></td>-->
             <td ><?php echo $aut->fecha_salida;?></td>

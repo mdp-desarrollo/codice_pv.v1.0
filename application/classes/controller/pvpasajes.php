@@ -144,18 +144,24 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
             $oficinas [$o->id] = $o->oficina;
         if(isset($_POST['submit']))
         {
-            $fecha1=$_POST['fecha1'].' 00:00:00';
-            $fecha2=$_POST['fecha2'].' 23:59:00';
-            if(strtotime($fecha1)>strtotime($fecha2))
-            {
-                $fecha1=$_POST['fecha2'].' 23:59:00';
-                $fecha2=$_POST['fecha1'].' 00:00:00';
+            if($_POST['fecha1']!='' && $_POST['fecha2']!=''){
+                $fecha1=$_POST['fecha1'].' 00:00:00';
+                $fecha2=$_POST['fecha2'].' 23:59:00';
+                if(strtotime($fecha1)>strtotime($fecha2))
+                {
+                    $fecha1=$_POST['fecha2'].' 23:59:00';
+                    $fecha2=$_POST['fecha1'].' 00:00:00';
+                }
             }
+            else{
+                $fecha1='';
+                $fecha2='';
+            }                
             $o_pasajes=New Model_Pvpasajes();
             $results=$o_pasajes->avanzada($this->user->id_entidad, $_POST['funcionario'],$_POST['boleto'],$_POST['oficina'],$fecha1,$fecha2);
             if(!sizeof($results)>0)
                 $mensajes['No Encontrado!'] = 'La búsqueda no produjo resultados.';
-            $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+                $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
                 $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
                 $this->template->content=View::factory('pvpasajes/lista')
                                             ->bind('autorizados',$results)

@@ -36,7 +36,7 @@ class Model_Pvpasajes extends ORM{
     }
     
     public function informependiente($entidad){
-        $sql = "select f.id, f.id_memo, f.id_documento,  f.fecha_salida, f.fecha_arribo, o.oficina, d.nombre_remitente nombre, d.cargo_remitente cargo, d.nur
+        $sql = "select f.id, f.id_memo, f.id_documento,  f.fecha_salida, f.fecha_arribo, o.oficina, d.nombre_remitente nombre, d.cargo_remitente cargo, d.nur, d.codigo
         from pvfucovs f
         inner join documentos d on f.id_documento = d.id
         inner join oficinas o on d.id_oficina = o.id
@@ -49,7 +49,7 @@ class Model_Pvpasajes extends ORM{
     }
     
     public function pendienteavanzado($entidad, $nombre, $oficina, $f1, $f2){
-        $sql = "select f.id, f.id_memo, f.id_documento,  f.fecha_salida, f.fecha_arribo, o.oficina, d.nombre_remitente nombre, d.cargo_remitente cargo, d.nur
+        $sql = "select f.id, f.id_memo, f.id_documento,  f.fecha_salida, f.fecha_arribo, o.oficina, d.nombre_remitente nombre, d.cargo_remitente cargo, d.nur, d.codigo
         from pvfucovs f
         inner join documentos d on f.id_documento = d.id
         inner join oficinas o on d.id_oficina = o.id

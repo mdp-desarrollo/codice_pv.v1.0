@@ -154,10 +154,27 @@ try {
     $pvobjetivos = $stmt->fetch(PDO::FETCH_OBJ);
     if($pvobjetivos){
     //$pdf->Ln(0);
-    $pdf->SetFont('Helvetica', 'B', 20);
+    $pdf->SetFont('Helvetica', 'B', 15);
     $pdf->write(0,'CERTIFICACIÓN POA '.$pvobjetivos->gestion,'',0,'C');
     //$pdf->Cell(5, 6, 'D.N.I.:',0,0,'',$valign='M');
-    $pdf->SetFont('Helvetica', 'B', 9);
+    //$pdf->SetFont('Helvetica', 'B', 9);
+    $pdf->Ln();
+    $pdf->SetFont('Helvetica', '', 13);
+    $pdf->write(0,$rs->nur,'',0,'C');
+    $pdf->SetFont('Helvetica', 'B', 14);
+    $tabla1 = "
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        <table style=\" width: 170px;\"  border=\"1px\">
+            <tr>
+                <td style = \" width: 40px;\" colspan = \"3\"><b>N°</b></td>
+                <td style = \" width: 130px;\"></td>
+            </tr>
+        </table>";
+    $pdf->writeHTML($tabla1, false, false, false,false,'C');
+    $pdf->SetFont('Helvetica', '', 10);
     $color = "#CBCBCB";
     $altura = "21 px";
     $altura2 = "18 px";
@@ -188,7 +205,7 @@ try {
                 <td>
                     <table border = \"1px\" style=\" width:580px;\">
                         <tr bgcolor=\"$color\">
-                            <td style=\"width: 120px; text align:center\" height =\"$altura\">POA</td>
+                            <td style=\"width: 130px; text align:center\" height =\"$altura\">POA</td>
                             <td style=\"width: 60px;\" >CODIGO</td>
                         </tr>
                         <tr>
@@ -202,10 +219,10 @@ try {
                     </table>
                 </td>
                 <td colspan =\"2\">
-                    <table border = \"1px\" style=\" width:580px;\">
+                    <table border = \"1px\" style=\" width:380px;\">
                         <tr bgcolor=\"$color\">
                             <td style=\"width: 60px;\" height =\"$altura\" >CODIGO</td>
-                            <td style=\"width: 300px;\" >ACTIVIDAD - DESCRIPCION SEGUN POA</td>
+                            <td style=\"width: 320px;\" >ACTIVIDAD - DESCRIPCION SEGUN POA</td>
                         </tr>
                         <tr>
                             <td >$pvobjetivos->cod_act</td>
@@ -219,12 +236,12 @@ try {
             </tr>
             <tr>
                 <td>
-                    <table border = \"1px\" style=\" width:180px;\">
+                    <table border = \"1px\" style=\" width:190px;\">
                         <tr bgcolor=\"$color\">
                             <td colspan=\"2\" height =\"$altura\">TIPO DE ACTIVIDAD</td>
                         </tr>
                         <tr>
-                            <td style=\"width: 120px;\" height =\"$altura2\">INVERSION</td>
+                            <td style=\"width: 130px;\" height =\"$altura2\">INVERSION</td>
                             <td style=\"width: 60px;\"></td>
                         </tr>
                         <tr>
@@ -234,12 +251,12 @@ try {
                     </table>
                 </td>
                 <td colspan = \"2\">
-                    <table border = \"1px\" style=\" width:300px;\">
+                    <table border = \"1px\" style=\" width:380px;\">
                         <tr bgcolor=\"$color\">
                             <td colspan=\"2\" height =\"$altura\">TIPO DE CONTRATACION</td>
                         </tr>
                         <tr>
-                            <td height =\"$altura2\" style=\"width: 250px;\">Consultoria Individual de linea</td>
+                            <td height =\"$altura2\" style=\"width: 330px;\">Consultoria Individual de linea</td>
                             <td style=\"width: 50px;\"></td>
                         </tr>
                         <tr>
@@ -298,7 +315,7 @@ try {
                 <td style = \" width: 100%;\" colspan = \"3\">&nbsp;</td>
             </tr>
         </table>";
-    $pdf->Ln(10);
+    $pdf->Ln(5);
     $pdf->Cell(169.5,90,'',1,0,'C');
     $pdf->Ln(5);
     $pdf->writeHTML($tabla1, false, false, false);
@@ -316,7 +333,7 @@ try {
                         <tr>
                             <td>En cumplimiento de los reglamentos Específicos del Sistema de Programación de Operaciones y del Sistema de 
                             Administración de Bienes y servicios del MDPyEP, la Dirección General de Planificación <b>Certifica</b> que la actividad solicitada
-                            se encuentra inscrita en el POA 2013 del MDPyEP.</td>
+                            se encuentra inscrita en el POA $pvobjetivos->gestion del MDPyEP.</td>
                         </tr>
                     </table>
                     </center>
@@ -330,10 +347,10 @@ try {
                 <td><br /><p>
                     <table border = \"1px\" style=\" width:580px;\" >
                         <tr>
-                            <td style=\"width: 80px;\" bgcolor = \"$color\">Responsable Verificación POA</td>
-                            <td style=\"width: 210px;\"><span style=\"color:#DADADA; text-align:center; font-size: 60%;\"><br /><br /><br /><br />FIRMA</span></td>
-                            <td style=\"width: 210px;\"><span style=\"color:#DADADA; text-align:center; font-size: 60%;\"><br /><br /><br /><br />SELLO</span></td>
-                            <td style=\"width: 80px;\">FECHA</td>
+                            <td style=\"width: 90px;\" bgcolor = \"$color\">Responsable Verificación POA</td>
+                            <td style=\"width: 200px;\"><span style=\"color:#DADADA; text-align:center; font-size: 60%;\"><br /><br /><br /><br />FIRMA</span></td>
+                            <td style=\"width: 200px;\"><span style=\"color:#DADADA; text-align:center; font-size: 60%;\"><br /><br /><br /><br />SELLO</span></td>
+                            <td style=\"width: 90px;\">FECHA</td>
                         </tr>
                         <tr>
                             <td bgcolor = \"$color\">Dirección General de Planificación</td>

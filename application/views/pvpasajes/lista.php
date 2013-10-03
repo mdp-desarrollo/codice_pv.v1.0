@@ -90,9 +90,9 @@ B&uacute;squeda Avanzada
         </td>
         <tr>
             <td>De fecha:</td>
-            <td><input type="text" name="fecha1" id="fecha1" value="<?php echo date('Y-m-01');?>"/></td>
+            <td><input type="text" name="fecha1" id="fecha1" value="<?php //echo date('Y-m-01');?>"/></td>
             <td>A fecha:</td>
-            <td colspan="2"><input type="text" name="fecha2" id="fecha2" value="<?php echo date('Y-m-d');?>" /></td>
+            <td colspan="2"><input type="text" name="fecha2" id="fecha2" value="<?php //echo date('Y-m-d');?>" /></td>
             <td><input type="submit" name="submit" value="Buscar"/></td>
         </tr>
     </table>
@@ -113,36 +113,31 @@ B&uacute;squeda Avanzada
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>
-            <!--<th>Memor&aacute;ndum</th>-->
             <th>Hoja de Ruta</th>
-            <!--<th>Fecha Solicitud</th>-->
+            <th>Detalle</th>
             <th>Fecha Salida</th>
             <th>Fecha Retorno</th>
-            <!--<th>Linea A&eacute;rea</th>
-            <th>Boleto Salida</th>-->
             <th>Oficina</th>
             <th>Nombre Funcionario</th>
         </tr>
     </thead>    
     <tbody>
-    <?php 
+    <?php
     foreach( $autorizados as $aut): ?>
         <tr>
-            <!--<td ><a href="/pyvpasajes/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>-->
-            <td ><a href="/pvpasajes/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->nur;?></a></td>
-            <!--<td ><?php echo $aut->nur;?></td>-->
-            <!--<td ><?php echo $aut->fecha_creacion;?></td>-->
+            <td ><a href="/seguimiento/?nur=<?php echo $aut->nur?>"><?php echo $aut->nur?></a></td>
+            <td ><a href="/pvpasajes/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
             <td ><?php echo $aut->fecha_salida;?></td>
             <td ><?php echo $aut->fecha_arribo;?></td>
-            <!--<td ><?php //echo $aut->empresa;?></td>
-            <td ><?php //echo $aut->nro_boleto;?></td>-->
             <td ><?php echo $aut->oficina;?></td>
             <td ><?php echo $aut->nombre;?><br /><b><?php echo $aut->cargo;?></b></td>
         </tr>        
     <?php endforeach;?>
    </tbody>   
 </table>
-<?php /*else: ?>
+<?php 
+//echo $autorizados;
+    /*else: ?>
 <div style="margin-top: 20px; padding: 10px;" class="info">
     <p><span style="float: left; margin-right: .3em;" class=""></span>    
      <strong>Info: </strong> <?php echo 'Usted no tiene Pasajes autorizados';?></p>    

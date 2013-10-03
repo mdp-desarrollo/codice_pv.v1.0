@@ -98,8 +98,8 @@ B&uacute;squeda Avanzada
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>
-            <!--<th>Memor&aacute;ndum</th>-->
-            <th>Nur</th>
+            <th>Hoja de Ruta</th>
+            <th>Detalle</th>
             <th>Fecha Solicitud</th>
             <th>Unidad Funcional</th>
             <th>Nombre Funcionario</th>
@@ -112,7 +112,8 @@ B&uacute;squeda Avanzada
         <tr>
             <!--<td ><a href="/documento/detalle/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
             <td ><?php echo $aut->nur;?></td>-->
-            <td ><a href="/pvpresupuesto/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->nur;?></a></td>
+            <td ><a href="/seguimiento/?nur=<?php echo $aut->nur;?>"><?php echo $aut->nur;?></a></td>
+            <td ><a href="/pvpresupuesto/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
             <td ><?php echo $aut->fecha_creacion;?></td>
             <td ><?php echo $aut->oficina;?></td>
             <td ><?php echo $aut->nombre;?><br /><b><?php echo $aut->cargo;?></b></td>
