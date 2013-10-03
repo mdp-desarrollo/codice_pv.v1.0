@@ -454,23 +454,25 @@ function dia_literal($n) {
                         </div>
                         
                         
-                        <div id='contenido2'>
+                        <div id='contenido2' style="width: 780px;">
                             <br>
                             Por medio del presente Memorándum se ordena a su persona trasladarse desde:<br> 
-                            ciudad (origen)
+                            La ciudad (origen)
                             <?php echo Form::input('origen', $origen, array('id' => 'origen')); ?> 
                             hasta la ciudad (destino)
                             <?php echo Form::input('destino', $destino, array('id' => 'destino')); ?><br>
                             con el objetivo de asistir a (detalle de comision)
-                            <p><?php echo Form::textarea('detalle_comision', $detalle_comision, array('id' => 'detalle_comision', 'cols' => 150, 'rows' => 2)); ?></p>
+                            <p>
+                                <textarea name="detalle_comision" id="detalle_comision" style="width: 775px;" ><?php echo $detalle_comision; ?></textarea>
+                            </p>
                             desde el 
                             <input type="text" id="fecha_inicio" name="fecha_inicio" size='16' value="<?php echo $diai.' '.$fi;?>"/> a Hrs. <input type="text" name="hora_inicio" id="hora_inicio" value="<?php echo $hi; ?>" size='6'/>
                             hasta el
                             <input type="text" id="fecha_fin" name="fecha_fin" size='16' value="<?php echo $diaf.' '.$ff?>"/> a Hrs. <input type="text" id="hora_fin" name="hora_fin" value="<?php echo $hf; ?>" size='6'/><br>
-                            Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para lo cual su persona deberá coordinar la elaboración del FUCOV.
-                            Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural.
+                            <p style="text-align: justify;">Sírvase tramitar ante la Dirección General de Asuntos Administrativos la asignación de pasajes y viáticos de acuerdo a escala autorizada para lo cual su persona deberá coordinar la elaboración del FUCOV.
+                            Una vez completada la comisión sírvase hacer llegar el informe de descargo dentro de los próximos 8 días hábiles de concluída la comisión de acuerdo al artículo 25 del reglamento de Pasajes y viáticos del Ministerio de Desarrollo Productivo y Economía Plural.</p>
                             <?php echo Form::label('observacion', 'Observacion:', array('id' => 'label_observacion', 'class' => 'form')); ?> 
-                            <?php echo Form::textarea('observacion', $obs, array('id' => 'observacion', 'cols' => 150, 'rows' => 2)); ?>
+                            <textarea name="observacion" id="observacion" style="width: 775px;" ><?php echo $obs; ?></textarea>
                         </div>
                     </div>  
                     <div id="op">

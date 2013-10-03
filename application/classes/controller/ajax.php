@@ -11,7 +11,7 @@ class Controller_Ajax extends Controller {
             $id_seg = $_POST['id_seg'];
             $destino = $_POST['destino'];
             $accion = $_POST['accion'];
-            $proveido = $_POST['proveido'];
+            $proveido = strtoupper($_POST['proveido']);
             $nur = $_POST['nur'];
             $user = $_POST['user'];
             $id_doc = $_POST['document'];
