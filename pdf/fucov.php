@@ -72,7 +72,7 @@ $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, 'LETTER', true, 'UTF-8', false)
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('Ivan Marcelo Chacolla');
+$pdf->SetAuthor('');
 $pdf->SetTitle('DOCUMENTO');
 $pdf->SetSubject('TCPDF Tutorial');
 $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
@@ -138,10 +138,18 @@ try {
         $stmtp = $dbh->prepare("select * from pvcategorias where id = $rs->id_categoria ");
         $stmtp->execute();
         $cat = $stmtp->fetch(PDO::FETCH_OBJ);
+        if($cat)
+            $categoria = $cat->categoria;
+        else
+            $categoria = "<b>NO SELECCIONADO</b>";
         ///TIPO DE VIAJE
         $stmtp = $dbh->prepare("select * from pvtipoviajes where id = $rs->id_tipoviaje ");
         $stmtp->execute();
         $viaje = $stmtp->fetch(PDO::FETCH_OBJ);
+        if($viaje)
+            $tipoviaje = $viaje->tipoviaje;
+        else
+            $tipoviaje = '<b>NO SELECCIONADO</b>';
         $pdf->SetFont('Helvetica', 'B', 15);
         $pdf->Write(0, 'FORMULARIO UNICO DE COMISION DE VIAJE ('.strtoupper($rs->tipo).')', '', 0, 'C');
         $pdf->Ln();
@@ -176,8 +184,8 @@ try {
                         <td>'.$rs->fecha_creacion.'</td>
                     </tr>
                     <tr>
-                        <td ><span style="color:#DADADA; text-align:center; font-size: 80%;"><br /><br /><br /><br />SELLO</span></td>
-                        <td><span style="color:#DADADA; text-align:center; font-size: 80%;"><br /><br /><br /><br />FIRMA</span></td>
+                        <td ><span style="color:#DADADA; text-align:center; font-size: 80%;"><br /><br /><br /><br /><br />SELLO</span></td>
+                        <td><span style="color:#DADADA; text-align:center; font-size: 80%;"><br /><br /><br /><br /><br />FIRMA</span></td>
                     </tr>
                     <tr style="text-align:left;background-color: #F4F4F4;">
                         <td colspan="2"><b>PARTE II. IDENTIFICACION DEL AREA QUE AUTORIZA EL VIAJE</b></td>
@@ -199,8 +207,8 @@ try {
                         <td>'.$memo->fecha_creacion.'</td>
                     </tr>
                     <tr>
-                        <td ><span style="color:#DADADA; text-align:center; font-size: 80%;"><br /><br /><br /><br />SELLO</span></td>
-                        <td><span style="color:#DADADA; text-align:center; font-size: 80%;"><br /><br /><br /><br />FIRMA</span></td>
+                        <td ><span style="color:#DADADA; text-align:center; font-size: 80%;"><br /><br /><br /><br /><br />SELLO</span></td>
+                        <td><span style="color:#DADADA; text-align:center; font-size: 80%;"><br /><br /><br /><br /><br />FIRMA</span></td>
                     </tr>
                     <tr style="text-align:left;background-color: #F4F4F4;">
                         <td colspan="2"><b>PARTE III. SOLICITUD DE PASAJES Y VIATICOS</b></td>
@@ -336,11 +344,11 @@ try {
        $contenido .='  <table border="1" cellpadding="'.$padding.'">
                             <tr>
                                 <td width="15%">TIPO VIAJE</td>
-                                <td width="85%">'.$viaje->tipoviaje.'</td>
+                                <td width="85%">'.$tipoviaje.'</td>
                             </tr>
                             <tr>
                                 <td width="15%">CATEGORIA</td>
-                                <td width="85%">'.$cat->categoria.'</td>
+                                <td width="85%">'.$categoria.'</td>
                             </tr>
                         </table>';
         
@@ -350,7 +358,7 @@ try {
                             <td>% Vi&aacute;tico</td>
                             <td>Viatico x Dia</td>
                             <td>Total Vi&aacute;ticos</td>
-                            <td>IVA 13 %: </td>
+                            <td>Desc. IVA <br />13 %</td>
                             <td>Gasto Rep.</td>
                             <td>Cambio</td>
                             <td>Total Pasajes</td>

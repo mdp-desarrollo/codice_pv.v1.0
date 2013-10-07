@@ -119,6 +119,7 @@ B&uacute;squeda Avanzada
             <th>Fecha Retorno</th>
             <th>Oficina</th>
             <th>Nombre Funcionario</th>
+            <!--<th>Imprimir</th>-->
         </tr>
     </thead>    
     <tbody>
@@ -131,6 +132,7 @@ B&uacute;squeda Avanzada
             <td ><?php echo $aut->fecha_arribo;?></td>
             <td ><?php echo $aut->oficina;?></td>
             <td ><?php echo $aut->nombre;?><br /><b><?php echo $aut->cargo;?></b></td>
+            <!--<td><a href="/pdf/fucov.php?id=<?php echo $aut->id_documento; ?>" class="link pdf" target="_blank" title="Imprimir PDF" >PDF</a></td>-->
         </tr>        
     <?php endforeach;?>
    </tbody>   

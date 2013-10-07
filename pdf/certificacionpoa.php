@@ -264,7 +264,7 @@ try {
                             <td></td>
                         </tr>
                         <tr>
-                            <td height =\"$altura2\">Servicios de Empresa consultora(estidios)</td>
+                            <td height =\"$altura2\">Servicios de Empresa consultora(estudios)</td>
                             <td></td>
                         </tr>
                         <tr>
@@ -318,7 +318,7 @@ try {
     $pdf->Ln(5);
     $pdf->Cell(169.5,90,'',1,0,'C');
     $pdf->Ln(5);
-    $pdf->writeHTML($tabla1, false, false, false);
+    $pdf->writeHTML( $tabla1, false, false, false);
     
     $fecha = date("d / m / Y");
     $tabla2 = "
@@ -374,6 +374,7 @@ try {
     $pdf->writeHTML('Adj. ' . strtoupper($rs->adjuntos));
     }
     else{         
+        $pdf->SetFont('Helvetica', '', 10);
         $pdf->writeHTML('ERROR AL GENERAR EL DOCUMENTO.', false, false, false);
     }
 } catch (PDOException $e) {

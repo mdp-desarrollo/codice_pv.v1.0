@@ -107,33 +107,26 @@ B&uacute;squeda Avanzada
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>
-            <!--<th>Memor&aacute;ndum</th>-->
             <th>Hoja de Ruta</th>
             <th>Detalle</th>
-            <!--<th>Fecha Solicitud</th>-->
             <th>Fecha Salida</th>
             <th>Fecha Retorno</th>
-            <!--<th>Linea A&eacute;rea</th>
-            <th>Boleto Salida</th>-->
             <th>Oficina</th>
             <th>Nombre Funcionario</th>
+            <!--<th>Imprimir</th>-->
         </tr>
     </thead>    
     <tbody>
     <?php 
     foreach( $pendientes as $aut): ?>
         <tr>
-            <!--<td ><a href="/pyvpasajes/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->nur;?></a></td>-->
             <td ><a href="/seguimiento/?nur=<?php echo $aut->nur?>"><?php echo $aut->nur?></a></td>
             <td ><a href="/pvpasajes/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
-            <!--<td ><?php echo $aut->nur;?></td>-->
-            <!--<td ><?php //echo $aut->fecha_creacion;?></td>-->
             <td ><?php echo $aut->fecha_salida;?></td>
             <td ><?php echo $aut->fecha_arribo;?></td>
-            <!--<td ><?php //echo $aut->empresa;?></td>
-            <td ><?php //echo $aut->nro_boleto;?></td>-->
             <td ><?php echo $aut->oficina;?></td>
             <td ><?php echo $aut->nombre;?><br /><b><?php echo $aut->cargo;?></b></td>
+            <!--<td><a href="/pdf/fucov.php?id=<?php echo $aut->id_documento; ?>" class="link pdf" target="_blank" title="Imprimir PDF" >PDF</a></td>-->
         </tr>        
     <?php endforeach;?>
    </tbody>   
