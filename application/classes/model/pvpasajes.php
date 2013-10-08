@@ -36,7 +36,7 @@ class Model_Pvpasajes extends ORM{
     }
     
     public function informependiente($entidad){
-        $sql = "select distinct f.id, f.id_memo, f.id_documento,  f.fecha_salida, f.fecha_arribo, o.oficina, d.nombre_remitente nombre, d.cargo_remitente cargo, d.nur, d.codigo
+        $sql = "select distinct f.id, f.id_memo, f.id_documento,  f.fecha_salida, f.fecha_arribo, o.oficina, d.nombre_remitente nombre, d.cargo_remitente cargo, d.nur, d.codigo, DATEDIFF( CURDATE(),f.fecha_arribo) dias
         from pvfucovs f
         inner join pvpoas p on f.id = p.id_fucov
 	inner join pvliquidaciones l on f.id = l.id_fucov
@@ -49,20 +49,10 @@ class Model_Pvpasajes extends ORM{
         and DATEDIFF( CURDATE(),f.fecha_arribo)>8
         and (select count(nur) from documentos where id_entidad = $entidad and id_proceso = 17 and id_tipo = 3 and nur = d.nur) =0";
         return $this->_db->query(Database::SELECT, $sql, TRUE);
-        /*$sql = "select f.id, f.id_memo, f.id_documento,  f.fecha_salida, f.fecha_arribo, o.oficina, d.nombre_remitente nombre, d.cargo_remitente cargo, d.nur, d.codigo
-        from pvfucovs f
-        inner join documentos d on f.id_documento = d.id
-        inner join oficinas o on d.id_oficina = o.id
-        where f.auto_pasaje = 1
-        and d.id_entidad = $entidad
-        and DATEDIFF( CURDATE(),f.fecha_arribo)>8
-        and (select count(nur) from documentos where id_entidad = $entidad and id_proceso = 17 and id_tipo = 3 and nur = d.nur) =0
-        ";
-        return $this->_db->query(Database::SELECT, $sql, TRUE);*/
     }
     
     public function pendienteavanzado($entidad, $nombre, $oficina, $f1, $f2){
-        $sql = "select f.id, f.id_memo, f.id_documento,  f.fecha_salida, f.fecha_arribo, o.oficina, d.nombre_remitente nombre, d.cargo_remitente cargo, d.nur, d.codigo
+        $sql = "select f.id, f.id_memo, f.id_documento,  f.fecha_salida, f.fecha_arribo, o.oficina, d.nombre_remitente nombre, d.cargo_remitente cargo, d.nur, d.codigo, DATEDIFF( CURDATE(),f.fecha_arribo) dias
         from pvfucovs f
         inner join documentos d on f.id_documento = d.id
         inner join oficinas o on d.id_oficina = o.id

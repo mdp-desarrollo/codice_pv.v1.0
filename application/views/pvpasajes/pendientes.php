@@ -1,7 +1,7 @@
 <script type="text/javascript">
 
 $(function(){
-        $("#theTable").tablesorter({sortList:[[3,1]], 
+        $("#theTable").tablesorter({sortList:[[0,0]], 
             widgets: ['zebra'],
             headers: {             
                 5: { sorter:false},
@@ -84,9 +84,9 @@ B&uacute;squeda Avanzada
         </td>
         <tr>
             <td>De fecha:</td>
-            <td><input type="text" name="fecha1" id="fecha1" value="<?php echo date('Y-m-01');?>"/></td>
+            <td><input type="text" name="fecha1" id="fecha1" value="<?php //echo date('Y-m-01');?>"/></td>
             <td>A fecha:</td>
-            <td colspan="2"><input type="text" name="fecha2" id="fecha2" value="<?php echo date('Y-m-d');?>" /></td>
+            <td colspan="2"><input type="text" name="fecha2" id="fecha2" value="<?php //echo date('Y-m-d');?>" /></td>
             <td><input type="submit" name="submit" value="Buscar"/></td>
         </tr>
     </table>
@@ -103,34 +103,41 @@ B&uacute;squeda Avanzada
 </div>
 <!--<button id="buscar">B&uacute;squeda Avanzada</button>-->
 <br />
+<?php if(sizeof($pendientes)>0):?> 
 <p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" /></p>
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>
+            <th>&nbsp;N°&nbsp;</th>
             <th>Hoja de Ruta</th>
             <th>Detalle</th>
             <th>Fecha Salida</th>
             <th>Fecha Retorno</th>
             <th>Oficina</th>
             <th>Nombre Funcionario</th>
+            <th>Retraso<br />(dias)</th>
             <!--<th>Imprimir</th>-->
         </tr>
     </thead>    
     <tbody>
     <?php 
+    $c = 1;
     foreach( $pendientes as $aut): ?>
         <tr>
+            <td ><b> <?php echo $c; $c++?> </b></td>
             <td ><a href="/seguimiento/?nur=<?php echo $aut->nur?>"><?php echo $aut->nur?></a></td>
             <td ><a href="/pvpasajes/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
-            <td ><?php echo $aut->fecha_salida;?></td>
-            <td ><?php echo $aut->fecha_arribo;?></td>
-            <td ><?php echo $aut->oficina;?></td>
-            <td ><?php echo $aut->nombre;?><br /><b><?php echo $aut->cargo;?></b></td>
+            <td ><?php echo $aut->fecha_salida?></td>
+            <td ><?php echo $aut->fecha_arribo?></td>
+            <td ><?php echo $aut->oficina?></td>
+            <td ><?php echo $aut->nombre?><br /><b><?php echo $aut->cargo;?></b></td>
+            <td style="text-align: center" ><?php echo $aut->dias?></td>
             <!--<td><a href="/pdf/fucov.php?id=<?php echo $aut->id_documento; ?>" class="link pdf" target="_blank" title="Imprimir PDF" >PDF</a></td>-->
         </tr>        
     <?php endforeach;?>
    </tbody>   
 </table>
+<?php endif; ?>
 <?php /*else: ?>
 <div style="margin-top: 20px; padding: 10px;" class="info">
     <p><span style="float: left; margin-right: .3em;" class=""></span>    

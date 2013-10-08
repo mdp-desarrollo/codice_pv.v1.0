@@ -202,12 +202,18 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
             $oficinas [$o->id] = $o->oficina;
         if(isset($_POST['submit']))
         {
-            $fecha1=$_POST['fecha1'].' 00:00:00';
-            $fecha2=$_POST['fecha2'].' 23:59:00';
-            if(strtotime($fecha1)>strtotime($fecha2))
-            {
-                $fecha1=$_POST['fecha2'].' 23:59:00';
-                $fecha2=$_POST['fecha1'].' 00:00:00';
+            if($_POST['fecha1']!='' && $_POST['fecha2']!=''){
+                $fecha1=$_POST['fecha1'].' 00:00:00';
+                $fecha2=$_POST['fecha2'].' 23:59:00';
+                if(strtotime($fecha1)>strtotime($fecha2))
+                {
+                    $fecha1=$_POST['fecha2'].' 23:59:00';
+                    $fecha2=$_POST['fecha1'].' 00:00:00';
+                }
+            }
+            else{
+                $fecha1='';
+                $fecha2='';
             }
             $o_pendientes=New Model_Pvpasajes();
             $pendientes=$o_pendientes->pendienteavanzado($this->user->id_entidad, $_POST['funcionario'],$_POST['oficina'],$fecha1,$fecha2);

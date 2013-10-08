@@ -1,7 +1,7 @@
 <script type="text/javascript">
 
 $(function(){
-        $("#theTable").tablesorter({sortList:[[3,1]], 
+        $("#theTable").tablesorter({sortList:[[0,0]], 
             widgets: ['zebra'],
             headers: {             
                 5: { sorter:false},
@@ -109,10 +109,12 @@ B&uacute;squeda Avanzada
 </div>
 <!--<button id="buscar">B&uacute;squeda Avanzada</button>-->
 <br />
+<?php if(sizeof($autorizados)>0):?> 
 <p style="margin: 5px auto;"> <b>Filtrar/Buscar: </b><input type="text" id="FilterTextBox" name="FilterTextBox" size="40" /></p>
 <table id="theTable" class="tablesorter" border="1px" >
     <thead>
         <tr>
+            <th>&nbsp;N°&nbsp;</th>
             <th>Hoja de Ruta</th>
             <th>Detalle</th>
             <th>Fecha Salida</th>
@@ -124,8 +126,10 @@ B&uacute;squeda Avanzada
     </thead>    
     <tbody>
     <?php
+    $c = 1;
     foreach( $autorizados as $aut): ?>
         <tr>
+            <td ><b> <?php echo $c; $c++?> </b></td>
             <td ><a href="/seguimiento/?nur=<?php echo $aut->nur?>"><?php echo $aut->nur?></a></td>
             <td ><a href="/pvpasajes/detalleautorizados/<?php echo $aut->id_memo;?>"><?php echo $aut->codigo;?></a></td>
             <td ><?php echo $aut->fecha_salida;?></td>
@@ -137,6 +141,7 @@ B&uacute;squeda Avanzada
     <?php endforeach;?>
    </tbody>   
 </table>
+<?php endif; ?>
 <?php 
 //echo $autorizados;
     /*else: ?>
