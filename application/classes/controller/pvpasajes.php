@@ -219,7 +219,7 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
             $pendientes=$o_pendientes->pendienteavanzado($this->user->id_entidad, $_POST['funcionario'],$_POST['oficina'],$fecha1,$fecha2);
             if(!sizeof($pendientes)>0)
                 $mensajes['No Encontrado!'] = 'La búsqueda no produjo resultados.';
-            $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
+                $this->template->styles = array('media/css/jquery-ui-1.8.16.custom.css' => 'screen', 'media/css/tablas.css' => 'screen');
                 $this->template->scripts = array('tinymce/tinymce.min.js', 'media/js/jquery-ui-1.8.16.custom.min.js', 'media/js/jquery.timeentry.js','media/js/jquery.tablesorter.min.js'); ///
                 $this->template->content=View::factory('pvpasajes/pendientes')
                         ->bind('pendientes',$pendientes)
@@ -237,6 +237,15 @@ class Controller_Pvpasajes extends Controller_DefaultTemplate {
                 ->bind('oficinas', $oficinas)
                 ->bind('mensajes', $mensajes)
                 ;
+        }
+    }
+    
+    public function action_autorizarinforme($id = ''){
+        $memo = ORM::factory('documentos',$id);
+        if($memo->loaded()){
+            $memo->auto_informe = 1;
+            $memo->save();
+            $this->request->redirect('documento/detalle/'.$memo->id);
         }
     }
 }
