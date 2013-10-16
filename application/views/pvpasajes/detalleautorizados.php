@@ -141,7 +141,7 @@ function dia_literal($n) {
     }
 }
 //calcular el numero de dias
-$fecha1 = strtotime($pvfucov->fecha_salida);
+/*$fecha1 = strtotime($pvfucov->fecha_salida);
 $fecha2 = strtotime($pvfucov->fecha_arribo);
 $diff =  $fecha2 - $fecha1;
 if($diff <0)
@@ -155,6 +155,24 @@ else{
     else
         $dias = intval((($diff) / (60*60*24))+0);
 }
+*/
+    $fi = date('Y-m-d', strtotime($pvfucov->fecha_salida));
+    $ff = date('Y-m-d', strtotime($pvfucov->fecha_arribo));
+    $fecha1 = strtotime($fi);
+        $fecha2 = strtotime($ff);
+        $diff =  $fecha2 - $fecha1;
+        if($diff < 0)
+            $diff = $diff*(-1);
+        if ($diff==0)
+            $dias = 1;
+        else{
+            $dias = intval((($diff) / (60*60*24)));
+            if (strcasecmp($hf, '12:00:00') != 0) {
+                if(strcasecmp($hf, '12:00:00') > 0)
+                    $dias ++;
+            }
+        }
+
     if($pvfucov->tipo_moneda == '0')
         $moneda = 'Bs.';
     else
@@ -163,6 +181,7 @@ else{
 <input type="hidden" id="id_fucov" value="<?php echo $pvfucov->id;?>" />
 <div style="width: 800px;">
             <div id="comision" style="border-bottom: 1px solid #ccc; background: #FCFCFC; display: block; padding: 10px 0;   width: 100%;">
+                <a href="/pdf/fucov.php?id=<?php echo $pvfucov->id_documento; ?>" class="link pdf" target="_blank" title="Imprimir PDF" >PDF</a>
                 <!--<form action="/pvpasajes/editarfucov/<?php echo $pvfucov->id; ?>" method="post" id="frmEditarFucov" >-->
                 <h2 style="text-align: center;"> PASAJES Y VI&Aacute;TICOS</h2>
                 <br /><hr /><br />
@@ -232,36 +251,6 @@ else{
                                 </tbody>
 
                             </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><br /><hr /><br /></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">
-                            <table border="1" width="100%">
-                                    <tr>
-                                        <td>Nro Dias</td>
-                                        <td>Viaticos</td>
-                                        <td>Viatico x Dia</td>
-                                        <td>Total Vi&aacute;ticos</td>
-                                        <td>IVA 13 %: </td>
-                                        <td>Gastos Representaci&oacute;n:</td>
-                                        <!--<td>Cambio</td>-->
-                                        <td>Total Pasajes</td>
-                                    </tr>
-                                    <tr>
-                                        <td><?php echo Form::input('nro_dias', $dias, array('id' => 'nro_dias', 'size' => 3,'readonly')) ?></td>
-                                        <td><?php echo Form::input('porcentaje_viatico', $pvfucov->porcentaje_viatico, array('id' => 'porcentaje_viatico', 'size' => 3,'readonly')) ?> %</td>
-                                        <td><?php echo Form::input('viatico_dia', $pvfucov->viatico_dia, array('id' => 'viatico_dia', 'size' => 5,'readonly'));echo $moneda;?> </td>
-                                        <td><?php echo Form::input('total_viatico', $pvfucov->total_viatico, array('id' => 'total_viatico', 'size' => 8,'readonly'));echo $moneda; ?></span></td>
-                                        <td><?php echo Form::input('gasto_imp', $pvfucov->gasto_imp, array('id' => 'gasto_imp', 'size' => 8,'readonly'));echo $moneda;?></td>
-                                        <td><?php echo Form::input('gasto_representacion', $pvfucov->gasto_representacion, array('id' => 'gasto_representacion', 'size' => 8,'readonly')); echo $moneda;?></td>
-                                        <!--<td><?php // echo Form::input('tipo_cambio', $tipo_cambio->cambio_venta, array('id' => 'tipo_cambio', 'size' => 3,'readonly'));echo $moneda; ?></td>-->
-                                        <td><?php echo Form::input('total_pasaje', $pvfucov->total_pasaje, array('id' => 'total_pasaje', 'size' => 8,'class'=>'required'));echo $moneda; ?></td>
-                                    </tr>
-                                </table>
-
                             <table width="100%">
                                 <?php  if ($pvfucov->justificacion_finsem != '') {?> 
                                 <tr><td colspan="2" style="padding-left: 5px;"><br><b>Justificacion Fin de Semana:</b><br><?php echo $pvfucov->justificacion_finsem; ?></td></tr>
@@ -273,7 +262,39 @@ else{
                     <tr>
                         <td colspan="3"><br /><hr /><br /></td>
                     </tr>
-                    <tr>    
+                    <tr>
+                        <td colspan="3">
+                        <center><b><h2>CÁLCULO DE VIATICOS</h2></b></center>
+                            <table border="0" width="100%" class="classy">
+                                <thead>
+                                    <th>Nro Dias</th>
+                                    <th>Viaticos</th>
+                                    <th>Viatico x Dia</th>
+                                    <th>Total Vi&aacute;ticos</th>
+                                    <th>Desc. IVA 13 %: </th>
+                                    <th>Gasto Rep</th>
+                                    <!--<th>Cambio</th>-->
+                                    <th>Total Pasajes</th>
+                                </thead>
+                                <tbody>
+                                    <tr style="text-align:center">
+                                        <td><?php echo $dias?></td>
+                                        <td><?php echo $pvfucov->porcentaje_viatico?> %</td>
+                                        <td><?php echo $pvfucov->viatico_dia?> </td>
+                                        <td><?php echo $pvfucov->total_viatico.' '.$moneda; ?></span></td>
+                                        <td><?php echo $pvfucov->gasto_imp.' '.$moneda;?></td>
+                                        <td><?php echo $pvfucov->gasto_representacion.' '.$moneda;?></td>
+                                        <!--<td><?php //echo Form::input('tipo_cambio', $tipo_cambio->cambio_venta, array('id' => 'tipo_cambio', 'size' => 3,'readonly'));echo $moneda; ?></td>-->
+                                        <td><?php echo $pvfucov->total_pasaje.' '.$moneda; ?></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><br /><hr /><br /></td>
+                    </tr>
+                    <!--<tr>    
                         <td><b>TOTAL VIATICOS:</b> <?php echo $pvfucov->total_viatico .' '. $tipo_moneda; ?></td>
                             <td width="300"><b>GASTOS DE REPRESENTACIÓN:</b> <?php echo $pvfucov->gasto_representacion .' '. $tipo_moneda; ?></td>    
                             <td><b>TOTAL PASAJES:</b> <?php echo $pvfucov->total_pasaje .' '. $tipo_moneda; ?></td>
@@ -289,12 +310,12 @@ else{
                     </tr> 
                     <tr>
                         <td colspan="3"><br /><hr /><br /></td>
-                    </tr>
+                    </tr>-->
                     <tr>
                         <td colspan="3">
                         <center><b><h2>LISTA DE PASAJES ASIGNADOS:</h2></b></center>
                             <?php if(sizeof($pvpasajes)>0):?>
-                                    <table class="classy">
+                                    <table class="classy" border="0">
                                         <thead>
                                             <th>TRAMO</th>
                                             <th>ORIGEN</th>
@@ -334,8 +355,6 @@ else{
                         </td>
                     </tr>
                 </table>
-                <br />
-                <hr />
                 <br />
             <div class="info" style="text-align:center;margin-top: 20px;">
                 <p><span style="float: left; margin-right: .3em;" class=""></span>    

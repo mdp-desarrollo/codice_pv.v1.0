@@ -372,7 +372,7 @@
             alert(r);
             return false;
         });        
-        $("input.file").si();
+        //$("input.file").si();
 
     });
 </script>

@@ -193,7 +193,7 @@ where p.id = $fucov->id_programatica");
             </tr>";
     $pdf->SetFont('Helvetica', '', 8);
     $html = "
-        <table style=\" width: 100%;\"  border=\"0px\">
+        <table style=\" width: 100%;\"  border=\"0px\" cellpadding=\"1\">
             <tr>
                 <td style = \" width: 30%;\">ENTIDAD</td>
                 <td style = \" width: 10%;\">:$ofi->sigla_entidad</td>
@@ -229,7 +229,7 @@ where p.id = $fucov->id_programatica");
         $pdf->Ln(5);
         $stmt = $dbh->prepare("select * from pvliquidaciones where id_fucov = $fucov->id");
         $stmt->execute();
-        $html = "<table border=\"1px\">
+        $html = "<table border=\"1px\" cellpadding=\"3\">
                     <tr>
                         <td style = \" width: 10%;\" bgcolor=\"$color\">Partida</td>
                         <td style = \" width: 40%;\" bgcolor=\"$color\">Descripci&oacute;n</td>
