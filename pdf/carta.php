@@ -171,13 +171,13 @@ try {
         $pdf->Write(0, utf8_encode($rs->cargo_destinatario), '', 0, 'L');
         $pdf->Ln();
         $pdf->Write(0, utf8_encode($rs->institucion_destinatario), '', 0, 'L');
-        $pdf->Ln();
+        $pdf->Ln(7);
         $pdf->SetFont('Helvetica', '', 10);
         $pdf->Write(0, 'Presente:', '', 0, 'L');
         $pdf->Ln(10);
-        $pdf->SetFont('Helvetica', '', 10);
-        $pdf->Cell(15, 5, 'REF.:');
         $pdf->SetFont('Helvetica', 'B', 10);
+        $pdf->Cell(15, 5, 'REF.:');
+        $pdf->SetFont('Helvetica', '', 10);
         $pdf->MultiCell(170, 5, utf8_encode($rs->referencia), 0, 'L');
         $pdf->Ln(20);
 

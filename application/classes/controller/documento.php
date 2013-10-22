@@ -652,10 +652,10 @@ class Controller_documento extends Controller_DefaultTemplate {
     ///rodrigo(opciones por usuario) 210813
     public function pvmodificar($id, $estado) {
         $detallepv = '';
-        if ($estado == 2) {
+        $memo = ORM::factory('documentos')->where('id', '=', $id)->and_where('fucov','=',1)->find();
+        if ($estado == 2 && $memo->loaded()) {
             $pvfucov = ORM::factory('pvfucovs')->where('id_memo', '=', $id)->find();
             $documento = ORM::factory('documentos')->where('id','=',$pvfucov->id_documento)->and_where('id_tipo','=',13)->find();
-            //$memo = ORM::factory('documentos')->where('id', '=', $pvfucov->id_memo)->find();
             //$oficina = ORM::factory('oficinas')->where('id', '=', $memo->id_oficina)->find();///oficina del usuario solicintante
             $cambio = ORM::factory('pvtipocambios')->find_all();
             foreach($cambio as $c)
@@ -744,6 +744,31 @@ class Controller_documento extends Controller_DefaultTemplate {
                                 ->bind('ue_poa', $uejecutorapoa)
                         ;
                         break;
+                    default:///verificar si presento informe de descargo
+                        if($this->user->id == $memo->id_user){///preguntar si este usuario creó el memorandum
+                            $oDesc = new Model_Pvpasajes();
+                            $desc = $oDesc->descargo($id, $this->user->id_entidad);
+                            $descargo = array();
+                            foreach ($desc as $d)
+                                $descargo = $d;///mostrar detalle del ultimo informe de descargo generado
+                            if($descargo){
+                                $doc = ORM::factory('documentos')
+                                        ->where('id_entidad','=',$this->user->id_entidad)
+                                        ->and_where('id_proceso','=',18)
+                                        ->and_where('id_tipo','=',3)
+                                        ->and_where('nur','=',$descargo->nur)
+                                        ->find_all();
+                                foreach ($doc as $d)
+                                    $documento = $d;
+                                $tipo = ORM::factory('tipos',$documento->id_tipo);
+                                $detallepv = View::factory('pvpasajes/detalleinforme')
+                                    ->bind('d', $documento)
+                                    ->bind('tipo', $tipo)
+                                    ->bind('memo', $memo)
+                                    ->bind('descargo', $descargo)
+                                        ;
+                            }
+                        }
                 }
             }
         }

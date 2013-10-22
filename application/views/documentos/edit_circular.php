@@ -235,7 +235,7 @@ tinymce.init({
                             <td>
                                 <?php
                                 echo Form::label('adjuntos', 'Adjunto:', array('class' => 'form'));
-                                echo Form::input('adjuntos', $documento->adjuntos, array('id' => 'adjuntos', 'size' => 40, 'class' => 'required', 'title' => 'Ejemplo: Lo citado'));
+                                echo Form::input('adjuntos', $documento->adjuntos, array('id' => 'adjuntos', 'size' => 40, 'title' => 'Ejemplo: Lo citado'));
                                 ?>
                                 <?php
                                 echo Form::label('copias', 'Con copia a:', array('class' => 'form'));
